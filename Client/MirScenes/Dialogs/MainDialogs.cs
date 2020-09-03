@@ -219,7 +219,7 @@ namespace Client.MirScenes.Dialogs
             HealthOrb = new MirControl
             {
                 Parent = this,
-                Location = new Point(0, 30),
+                Location = new Point(305, 30),
                 NotControl = true,
             };
 
@@ -261,14 +261,14 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = this,
-                Location = new Point(15, 150)
+                Location = new Point(370, 123)
             };
 
             CharacterName = new MirLabel
             {
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 Parent = this,
-                Location = new Point(6, 120),
+                Location = new Point(287, 122),
                 Size = new Size(90, 16)
             };
 
