@@ -227,7 +227,7 @@ namespace Client.MirControls
 
                             if (GameScene.Scene.ChatDialog.ChatTextBox.Text.Length + text.Length > Globals.MaxChatLength)
                             {
-                                GameScene.Scene.ChatDialog.ReceiveChat("Unable to link item, message exceeds allowed length", ChatType.System);
+                                GameScene.Scene.ChatDialog.ReceiveChat("无法链接项目，消息超过了允许的长度", ChatType.System);
                                 return;
                             }
 
@@ -292,7 +292,7 @@ namespace Client.MirControls
             MirAmountBox amountBox;
             if (Item.Count > 1)
             {
-                amountBox = new MirAmountBox("Purchase Amount:", Item.Image, Item.Count);
+                amountBox = new MirAmountBox("采购量:", Item.Image, Item.Count);
 
                 amountBox.OKButton.Click += (o, e) =>
                 {
@@ -302,7 +302,7 @@ namespace Client.MirControls
             }
             else
             {
-                amountBox = new MirAmountBox("Purchase", Item.Image, string.Format("Value: {0:#,##0} Gold", Item.Price()));
+                amountBox = new MirAmountBox("采购", Item.Image, string.Format("价格: {0:#,##0} 金", Item.Price()));
 
                 amountBox.OKButton.Click += (o, e) =>
                 {
@@ -716,7 +716,7 @@ namespace Client.MirControls
                                 {
                                     if (CMain.Ctrl)
                                     {
-                                        MirMessageBox messageBox = new MirMessageBox("Do you want to try and combine these items?", MirMessageBoxButtons.YesNo);
+                                        MirMessageBox messageBox = new MirMessageBox("您想尝试合并这些物品吗?", MirMessageBoxButtons.YesNo);
                                         messageBox.YesButton.Click += (o, e) =>
                                         {
                                             //Combine
@@ -810,7 +810,7 @@ namespace Client.MirControls
 
                                 if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.MaxBagWeight)
                                 {
-                                    GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to get back.", ChatType.System);
+                                    GameScene.Scene.ChatDialog.ReceiveChat("超重.", ChatType.System);
                                     GameScene.SelectedCell = null;
                                     return;
                                 }
@@ -857,12 +857,12 @@ namespace Client.MirControls
                             case MirGridType.GuildStorage:
                                 if (Item != null)
                                 {
-                                    GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
+                                    GameScene.Scene.ChatDialog.ReceiveChat("你不能调换物品.", ChatType.System);
                                     return;
                                 }
                                 if (!GuildDialog.MyOptions.HasFlag(GuildRankOptions.CanRetrieveItem))
                                 {
-                                    GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to retrieve items.", ChatType.System);
+                                    GameScene.Scene.ChatDialog.ReceiveChat("检索物品的权限不足.", ChatType.System);
                                     return;
                                 }
                                 Network.Enqueue(new C.GuildStorageItemChange { Type = 1, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
@@ -888,7 +888,7 @@ namespace Client.MirControls
 
                                 if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.MaxBagWeight)
                                 {
-                                    GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to get back.", ChatType.System);
+                                    GameScene.Scene.ChatDialog.ReceiveChat("超重.", ChatType.System);
                                     GameScene.SelectedCell = null;
                                     return;
                                 }
@@ -961,7 +961,7 @@ namespace Client.MirControls
 
                                 if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.MaxBagWeight)
                                 {
-                                    GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to get back.", ChatType.System);
+                                    GameScene.Scene.ChatDialog.ReceiveChat("超重.", ChatType.System);
                                     GameScene.SelectedCell = null;
                                     return;
                                 }
@@ -1010,14 +1010,14 @@ namespace Client.MirControls
                             case MirGridType.Renting:
                                 if (GameScene.User.RentalItemLocked)
                                 {
-                                    GameScene.Scene.ChatDialog.ReceiveChat("Unable to remove locked item, cancel item rental and try again.", ChatType.System);
+                                    GameScene.Scene.ChatDialog.ReceiveChat("无法删除锁定的物品，无法取消租借的物品，然后重试.", ChatType.System);
                                     GameScene.SelectedCell = null;
                                     return;
                                 }
 
                                 if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.MaxBagWeight)
                                 {
-                                    GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to get back.", ChatType.System);
+                                    GameScene.Scene.ChatDialog.ReceiveChat("超重.", ChatType.System);
                                     GameScene.SelectedCell = null;
                                     return;
                                 }
@@ -1191,7 +1191,7 @@ namespace Client.MirControls
                                 {                                    
                                     if (!GuildDialog.MyOptions.HasFlag(GuildRankOptions.CanStoreItem))
                                     {
-                                        GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
+                                        GameScene.Scene.ChatDialog.ReceiveChat("权利不足，无法存放物品.", ChatType.System);
                                         return;
                                     }
                                        
@@ -1212,12 +1212,12 @@ namespace Client.MirControls
                                 {
                                     if (Item != null)
                                     {
-                                        GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
+                                        GameScene.Scene.ChatDialog.ReceiveChat("你不能调换物品.", ChatType.System);
                                         return;
                                     }
                                     if (!GuildDialog.MyOptions.HasFlag(GuildRankOptions.CanStoreItem))
                                     {
-                                        GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
+                                        GameScene.Scene.ChatDialog.ReceiveChat("权利不足，无法存放物品.", ChatType.System);
                                         return;
                                     }
                                     if (ItemArray[ItemSlot] == null)
@@ -1521,13 +1521,13 @@ namespace Client.MirControls
                         {
                             if (Item != null)
                             {
-                                GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
+                                GameScene.Scene.ChatDialog.ReceiveChat("你不能调换物品.", ChatType.System);
                                 return;
                             }
 
                             if (GameScene.SelectedCell.Item.Info.Bind.HasFlag(BindMode.DontTrade))
                             {
-                                GameScene.Scene.ChatDialog.ReceiveChat("You cannot mail this item.", ChatType.System);
+                                GameScene.Scene.ChatDialog.ReceiveChat("您不能邮寄该物品.", ChatType.System);
                                 return;
                             }
 
@@ -1676,35 +1676,35 @@ namespace Client.MirControls
                 case MirClass.Warrior:
                     if (!Item.Info.RequiredClass.HasFlag(RequiredClass.Warrior))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Warriors cannot use this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("战士不能使用该物品.", ChatType.System);
                         return false;
                     }
                     break;
                 case MirClass.Wizard:
                     if (!Item.Info.RequiredClass.HasFlag(RequiredClass.Wizard))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Wizards cannot use this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("法师无法使用此项目.", ChatType.System);
                         return false;
                     }
                     break;
                 case MirClass.Taoist:
                     if (!Item.Info.RequiredClass.HasFlag(RequiredClass.Taoist))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Taoists cannot use this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("道士不能使用此物品.", ChatType.System);
                         return false;
                     }
                     break;
                 case MirClass.Assassin:
                     if (!Item.Info.RequiredClass.HasFlag(RequiredClass.Assassin))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Assassins cannot use this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("刺客不能使用此物品.", ChatType.System);
                         return false;
                     }
                     break;
                 case MirClass.Archer:
                     if (!Item.Info.RequiredClass.HasFlag(RequiredClass.Archer))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Archers cannot use this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("弓箭手无法使用该物品.", ChatType.System);
                         return false;
                     }
                     break;
@@ -1722,14 +1722,14 @@ namespace Client.MirControls
                 case RequiredType.MaxAC:
                     if (MapObject.User.MaxAC < Item.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough AC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的物防.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxMAC:
                     if (MapObject.User.MaxMAC < Item.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough MAC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的魔防.", ChatType.System);
                         return false;
                     }
                     break;
@@ -1757,42 +1757,42 @@ namespace Client.MirControls
                 case RequiredType.MaxLevel:
                     if (MapObject.User.Level > Item.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You have exceeded the maximum level.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您已超出最高级别.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinAC:
                     if (MapObject.User.MinAC < Item.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base AC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的基础物防.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinMAC:
                     if (MapObject.User.MinMAC < Item.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base MAC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的基本魔防.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinDC:
                     if (MapObject.User.MinDC < Item.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base DC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的基本攻击.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinMC:
                     if (MapObject.User.MinMC < Item.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base MC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的基础魔攻.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinSC:
                     if (MapObject.User.MinSC < Item.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base SC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的基础道术.", ChatType.System);
                         return false;
                     }
                     break;
@@ -1807,7 +1807,7 @@ namespace Client.MirControls
                 case ItemType.Reins:
                     if (MapObject.User.Equipment[(int)EquipmentSlot.Mount] == null)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have a mount equipped.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有装备坐骑.", ChatType.System);
                         return false;
                     }
                     break;
@@ -1818,7 +1818,7 @@ namespace Client.MirControls
                 case ItemType.Reel:
                     if (MapObject.User.Equipment[(int)EquipmentSlot.Weapon] == null || !MapObject.User.Equipment[(int)EquipmentSlot.Weapon].Info.IsFishingRod)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have a fishing rod equipped.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有装备钓鱼竿.", ChatType.System);
                         return false;
                     }
                     break;
@@ -1855,35 +1855,35 @@ namespace Client.MirControls
                 case MirClass.Warrior:
                     if (!i.Info.RequiredClass.HasFlag(RequiredClass.Warrior))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Warriors cannot use this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("战士不能使用该物品.", ChatType.System);
                         return false;
                     }
                     break;
                 case MirClass.Wizard:
                     if (!i.Info.RequiredClass.HasFlag(RequiredClass.Wizard))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Wizards cannot use this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("法师不能使用该物品.", ChatType.System);
                         return false;
                     }
                     break;
                 case MirClass.Taoist:
                     if (!i.Info.RequiredClass.HasFlag(RequiredClass.Taoist))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Taoists cannot use this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("道士不能使用该物品.", ChatType.System);
                         return false;
                     }
                     break;
                 case MirClass.Assassin:
                     if (!i.Info.RequiredClass.HasFlag(RequiredClass.Assassin))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Assassins cannot use this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("刺客不能使用该物品.", ChatType.System);
                         return false;
                     }
                     break;
                 case MirClass.Archer:
                     if (!i.Info.RequiredClass.HasFlag(RequiredClass.Archer))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Archers cannot use this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("弓箭手不能使用该物品.", ChatType.System);
                         return false;
                     }
                     break;
@@ -1901,14 +1901,14 @@ namespace Client.MirControls
                 case RequiredType.MaxAC:
                     if (MapObject.User.MaxAC < i.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough AC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的物防.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxMAC:
                     if (MapObject.User.MaxMAC < i.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough MAC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的魔防.", ChatType.System);
                         return false;
                     }
                     break;
@@ -1936,42 +1936,42 @@ namespace Client.MirControls
                 case RequiredType.MaxLevel:
                     if (MapObject.User.Level > i.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You have exceeded the maximum level.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您已超出最高级别.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinAC:
                     if (MapObject.User.MinAC < i.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base AC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的基础物防.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinMAC:
                     if (MapObject.User.MinMAC < i.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base MAC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的基础魔防.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinDC:
                     if (MapObject.User.MinDC < i.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base DC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的基础攻击.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinMC:
                     if (MapObject.User.MinMC < i.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base MC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的基础魔攻.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinSC:
                     if (MapObject.User.MinSC < i.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base SC.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("您没有足够的基础道术.", ChatType.System);
                         return false;
                     }
                     break;
@@ -1989,7 +1989,7 @@ namespace Client.MirControls
             {
                 if (i.Weight - (Item != null ? Item.Weight : 0) + MapObject.User.CurrentWearWeight > MapObject.User.MaxWearWeight)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("It is too heavy to wear.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("太重了，无法穿戴.", ChatType.System);
                     return false;
                 }
             }
