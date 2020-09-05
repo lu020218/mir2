@@ -8788,6 +8788,7 @@ namespace Client.MirScenes
             //Render Death, 
 
             LightSetting setting = Lights == LightSetting.Normal ? GameScene.Scene.Lights : Lights;
+            setting = LightSetting.Day;//免蜡
             if (setting != LightSetting.Day)
                 DrawLights(setting);
 
