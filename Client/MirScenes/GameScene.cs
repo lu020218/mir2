@@ -39,6 +39,7 @@ namespace Client.MirScenes
 
         public MapControl MapControl;
         public MainDialog MainDialog;
+        public MenuBarDialog MenuBar;
         public ChatDialog ChatDialog;
         public ChatControlBar ChatControl;
         public InventoryDialog InventoryDialog;
@@ -71,6 +72,12 @@ namespace Client.MirScenes
         public GuestTradeDialog GuestTradeDialog;
 
         public CustomPanel1 CustomPanel1;
+        public PersonalPanel PersonalPanel;
+        public PlayContentPanel PlayContentPanel;
+        public SocialPanel SocialPanel;
+        public SettingPanel SettingPanel;
+
+        public SelObjDialog SelObjDialog;
 
         //public SkillBarDialog SkillBarDialog;
         public List<SkillBarDialog> SkillBarDialogs = new List<SkillBarDialog>();
@@ -180,6 +187,7 @@ namespace Client.MirScenes
             KeyDown += GameScene_KeyDown;
 
             MainDialog = new MainDialog { Parent = this };
+            MenuBar = new MenuBarDialog { Parent = this };
             ChatDialog = new ChatDialog { Parent = this };
             ChatControl = new ChatControlBar { Parent = this };
             InventoryDialog = new InventoryDialog { Parent = this };
@@ -215,6 +223,11 @@ namespace Client.MirScenes
             GuestTradeDialog = new GuestTradeDialog { Parent = this, Visible = false };
 
             CustomPanel1 = new CustomPanel1(this) { Visible = false };
+            PersonalPanel = new PersonalPanel(this) { Visible = false };
+            PlayContentPanel = new PlayContentPanel(this) { Visible = false };
+            SocialPanel = new SocialPanel(this) { Visible = false };
+            SettingPanel = new SettingPanel(this) { Visible = false };
+            SelObjDialog = new SelObjDialog { Parent = this };
 
             SkillBarDialog Bar1 = new SkillBarDialog { Parent = this, Visible = false, BarIndex = 0 };
             SkillBarDialogs.Add(Bar1);
@@ -9387,7 +9400,71 @@ namespace Client.MirScenes
                 case MouseButtons.Left:
                     {
                         AutoRun = false;
-                        if (MapObject.MouseObject == null) return;
+                        if (MapObject.MouseObject == null) { GameScene.Scene.SelObjDialog.Visible = false; return; }
+
+                        GameScene.Scene.SelObjDialog.Visible = true;
+                        GameScene.Scene.SelObjDialog.NameLabel.Text = MapObject.MouseObject.Name;
+                        GameScene.Scene.SelObjDialog.NameLabel.Location = new Point(((GameScene.Scene.SelObjDialog.Size.Width + 53) / 2) - (GameScene.Scene.SelObjDialog.NameLabel.Size.Width / 2), 5);
+
+                        switch (MapObject.MouseObject.Race)
+                        {
+                            case ObjectType.None:
+                                //ClassImage.Index = 100;// + offSet * 5;
+                                GameScene.Scene.SelObjDialog.JobLabel.Text = "???";
+                                GameScene.Scene.SelObjDialog.LevelLabel.Text = "???";
+                                break;
+                            case ObjectType.Player:
+                                //ClassImage.Index = 101;// + offSet * 5;
+                                PlayerObject player = MapObject.MouseObject as PlayerObject;
+                                if (player != null)
+                                {
+                                    GameScene.Scene.SelObjDialog.JobLabel.Text = player.Class.ToString();
+                                    GameScene.Scene.SelObjDialog.LevelLabel.Text = player.Level.ToString();
+                                }
+                                break;
+                            case ObjectType.Item:
+                                //ClassImage.Index = 102;// + offSet * 5;
+                                GameScene.Scene.SelObjDialog.JobLabel.Text = "物品";
+                                GameScene.Scene.SelObjDialog.LevelLabel.Text = "???";
+                                break;
+                            case ObjectType.Merchant:
+                                //ClassImage.Index = 103;// + offSet * 5;
+                                NPCObject npctemp = MapObject.MouseObject as NPCObject;
+                                if (npctemp != null)
+                                {
+                                    GameScene.Scene.SelObjDialog.JobLabel.Text = "商家";
+                                    GameScene.Scene.SelObjDialog.LevelLabel.Text = "???";
+                                }
+                                break;
+                            case ObjectType.Spell:
+                                //ClassImage.Index = 104;// + offSet * 5;
+                                GameScene.Scene.SelObjDialog.JobLabel.Text = "法术";
+                                GameScene.Scene.SelObjDialog.LevelLabel.Text = "???";
+                                break;
+                            case ObjectType.Monster:
+                                //ClassImage.Index = 104;// + offSet * 5;
+                                MonsterObject monster = MapObject.MouseObject as MonsterObject;
+                                if (monster != null)
+                                {
+                                    GameScene.Scene.SelObjDialog.JobLabel.Text = "怪物";
+                                    GameScene.Scene.SelObjDialog.LevelLabel.Text = "";
+                                }
+                                break;
+                            case ObjectType.Deco:
+                                //ClassImage.Index = 104;// + offSet * 5;
+                                GameScene.Scene.SelObjDialog.JobLabel.Text = "装饰";
+                                GameScene.Scene.SelObjDialog.LevelLabel.Text = "???";
+                                break;
+                            case ObjectType.Creature:
+                                //ClassImage.Index = 104;// + offSet * 5;
+                                GameScene.Scene.SelObjDialog.JobLabel.Text = "生物";
+                                GameScene.Scene.SelObjDialog.LevelLabel.Text = "???";
+                                break;
+                        }
+
+                        GameScene.Scene.SelObjDialog.JobLabel.Location = new Point((56 / 2) - (GameScene.Scene.SelObjDialog.JobLabel.Size.Width / 2), 40);
+                        GameScene.Scene.SelObjDialog.LevelLabel.Location = new Point((56 / 2) - (GameScene.Scene.SelObjDialog.LevelLabel.Size.Width / 2), 5);
+
                         NPCObject npc = MapObject.MouseObject as NPCObject;
                         if (npc != null)
                         {
