@@ -26,12 +26,12 @@ namespace Client.MirScenes.Dialogs
 {
     public sealed class SelObjDialog : MirImageControl
     {
-        public MirLabel NameLabel, JobLabel, LevelLabel;
+        public MirLabel NameLabel, JobLabel, LevelLabel, HealthLabel;
         public MirImageControl HPImageControl, AvatarImageControl;
 
         public SelObjDialog()
         {
-            Index = 2475;
+            Index = 2478;
             Library = Libraries.Prguse;
             Location = new Point((Settings.ScreenWidth / 2) - (300 / 2), 0);
             Visible = false;
@@ -63,26 +63,47 @@ namespace Client.MirScenes.Dialogs
 
             HPImageControl = new MirImageControl
             {
-                Index = 2476,
+                Index = 2479,
                 Library = Libraries.Prguse,
-                Location = new Point((300 / 2) - (237 / 2), 50),
+                Location = new Point(60, 35),
                 Parent = this,
-                DrawImage = true,
+                DrawImage = false,
                 NotControl = true,
                 Visible = true
             };
             HPImageControl.BeforeDraw += HPImageControl_BeforeDraw;
+
+            HealthLabel = new MirLabel
+            {
+                AutoSize = true,
+                DrawFormat = TextFormatFlags.HorizontalCenter,
+                Location = new Point(((300 + 53) / 2) - (237 / 2), 40),
+                Parent = this,
+            };
         }
 
         private void HPImageControl_BeforeDraw(object sender, EventArgs e)
         {
-            if (HPImageControl.Library == null) return;
+            if (HPImageControl.Library == null || MapObject.TargetObject == null) return;
 
-            int percent = MapObject.MouseObject == null ? 1 : (int)(MapObject.MouseObject.PercentHealth / 100F);
+            double percent = 0;
+            if (MapObject.TargetObject is MonsterObject)
+            {
+                MonsterObject monster = MapObject.TargetObject as MonsterObject;
+                percent = monster.PercentHealth / 100F;
+            }
+            
             if (percent > 1) percent = 1;
             if (percent <= 0) percent = 0;
 
-            HPImageControl.Library.Draw(2477, new Rectangle(0, 0, (int)(32 * percent / 100F), HPImageControl.Size.Height), HPImageControl.DisplayLocation, Color.White, false);
+            HPImageControl.Library.Draw(2479, new Rectangle(0, 0, (int)(237 * percent), HPImageControl.Size.Height), HPImageControl.DisplayLocation, Color.White, false);
+        }
+
+        public void Process()
+        {
+            if (MapObject.TargetObject == null) return;
+
+            HealthLabel.Text = MapObject.TargetObject.PercentHealth.ToString();
         }
     }
 
@@ -707,7 +728,7 @@ namespace Client.MirScenes.Dialogs
             HealthOrb = new MirControl
             {
                 Parent = this,
-                Location = new Point(((Settings.ScreenWidth / 2) - 80), 110 - 80),
+                Location = new Point(((Settings.ScreenWidth / 2) - 42), 31),
                 NotControl = true,
             };
 
@@ -716,7 +737,7 @@ namespace Client.MirScenes.Dialogs
             HealthLabel = new MirLabel
             {
                 AutoSize = true,
-                Location = new Point(47, 40),
+                Location = new Point(12, 40),
                 Parent = HealthOrb
             };
             //HealthLabel.SizeChanged += Label_SizeChanged;
@@ -724,7 +745,7 @@ namespace Client.MirScenes.Dialogs
             ManaLabel = new MirLabel
             {
                 AutoSize = true,
-                Location = new Point(80, 40),
+                Location = new Point(43, 40),
                 Parent = HealthOrb
             };
             //ManaLabel.SizeChanged += Label_SizeChanged;
@@ -983,19 +1004,6 @@ namespace Client.MirScenes.Dialogs
             if (!(sender is MirLabel l)) return;
 
             l.Location = new Point(50 - (l.Size.Width / 2), l.Location.Y);
-        }
-
-        private void Label_BeforeDraw(object sender, EventArgs e)
-        {
-            bool hpOnly = false;
-
-            if (HPOnly)
-            {
-                hpOnly = true;
-            }
-
-            //Rectangle r = new Rectangle(0, 80 - height, hpOnly ? 84 : 42, height);
-            //Libraries.Prguse.Draw(orbImage, r, new Point(((Settings.ScreenWidth / 2) - (hpOnly ? r.Width / 2 : r.Width)), HealthOrb.DisplayLocation.Y + 101 - height), Color.White, false);
         }
 
         private void HealthOrb_BeforeDraw(object sender, EventArgs e)
@@ -2415,7 +2423,7 @@ namespace Client.MirScenes.Dialogs
 
         public BeltDialog()
         {
-            Index = 2474;
+            Index = 2477;
             Library = Libraries.Prguse;
             //Movable = true;
             Sort = true;
@@ -2423,7 +2431,7 @@ namespace Client.MirScenes.Dialogs
             //Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Settings.ScreenHeight - 150);
             Location = new Point(GameScene.Scene.MainDialog.Location.X + (GameScene.Scene.MainDialog.Size.Width / 2) - 332, Settings.ScreenHeight - 90);
 
-            BeforeDraw += BeltPanel_BeforeDraw;
+            //BeforeDraw += BeltPanel_BeforeDraw;
 
             for (int i = 0; i < Key.Length; i++)
             {
@@ -2479,13 +2487,13 @@ namespace Client.MirScenes.Dialogs
 
         }
 
-        private void BeltPanel_BeforeDraw(object sender, EventArgs e)
-        {
-            //if Transparent return
+        //private void BeltPanel_BeforeDraw(object sender, EventArgs e)
+        //{
+        //    //if Transparent return
 
-            if (Libraries.Prguse != null)
-                Libraries.Prguse.Draw(Index + 1, DisplayLocation, Color.White, false, 0.5F);
-        }
+        //    if (Libraries.Prguse != null)
+        //        Libraries.Prguse.Draw(Index + 1, DisplayLocation, Color.White, false, 0.5F);
+        //}
 
         public void Flip()
         {
