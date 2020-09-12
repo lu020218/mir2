@@ -44,6 +44,7 @@ namespace Client.MirScenes
         public ChatControlBar ChatControl;
         public InventoryDialog InventoryDialog;
         public CharacterDialog CharacterDialog;
+        public SkillDialog SkillDialog;
         public CraftDialog CraftDialog;
         public StorageDialog StorageDialog;
         public BeltDialog BeltDialog;
@@ -194,6 +195,7 @@ namespace Client.MirScenes
             ChatControl = new ChatControlBar { Parent = this };
             InventoryDialog = new InventoryDialog { Parent = this };
             CharacterDialog = new CharacterDialog { Parent = this, Visible = false };
+            SkillDialog = new SkillDialog { Parent = this, Visible = false };
             BeltDialog = new BeltDialog { Parent = this };
             StorageDialog = new StorageDialog { Parent = this, Visible = false };
             CraftDialog = new CraftDialog { Parent = this, Visible = false };
@@ -389,12 +391,12 @@ namespace Client.MirScenes
                         break;
                     case KeybindOptions.Skills:
                     case KeybindOptions.Skills2:
-                        if (!CharacterDialog.Visible || !CharacterDialog.SkillPage.Visible)
+                        if (!SkillDialog.Visible)
                         {
-                            CharacterDialog.Show();
-                            CharacterDialog.ShowSkillPage();
+                            SkillDialog.Show();
+                            SkillDialog.ShowSkillPage();
                         }
-                        else CharacterDialog.Hide();
+                        else SkillDialog.Hide();
                         break;
                     case KeybindOptions.Creature:
                         if (!IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Show();
@@ -514,7 +516,7 @@ namespace Client.MirScenes
                         else BeltDialog.Hide();
                         break;
                     case KeybindOptions.BeltFlip:
-                        BeltDialog.Flip();
+                        //BeltDialog.Flip();
                         break;
                     case KeybindOptions.Pickup:
                         if (CMain.Time > PickUpTime)
