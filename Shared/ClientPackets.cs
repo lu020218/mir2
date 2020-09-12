@@ -517,6 +517,7 @@ namespace ClientPackets
         public MirGridType GridTo;
         public ulong UniqueID;
         public int To;
+        public ulong FromUniqueID;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -524,6 +525,7 @@ namespace ClientPackets
             GridTo = (MirGridType)reader.ReadByte();
             UniqueID = reader.ReadUInt64();
             To = reader.ReadInt32();
+            FromUniqueID = reader.ReadUInt64();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -531,6 +533,7 @@ namespace ClientPackets
             writer.Write((byte)GridTo);
             writer.Write(UniqueID);
             writer.Write(To);
+            writer.Write(FromUniqueID);
         }
     }
     public sealed class SplitItem : Packet
@@ -806,8 +809,8 @@ namespace ClientPackets
         {
             UniqueID = reader.ReadUInt64();
             Count = reader.ReadUInt32();
-            Slots = new int[reader.ReadInt32()];
 
+            Slots = new int[reader.ReadInt32()];
             for (int i = 0; i < Slots.Length; i++)
             {
                 Slots[i] = reader.ReadInt32();
@@ -817,8 +820,8 @@ namespace ClientPackets
         {
             writer.Write(UniqueID);
             writer.Write(Count);
-            writer.Write(Slots.Length);
 
+            writer.Write(Slots.Length);
             for (int i = 0; i < Slots.Length; i++)
             {
                 writer.Write(Slots[i]);
@@ -1478,6 +1481,7 @@ namespace ClientPackets
         public ulong UniqueID;
         public int To;
         public MirGridType GridTo;
+        public ulong ToUniqueID;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -1485,6 +1489,7 @@ namespace ClientPackets
             UniqueID = reader.ReadUInt64();
             To = reader.ReadInt32();
             GridTo = (MirGridType)reader.ReadByte();
+            ToUniqueID = reader.ReadUInt64();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -1492,6 +1497,7 @@ namespace ClientPackets
             writer.Write(UniqueID);
             writer.Write(To);
             writer.Write((byte)GridTo);
+            writer.Write(ToUniqueID);
         }
     }
 

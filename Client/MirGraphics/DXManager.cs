@@ -305,6 +305,7 @@ namespace Client.MirGraphics
             catch
             {
             }
+
             try
             {
                 MainSurface = Device.GetBackBuffer(0, 0);

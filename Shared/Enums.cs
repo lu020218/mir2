@@ -2,12 +2,14 @@
 
 public enum PanelType : byte
 {
-    Buy = 0,
+    Buy,
+    BuySub,
+    Craft,
+
     Sell,
     Repair,
     SpecialRepair,
     Consign,
-    Craft,
     Refine,
     CheckRefine,
     Disassemble,
@@ -195,7 +197,7 @@ public enum IntelligentCreatureType : byte
     MedicalRat = 14,
 }
 
-//3 blank mob files
+//2 blank mob files
 public enum Monster : ushort
 {
     Guard = 0,
@@ -876,7 +878,8 @@ public enum ItemType : byte
     Awakening = 35,
     Pets = 36,
     Transform = 37,
-    Deco = 38
+    Deco = 38,
+    Socket = 39
 }
 
 public enum MirGridType : byte
@@ -901,7 +904,7 @@ public enum MirGridType : byte
     Renting = 17,
     GuestRenting = 18,
     Craft = 19,
-    Tool = 20
+    Socket = 20
 }
 
 public enum EquipmentSlot : byte
