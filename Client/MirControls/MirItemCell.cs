@@ -2056,6 +2056,19 @@ namespace Client.MirControls
                 DisposeCountLabel();
         }
 
+        public override bool IsMouseOver(Point p)
+        {
+            if (GridType == MirGridType.Equipment && MapObject.User != null)
+            {
+                if (ItemSlot == (int)EquipmentSlot.Weapon || ItemSlot == (int)EquipmentSlot.Armour || ItemSlot == (int)EquipmentSlot.Helmet)
+                {
+                    return !Visible && (DisplayRectangle.Contains(p) || Moving || Modal);
+                }
+            }
+
+            return base.IsMouseOver(p);
+        }
+
         protected override void OnMouseEnter()
         {
             base.OnMouseEnter();
