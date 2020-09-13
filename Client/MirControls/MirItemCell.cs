@@ -485,7 +485,7 @@ namespace Client.MirControls
                         if (CMain.Time < GameScene.UseItemTime) return;
                         Network.Enqueue(new C.UseItem { UniqueID = Item.UniqueID });
 
-                        if (Item.Count == 1 && ItemSlot < 6)
+                        if (Item.Count == 1 && ItemSlot < 10)
                         {
                             for (int i = GameScene.User.BeltIdx; i < GameScene.User.Inventory.Length; i++)
                                 if (ItemArray[i] != null && ItemArray[i].Info == Item.Info)
@@ -677,7 +677,6 @@ namespace Client.MirControls
             for (int i = 0; i < GameScene.User.Inventory.Length; i++)
             {
                 MirItemCell itemCell = i < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[i] : GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx];
-
                 if (itemCell.Item == null) count++;
             }
 
@@ -690,7 +689,6 @@ namespace Client.MirControls
                 for (int i = 0; i < GameScene.User.Inventory.Length; i++)
                 {
                     MirItemCell itemCell = i < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[i] : GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx];
-
                     if (itemCell.Item == null || itemCell.Item.Info != Item.Info) continue;
 
                     item = itemCell.Item;
@@ -848,7 +846,7 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 6; x < ItemArray.Length; x++)
+                                for (int x = 10; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.RemoveItem { Grid = GridType, UniqueID = GameScene.SelectedCell.Item.UniqueID, To = x });
@@ -908,7 +906,7 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 6; x < ItemArray.Length; x++)
+                                for (int x = 10; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.TakeBackItem { From = GameScene.SelectedCell.ItemSlot, To = x });
@@ -986,7 +984,7 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 6; x < ItemArray.Length; x++)
+                                for (int x = 10; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.RetrieveTradeItem { From = GameScene.SelectedCell.ItemSlot, To = x });
@@ -1059,7 +1057,7 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 6; x < ItemArray.Length; x++)
+                                for (int x = 10; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.RetrieveRefineItem { From = GameScene.SelectedCell.ItemSlot, To = x });
@@ -1722,7 +1720,7 @@ namespace Client.MirControls
         {
             if (Item == null) return false;
 
-            switch (MapObject.User.Gender)
+            switch (MapObject.User.Gender)//性别
             {
                 case MirGender.Male:
                     if (!Item.Info.RequiredGender.HasFlag(RequiredGender.Male))
@@ -1740,7 +1738,7 @@ namespace Client.MirControls
                     break;
             }
 
-            switch (MapObject.User.Class)
+            switch (MapObject.User.Class)//职业
             {
                 case MirClass.Warrior:
                     if (!Item.Info.RequiredClass.HasFlag(RequiredClass.Warrior))

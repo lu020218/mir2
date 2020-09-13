@@ -1933,10 +1933,8 @@ namespace Client.MirScenes.Dialogs
 
         public ChatControlBar()
         {
-            //Index = Settings.Resolution != 800 ? 2034 : 2035;
             Index = 2034;
             Library = Libraries.Prguse;
-            //Location = new Point(GameScene.Scene.Location.X + 230, Settings.ScreenHeight - 112);
             Location = new Point(GameScene.Scene.Location.X + 10, Settings.ScreenHeight - 195);
 
             SizeButton = new MirButton
@@ -1946,7 +1944,6 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 2059,
                 Library = Libraries.Prguse,
                 Parent = this,
-                //Location = new Point(Settings.Resolution != 800 ? 574 : 350, 1),
                 Location = new Point(440, 1),
                 Visible = true,
                 Sound = SoundList.ButtonA,
@@ -1957,7 +1954,6 @@ namespace Client.MirScenes.Dialogs
                 GameScene.Scene.ChatDialog.ChangeSize();
                 Location = new Point(Location.X, GameScene.Scene.ChatDialog.DisplayRectangle.Top - Size.Height);
                 if (GameScene.Scene.BeltDialog.Index == 1932)
-                    //GameScene.Scene.BeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
                     GameScene.Scene.BeltDialog.Location = new Point(GameScene.Scene.Location.X + 230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
             };
 
@@ -1968,7 +1964,6 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 2062,
                 Library = Libraries.Prguse,
                 Parent = this,
-                //Location = new Point(Settings.Resolution != 800 ? 596 : 372, 1),
                 Location = new Point(463, 1),
                 Sound = SoundList.ButtonA,
                 Hint = GameLanguage.ChatSettings
@@ -1979,9 +1974,6 @@ namespace Client.MirScenes.Dialogs
                     GameScene.Scene.ChatOptionDialog.Hide();
                 else
                     GameScene.Scene.ChatOptionDialog.Show();
-
-                //GameScene.Scene.ChatDialog.Transparent = !GameScene.Scene.ChatDialog.Transparent;
-                //GameScene.Scene.ChatDialog.UpdateBackground();
             };
 
             NormalButton = new MirButton
@@ -2197,11 +2189,12 @@ namespace Client.MirScenes.Dialogs
         public MirItemCell[] QuestGrid;
 
         public MirButton CloseButton, ItemButton, ItemButton2, QuestButton, AddButton;
+        public MirButton SortButton, SplitButton;
         public MirLabel GoldLabel, WeightLabel;
 
         public InventoryDialog()
         {
-            Index = 196;
+            Index = 824;
             Library = Libraries.Title;
             Movable = true;
             Sort = true;
@@ -2211,11 +2204,35 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 24,
                 Library = Libraries.Prguse,
-                Location = new Point(182, 217),
+                Location = new Point(182, 238),
                 Parent = this,
                 DrawImage = false,
                 NotControl = true,
             };
+
+            SortButton = new MirButton
+            {
+                Index = 825,
+                HoverIndex = 826,
+                PressedIndex = 827,
+                Library = Libraries.Title,
+                Location = new Point(313 - 48 - 5, 207),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            SortButton.Click += SortButton_Click;
+
+            SplitButton = new MirButton
+            {
+                Index = 828,
+                HoverIndex = 829,
+                PressedIndex = 830,
+                Library = Libraries.Title,
+                Location = new Point(313 - (48 * 2) - 10, 207),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            //SplitButton.Click += Button_Click;
 
             ItemButton = new MirButton
             {
@@ -2264,7 +2281,7 @@ namespace Client.MirScenes.Dialogs
             };
             AddButton.Click += (o1, e) =>
             {
-                int openLevel = (GameScene.User.Inventory.Length - 46) / 4;
+                int openLevel = (GameScene.User.Inventory.Length - 50) / 4;
                 int openGold = (1000000 + openLevel * 1000000);
                 MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ExtraSlots4, openGold), MirMessageBoxButtons.OKCancel);
 
@@ -2290,7 +2307,7 @@ namespace Client.MirScenes.Dialogs
             GoldLabel = new MirLabel
             {
                 Parent = this,
-                Location = new Point(40, 212),
+                Location = new Point(40, 235),
                 Size = new Size(111, 14),
                 Sound = SoundList.Gold,
             };
@@ -2310,14 +2327,14 @@ namespace Client.MirScenes.Dialogs
                     int idx = 8 * y + x;
                     Grid[idx] = new MirItemCell
                     {
-                        ItemSlot = 6 + idx,
+                        ItemSlot = 10 + idx,
                         GridType = MirGridType.Inventory,
                         Library = Libraries.Items,
                         Parent = this,
                         Location = new Point(x * 36 + 9 + x, y % 5 * 32 + 37 + y % 5),
                     };
 
-                    if (idx >= 40)
+                    if (idx >= 50)
                         Grid[idx].Visible = false;
                 }
             }
@@ -2343,7 +2360,7 @@ namespace Client.MirScenes.Dialogs
             WeightLabel = new MirLabel
             {
                 Parent = this,
-                Location = new Point(268, 212),
+                Location = new Point(268, 235),
                 Size = new Size(26, 14)
             };
             WeightBar.BeforeDraw += WeightBar_BeforeDraw;
@@ -2364,9 +2381,46 @@ namespace Client.MirScenes.Dialogs
 
         }
 
+        void SortButton_Click(object sender, EventArgs e)
+        {
+            MirItemCell[] tempCells;
+            int tmpIdx = 0;
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i].Visible == false)
+                {
+                    break;
+                }
+
+                if (Grid[i].Item != null)
+                {
+                    continue;
+                }
+
+                tempCells.Append(Grid[i]);
+            }
+
+            for (int i = Grid.Length - 1; i >= 0; i--)
+            {
+                if (Grid[i].Visible == false || Grid[i].Item == null)
+                {
+                    continue;
+                }
+                for (int j = tempCells.Length - 1; j >= 0; j--)
+                {
+
+                }
+                if (Grid[i].ItemSlot != tempCells[i].ItemSlot)
+                {
+                    Network.Enqueue(new C.MoveItem { Grid = MirGridType.Inventory, From = tempCells[i].ItemSlot, To = Grid[i].ItemSlot });
+                    Grid[i].Locked = true;
+                }
+            }
+        }
+
         void Button_Click(object sender, EventArgs e)
         {
-            if (GameScene.User.Inventory.Length == 46 && sender == ItemButton2)
+            if (GameScene.User.Inventory.Length == 50 && sender == ItemButton2)
             {
                 MirMessageBox messageBox = new MirMessageBox(GameLanguage.ExtraSlots8, MirMessageBoxButtons.OKCancel);
 
@@ -2394,7 +2448,7 @@ namespace Client.MirScenes.Dialogs
                     ItemButton2.Index = 738;
                     QuestButton.Index = 198;
 
-                    if (GameScene.User.Inventory.Length == 46)
+                    if (GameScene.User.Inventory.Length == 50)
                     {
                         ItemButton2.Index = 169;
                     }
@@ -2437,14 +2491,14 @@ namespace Client.MirScenes.Dialogs
             ItemButton2.Index = 738;
             QuestButton.Index = 739;
 
-            if (GameScene.User.Inventory.Length == 46)
+            if (GameScene.User.Inventory.Length == 50)
             {
                 ItemButton2.Index = 169;
             }
 
             foreach (var grid in Grid)
             {
-                if (grid.ItemSlot < 46)
+                if (grid.ItemSlot < 50)
                     grid.Visible = true;
                 else
                     grid.Visible = false;
@@ -2461,13 +2515,13 @@ namespace Client.MirScenes.Dialogs
 
             foreach (var grid in Grid)
             {
-                if (grid.ItemSlot < 46 || grid.ItemSlot >= GameScene.User.Inventory.Length)
+                if (grid.ItemSlot < 50 || grid.ItemSlot >= GameScene.User.Inventory.Length)
                     grid.Visible = false;
                 else
                     grid.Visible = true;
             }
 
-            int openLevel = (GameScene.User.Inventory.Length - 46) / 4;
+            int openLevel = (GameScene.User.Inventory.Length - 50) / 4;
             for (int i = 0; i < LockBar.Length; i++)
             {
                 LockBar[i].Visible = (i < openLevel) ? false : true;
