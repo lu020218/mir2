@@ -19379,21 +19379,21 @@ namespace Server.MirObjects
 
             if (!accept)
             {
-                MarriageProposal.ReceiveChat(string.Format("{0} has refused to marry you.", Info.Name), ChatType.System);
+                MarriageProposal.ReceiveChat(string.Format("{0}拒绝与您结婚。", Info.Name), ChatType.System);
                 MarriageProposal = null;
                 return;
             }
 
             if (Info.Married != 0)
             {
-                ReceiveChat("You are already married.", ChatType.System);
+                ReceiveChat("你已经结婚了", ChatType.System);
                 MarriageProposal = null;
                 return;
             }
 
             if (MarriageProposal.Info.Married != 0)
             {
-                ReceiveChat(string.Format("{0} is already married.", MarriageProposal.Info.Name), ChatType.System);
+                ReceiveChat(string.Format("{0}已经结婚。", MarriageProposal.Info.Name), ChatType.System);
                 MarriageProposal = null;
                 return;
             }
@@ -19408,8 +19408,8 @@ namespace Server.MirObjects
             GetRelationship(false);
             MarriageProposal.GetRelationship(false);
 
-            MarriageProposal.ReceiveChat(string.Format("Congratulations, you're now married to {0}.", Info.Name), ChatType.System);
-            ReceiveChat(String.Format("Congratulations, you're now married to {0}.", MarriageProposal.Info.Name), ChatType.System);
+            MarriageProposal.ReceiveChat(string.Format("恭喜，您已结婚{0}。", Info.Name), ChatType.System);
+            ReceiveChat(String.Format("恭喜，您已结婚{0}。", MarriageProposal.Info.Name), ChatType.System);
 
             MarriageProposal = null;
         }
@@ -19419,7 +19419,7 @@ namespace Server.MirObjects
 
             if (Info.Married == 0)
             {
-                ReceiveChat(string.Format("You're not married."), ChatType.System);
+                ReceiveChat(string.Format("你还没结婚"), ChatType.System);
                 return;
             }
 
@@ -19440,7 +19440,7 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(string.Format("You need to be facing your lover to divorce them."), ChatType.System);
+                ReceiveChat(string.Format("您需要面对爱人与他们离婚。"), ChatType.System);
                 return;
             }
 
@@ -19448,31 +19448,31 @@ namespace Server.MirObjects
             {
                 if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
                 {
-                    ReceiveChat(string.Format("You need to be facing your lover to divorce them."), ChatType.System);
+                    ReceiveChat(string.Format("您需要面对爱人与他们离婚。"), ChatType.System);
                     return;
                 }
 
                 if (player == this)
                 {
-                    ReceiveChat("You can't divorce yourself.", ChatType.System);
+                    ReceiveChat("你不能离婚。", ChatType.System);
                     return;
                 }
 
                 if (player.Dead || Dead)
                 {
-                    ReceiveChat("You can't divorce a dead player.", ChatType.System); //GOT TO HERE, NEED TO KEEP WORKING ON IT.
+                    ReceiveChat("你不能与一个死去的玩家离婚。", ChatType.System); //GOT TO HERE, NEED TO KEEP WORKING ON IT.
                     return;
                 }
 
                 if (player.Info.Index != Info.Married)
                 {
-                    ReceiveChat(string.Format("You aren't married to {0}", player.Info.Name), ChatType.System);
+                    ReceiveChat(string.Format("您尚未与{0}结婚", player.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (!Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) || player.CurrentMap != CurrentMap)
                 {
-                    ReceiveChat(string.Format("{0} is not within divorce range.", player.Info.Name), ChatType.System);
+                    ReceiveChat(string.Format("{0}不在离婚范围内。", player.Info.Name), ChatType.System);
                     return;
                 }
 
@@ -19481,7 +19481,7 @@ namespace Server.MirObjects
             }
             else
             {
-                ReceiveChat(string.Format("You need to be facing your lover to divorce them."), ChatType.System);
+                ReceiveChat(string.Format("您需要面对爱人与他们离婚。"), ChatType.System);
                 return;
             }
         }
@@ -19496,14 +19496,14 @@ namespace Server.MirObjects
 
             if (!accept)
             {
-                DivorceProposal.ReceiveChat(string.Format("{0} has refused to divorce you.", Info.Name), ChatType.System);
+                DivorceProposal.ReceiveChat(string.Format("{0}拒绝与您离婚。", Info.Name), ChatType.System);
                 DivorceProposal = null;
                 return;
             }
 
             if (Info.Married == 0)
             {
-                ReceiveChat("You aren't married so you don't require a divorce.", ChatType.System);
+                ReceiveChat("您尚未结婚，因此不需要离婚。", ChatType.System);
                 DivorceProposal = null;
                 return;
             }
@@ -19532,8 +19532,8 @@ namespace Server.MirObjects
             }
 
 
-            DivorceProposal.ReceiveChat(string.Format("You're now divorced", Info.Name), ChatType.System);
-            ReceiveChat("You're now divorced", ChatType.System);
+            DivorceProposal.ReceiveChat(string.Format("你现在离婚了", Info.Name), ChatType.System);
+            ReceiveChat("你现在离婚了", ChatType.System);
 
             GetRelationship(false);
             DivorceProposal.GetRelationship(false);
@@ -19560,7 +19560,7 @@ namespace Server.MirObjects
                     if (CheckOnline)
                     {
                         player.GetRelationship(false);
-                        player.ReceiveChat(String.Format("{0} has come online.", Info.Name), ChatType.System);
+                        player.ReceiveChat(String.Format("{0}已上线。", Info.Name), ChatType.System);
                     }
                 }
             }
@@ -19572,7 +19572,7 @@ namespace Server.MirObjects
 
             if (Lover == null)
             {
-                MessageQueue.EnqueueDebugging(Name + " is married but couldn't find marriage ID " + Info.Married);
+                MessageQueue.EnqueueDebugging(Name + " 已婚，但找不到结婚证 " + Info.Married);
                 return;
             }
 
@@ -19580,7 +19580,7 @@ namespace Server.MirObjects
             if (player != null)
             {
                 player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
-                player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
+                player.ReceiveChat(String.Format("{0}已离线。", Info.Name), ChatType.System);
             }
         }
 
@@ -19601,10 +19601,10 @@ namespace Server.MirObjects
             if (Force)
             {
                 Info.MentorDate = DateTime.Now.AddDays(Settings.MentorLength);
-                ReceiveChat(String.Format("You now have a {0} day cooldown on starting a new Mentorship.", Settings.MentorLength), ChatType.System);
+                ReceiveChat(String.Format("现在，您有{0}天的冷却时间来开始新的师徒关系。", Settings.MentorLength), ChatType.System);
             }
             else
-                ReceiveChat("Your Mentorship has now expired.", ChatType.System);
+                ReceiveChat("您的师徒关系已过期。", ChatType.System);
 
             if (Info.isMentor)
             {
@@ -19645,7 +19645,7 @@ namespace Server.MirObjects
 
             if (Player != null)
             {
-                Player.ReceiveChat("Your Mentorship has now expired.", ChatType.System);
+                Player.ReceiveChat("您的师徒已过期。", ChatType.System);
                 Player.GetMentor(false);
                 if (Mentor.isMentor && Mentor.MentorExp > 0)
                 {
@@ -19673,19 +19673,19 @@ namespace Server.MirObjects
 
             if (Info.Mentor != 0)
             {
-                ReceiveChat("You already have a Mentor.", ChatType.System);
+                ReceiveChat("您已经有一位师傅。", ChatType.System);
                 return;
             }
 
             if (Info.Name == Name)
             {
-                ReceiveChat("You can't Mentor yourself.", ChatType.System);
+                ReceiveChat("你不能拜自己为师。", ChatType.System);
                 return;
             }
 
             if (Info.MentorDate > DateTime.Now)
             {
-                ReceiveChat("You can't start a new Mentorship yet.", ChatType.System);
+                ReceiveChat("您还不能开始新的师徒关系。", ChatType.System);
                 return;
             }
 
@@ -19693,7 +19693,7 @@ namespace Server.MirObjects
 
             if (Mentor == null)
             {
-                ReceiveChat(String.Format("Can't find anybody by the name {0}.", Name), ChatType.System);
+                ReceiveChat(String.Format("找不到名称为{0}的人。", Name), ChatType.System);
             }
             else
             {
@@ -19701,36 +19701,36 @@ namespace Server.MirObjects
 
                 if (!Mentor.AllowMentor)
                 {
-                    ReceiveChat(String.Format("{0} is not allowing Mentor requests.", Mentor.Info.Name), ChatType.System);
+                    ReceiveChat(String.Format("{0}不允许拜师请求。", Mentor.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (Mentor.Info.MentorDate > DateTime.Now)
                 {
-                    ReceiveChat(String.Format("{0} can't start another Mentorship yet.", Mentor.Info.Name), ChatType.System);
+                    ReceiveChat(String.Format("{0}还无法开始其他师徒关系。", Mentor.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (Mentor.Info.Mentor != 0)
                 {
-                    ReceiveChat(String.Format("{0} is already a Mentor.", Mentor.Info.Name), ChatType.System);
+                    ReceiveChat(String.Format("{0}已经是一名师傅。", Mentor.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (Info.Class != Mentor.Info.Class)
                 {
-                    ReceiveChat("You can only be mentored by someone of the same Class.", ChatType.System);
+                    ReceiveChat("您只能拜同职业的为师傅。", ChatType.System);
                     return;
                 }
                 if ((Info.Level + Settings.MentorLevelGap) > Mentor.Level)
                 {
-                    ReceiveChat(String.Format("You can only be mentored by someone who at least {0} level(s) above you.", Settings.MentorLevelGap), ChatType.System);
+                    ReceiveChat(String.Format("您只能由至少比您高{0}级的人来指导。", Settings.MentorLevelGap), ChatType.System);
                     return;
                 }
 
                 Mentor.MentorRequest = this;
                 Mentor.Enqueue(new S.MentorRequest { Name = Info.Name, Level = Info.Level });
-                ReceiveChat(String.Format("Request Sent."), ChatType.System);
+                ReceiveChat(String.Format("请求已发送。"), ChatType.System);
             }
 
         }
@@ -19745,14 +19745,14 @@ namespace Server.MirObjects
 
             if (!accept)
             {
-                MentorRequest.ReceiveChat(string.Format("{0} has refused to Mentor you.", Info.Name), ChatType.System);
+                MentorRequest.ReceiveChat(string.Format("{0}已拒绝指导您。", Info.Name), ChatType.System);
                 MentorRequest = null;
                 return;
             }
 
             if (Info.Mentor != 0)
             {
-                ReceiveChat("You already have a Student.", ChatType.System);
+                ReceiveChat("您已经有一个学生。", ChatType.System);
                 return;
             }
 
@@ -19761,24 +19761,24 @@ namespace Server.MirObjects
 
             if (Student == null)
             {
-                ReceiveChat(String.Format("{0} is no longer online.", Student.Name), ChatType.System);
+                ReceiveChat(String.Format("{0}不在线。", Student.Name), ChatType.System);
                 return;
             }
             else
             {
                 if (Student.Info.Mentor != 0)
                 {
-                    ReceiveChat(String.Format("{0} already has a Mentor.", Student.Info.Name), ChatType.System);
+                    ReceiveChat(String.Format("{0}已经有一个师傅。", Student.Info.Name), ChatType.System);
                     return;
                 }
                 if (Info.Class != Student.Info.Class)
                 {
-                    ReceiveChat("You can only mentor someone of the same Class.", ChatType.System);
+                    ReceiveChat("您只能指导同职业的玩家。", ChatType.System);
                     return;
                 }
                 if ((Info.Level - Settings.MentorLevelGap) < Student.Level)
                 {
-                    ReceiveChat(String.Format("You can only mentor someone who at least {0} level(s) below you.", Settings.MentorLevelGap), ChatType.System);
+                    ReceiveChat(String.Format("您只能指导低于您至少{0}级的人。", Settings.MentorLevelGap), ChatType.System);
                     return;
                 }
 
@@ -19789,8 +19789,8 @@ namespace Server.MirObjects
                 Student.Info.MentorDate = DateTime.Now;
                 Info.MentorDate = DateTime.Now;
 
-                ReceiveChat(String.Format("You're now the Mentor of {0}.", Student.Info.Name), ChatType.System);
-                Student.ReceiveChat(String.Format("You're now being Mentored by {0}.", Info.Name), ChatType.System);
+                ReceiveChat(String.Format("您现在是{0}的师傅。", Student.Info.Name), ChatType.System);
+                Student.ReceiveChat(String.Format("您正在接受{0}的指导。", Info.Name), ChatType.System);
                 GetMentor(false);
                 Student.GetMentor(false);
             }
@@ -19816,7 +19816,7 @@ namespace Server.MirObjects
                     if (CheckOnline)
                     {
                         player.GetMentor(false);
-                        player.ReceiveChat(String.Format("{0} has come online.", Info.Name), ChatType.System);
+                        player.ReceiveChat(String.Format("{0}已上线。", Info.Name), ChatType.System);
                     }
                 }
             }
@@ -19830,7 +19830,7 @@ namespace Server.MirObjects
 
             if (Mentor == null)
             {
-                MessageQueue.EnqueueDebugging(Name + " is mentored but couldn't find mentor ID " + Info.Mentor);
+                MessageQueue.EnqueueDebugging(Name + " 拜师但找不到师傅ID " + Info.Mentor);
                 return;
             }
 
@@ -19844,7 +19844,7 @@ namespace Server.MirObjects
             if (player != null)
             {
                 player.Enqueue(new S.MentorUpdate { Name = Info.Name, Level = Info.Level, Online = false, MenteeEXP = Mentor.MentorExp });
-                player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
+                player.ReceiveChat(String.Format("{0}已离线。", Info.Name), ChatType.System);
             }
         }
 
@@ -19900,8 +19900,8 @@ namespace Server.MirObjects
 
             if (Product == null)
             {
-                ReceiveChat("You're trying to buy an item that isn't in the shop.", ChatType.System);
-                MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy Something that doesn't exist.");
+                ReceiveChat("您正在尝试购买不在商店中的商品。", ChatType.System);
+                MessageQueue.EnqueueDebugging(Info.Name + " 正在尝试购买不存在的东西。");
                 return;
             }
 
@@ -19925,7 +19925,7 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    ReceiveChat("You're trying to buy more of this item than is available.", ChatType.System);
+                    ReceiveChat("您正在尝试购买的物品多于可用物品。", ChatType.System);
                     GameShopStock(Product);
                     MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock isn't available.");
                     return;
@@ -19955,7 +19955,7 @@ namespace Server.MirObjects
                     else
                     {
 
-                        ReceiveChat("You don't have enough currency for your purchase.", ChatType.System);
+                        ReceiveChat("您没有足够的货币购买商品。", ChatType.System);
                         MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - not enough currency.");
                         return;
                     }
@@ -20047,14 +20047,14 @@ namespace Server.MirObjects
             MailInfo mail = new MailInfo(Info.Index)
                 {
                     MailID = ++Envir.NextMailID,
-                    Sender = "Gameshop",
-                    Message = "Thank you for your purchase from the Gameshop. Your item(s) are enclosed.",
+                    Sender = "游戏商城",
+                    Message = "感谢您从游戏商城购买。 随附您的物品。",
                     Items = mailItems,
                 };
                 mail.Send();
 
             MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Purchases Sent!");
-            ReceiveChat("Your purchases have been sent to your Mailbox.", ChatType.Hint);
+            ReceiveChat("您的购买已发送到您的邮箱。", ChatType.Hint);
         }
             
         public void GetGameShop()
@@ -20475,7 +20475,7 @@ namespace Server.MirObjects
             if (ItemRentalFeeLocked && ItemRentalPartner.ItemRentalItemLocked)
                 ItemRentalPartner.Enqueue(new S.CanConfirmItemRental());
             else if (ItemRentalFeeLocked && !ItemRentalPartner.ItemRentalItemLocked)
-                ItemRentalPartner.ReceiveChat($"{Name} has locked in the rental fee.", ChatType.System);
+                ItemRentalPartner.ReceiveChat($"{Name}已锁定租金。", ChatType.System);
 
             Enqueue(p);
         }
@@ -20496,7 +20496,7 @@ namespace Server.MirObjects
             if (ItemRentalItemLocked && ItemRentalPartner.ItemRentalFeeLocked)
                 Enqueue(new S.CanConfirmItemRental());
             else if (ItemRentalItemLocked && !ItemRentalPartner.ItemRentalFeeLocked)
-                ItemRentalPartner.ReceiveChat($"{Name} has locked in the rental item.", ChatType.System);
+                ItemRentalPartner.ReceiveChat($"{Name}已锁定出租项目。", ChatType.System);
 
 
             Enqueue(p);
@@ -20560,10 +20560,10 @@ namespace Server.MirObjects
 
             if (!ItemRentalPartner.CanGainItem(ItemRentalDepositedItem))
             {
-                ReceiveChat($"{ItemRentalPartner.Name} is unable to receive the item.", ChatType.System);
+                ReceiveChat($"{ItemRentalPartner.Name}无法接收该物品。", ChatType.System);
                 Enqueue(new S.CancelItemRental());
 
-                ItemRentalPartner.ReceiveChat("Unable to accept the rental item.", ChatType.System);
+                ItemRentalPartner.ReceiveChat("无法接受租赁物品。", ChatType.System);
                 ItemRentalPartner.Enqueue(new S.CancelItemRental());
 
                 return;
@@ -20571,10 +20571,10 @@ namespace Server.MirObjects
 
             if (!CanGainGold(ItemRentalPartner.ItemRentalFeeAmount))
             {
-                ReceiveChat("You are unable to receive any more gold.", ChatType.System);
+                ReceiveChat("您再也收不到金币了。", ChatType.System);
                 Enqueue(new S.CancelItemRental());
 
-                ItemRentalPartner.ReceiveChat($"{Name} is unable to receive any more gold.", ChatType.System);
+                ItemRentalPartner.ReceiveChat($"{Name}无法再收到金币。", ChatType.System);
                 ItemRentalPartner.Enqueue(new S.CancelItemRental());
 
                 return;
@@ -20602,10 +20602,10 @@ namespace Server.MirObjects
 
             ItemRentalPartner.GainItem(item);
             ItemRentalPartner.Info.HasRentedItem = true;
-            ItemRentalPartner.ReceiveChat($"You have rented {item.FriendlyName} from {Name} until {item.RentalInformation.ExpiryDate}", ChatType.System);
+            ItemRentalPartner.ReceiveChat($"您从{Name}租借了{item.FriendlyName}，直到{item.RentalInformation.ExpiryDate}", ChatType.System);
 
             GainGold(ItemRentalPartner.ItemRentalFeeAmount);
-            ReceiveChat($"Received {ItemRentalPartner.ItemRentalFeeAmount} gold for item rental.", ChatType.System);
+            ReceiveChat($"收到了{ItemRentalPartner.ItemRentalFeeAmount}金币用于物品租赁。", ChatType.System);
             ItemRentalPartner.ItemRentalFeeAmount = 0;
 
             Enqueue(new S.ConfirmItemRental());
