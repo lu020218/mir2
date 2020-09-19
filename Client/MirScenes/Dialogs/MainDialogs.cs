@@ -21,6 +21,7 @@ using Effect = Client.MirObjects.Effect;
 using Client.MirScenes.Dialogs;
 using System.Drawing.Imaging;
 using SlimDX.Direct3D11;
+using System.CodeDom;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -702,162 +703,6 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -443 : -265),
                 Visible = false
             };
-
-            //LeftCap = new MirImageControl
-            //{
-            //    Index = 12,
-            //    Library = Libraries.Prguse,
-            //    Location = new Point(-67, this.Size.Height - 96),
-            //    Parent = this,
-            //    Visible = false
-            //};
-            //RightCap = new MirImageControl
-            //{
-            //    Index = 13,
-            //    Library = Libraries.Prguse,
-            //    Location = new Point(1024, this.Size.Height - 104),
-            //    Parent = this,
-            //    Visible = false
-            //};
-
-            //if (Settings.Resolution > 1024)
-            //{
-            //    LeftCap.Visible = true;
-            //    RightCap.Visible = true;
-            //}
-
-            //InventoryButton = new MirButton
-            //{
-            //    HoverIndex = 1904,
-            //    Index = 1903,
-            //    Library = Libraries.Prguse,
-            //    Location = new Point(this.Size.Width - 96, 76),
-            //    Parent = this,
-            //    PressedIndex = 1905,
-            //    Sound = SoundList.ButtonA,
-            //    Hint = string.Format(GameLanguage.Inventory, CMain.InputKeys.GetKey(KeybindOptions.Inventory))
-            //};
-            //InventoryButton.Click += (o, e) =>
-            //{
-            //    if (GameScene.Scene.InventoryDialog.Visible)
-            //        GameScene.Scene.InventoryDialog.Hide();
-            //    else
-            //        GameScene.Scene.InventoryDialog.Show();
-            //};
-
-            //CharacterButton = new MirButton
-            //{
-            //    HoverIndex = 1901,
-            //    Index = 1900,
-            //    Library = Libraries.Prguse,
-            //    Location = new Point(this.Size.Width - 119, 76),
-            //    Parent = this,
-            //    PressedIndex = 1902,
-            //    Sound = SoundList.ButtonA,
-            //    Hint = string.Format(GameLanguage.Character, CMain.InputKeys.GetKey(KeybindOptions.Equipment))
-            //};
-            //CharacterButton.Click += (o, e) =>
-            //{
-            //    if (GameScene.Scene.CharacterDialog.Visible && GameScene.Scene.CharacterDialog.CharacterPage.Visible)
-            //        GameScene.Scene.CharacterDialog.Hide();
-            //    else
-            //    {
-            //        GameScene.Scene.CharacterDialog.Show();
-            //        GameScene.Scene.CharacterDialog.ShowCharacterPage();
-            //    }
-            //};
-
-            //SkillButton = new MirButton
-            //{
-            //    HoverIndex = 1907,
-            //    Index = 1906,
-            //    Library = Libraries.Prguse,
-            //    Location = new Point(this.Size.Width - 73, 76),
-            //    Parent = this,
-            //    PressedIndex = 1908,
-            //    Sound = SoundList.ButtonA,
-            //    Hint = string.Format(GameLanguage.Skills, CMain.InputKeys.GetKey(KeybindOptions.Skills))
-            //};
-            //SkillButton.Click += (o, e) =>
-            //{
-            //    if (GameScene.Scene.CharacterDialog.Visible && GameScene.Scene.CharacterDialog.SkillPage.Visible)
-            //        GameScene.Scene.CharacterDialog.Hide();
-            //    else
-            //    {
-            //        GameScene.Scene.CharacterDialog.Show();
-            //        GameScene.Scene.CharacterDialog.ShowSkillPage();
-            //    }
-            //};
-
-            //QuestButton = new MirButton
-            //{
-            //    HoverIndex = 1910,
-            //    Index = 1909,
-            //    Library = Libraries.Prguse,
-            //    Location = new Point(this.Size.Width - 50, 76),
-            //    Parent = this,
-            //    PressedIndex = 1911,
-            //    Sound = SoundList.ButtonA,
-            //    Hint = string.Format(GameLanguage.Quests, CMain.InputKeys.GetKey(KeybindOptions.Quests))
-            //};
-            //QuestButton.Click += (o, e) =>
-            //{
-            //    if (!GameScene.Scene.QuestLogDialog.Visible)
-            //        GameScene.Scene.QuestLogDialog.Show();
-            //    else GameScene.Scene.QuestLogDialog.Hide();
-            //};
-
-            //OptionButton = new MirButton
-            //{
-            //    HoverIndex = 1913,
-            //    Index = 1912,
-            //    Library = Libraries.Prguse,
-            //    Location = new Point(this.Size.Width - 27, 76),
-            //    Parent = this,
-            //    PressedIndex = 1914,
-            //    Sound = SoundList.ButtonA,
-            //    Hint = string.Format(GameLanguage.Options, CMain.InputKeys.GetKey(KeybindOptions.Options))
-            //};
-            //OptionButton.Click += (o, e) =>
-            //{
-            //    if (!GameScene.Scene.OptionDialog.Visible)
-            //        GameScene.Scene.OptionDialog.Show();
-            //    else GameScene.Scene.OptionDialog.Hide();
-            //};
-
-            //MenuButton = new MirButton
-            //{
-            //    HoverIndex = 1961,
-            //    Index = 1960,
-            //    Library = Libraries.Prguse,
-            //    Location = new Point(this.Size.Width - 55, 35),
-            //    Parent = this,
-            //    PressedIndex = 1962,
-            //    Sound = SoundList.ButtonC,
-            //    Hint = GameLanguage.Menu
-            //};
-            //MenuButton.Click += (o, e) =>
-            //{
-            //    if (!GameScene.Scene.MenuDialog.Visible) GameScene.Scene.MenuDialog.Show();
-            //    else GameScene.Scene.MenuDialog.Hide();
-            //};
-
-            //GameShopButton = new MirButton
-            //{
-            //    HoverIndex = 827,
-            //    Index = 826,
-            //    Library = Libraries.Prguse,
-            //    Location = new Point(this.Size.Width - 105, 35),
-            //    Parent = this,
-            //    PressedIndex = 828,
-            //    Sound = SoundList.ButtonC,
-            //    Hint = string.Format(GameLanguage.GameShop, CMain.InputKeys.GetKey(KeybindOptions.GameShop))
-            //};
-            //GameShopButton.Click += (o, e) =>
-            //{
-            //    if (!GameScene.Scene.GameShopDialog.Visible) GameScene.Scene.GameShopDialog.Show();
-            //    else GameScene.Scene.GameShopDialog.Hide();
-            //};
 
             HealthOrb = new MirControl
             {
@@ -2383,38 +2228,10 @@ namespace Client.MirScenes.Dialogs
 
         void SortButton_Click(object sender, EventArgs e)
         {
-            MirItemCell[] tempCells;
-            int tmpIdx = 0;
+            Network.Enqueue(new C.SortInventory { Order = true });
             for (int i = 0; i < Grid.Length; i++)
             {
-                if (Grid[i].Visible == false)
-                {
-                    break;
-                }
-
-                if (Grid[i].Item != null)
-                {
-                    continue;
-                }
-
-                tempCells.Append(Grid[i]);
-            }
-
-            for (int i = Grid.Length - 1; i >= 0; i--)
-            {
-                if (Grid[i].Visible == false || Grid[i].Item == null)
-                {
-                    continue;
-                }
-                for (int j = tempCells.Length - 1; j >= 0; j--)
-                {
-
-                }
-                if (Grid[i].ItemSlot != tempCells[i].ItemSlot)
-                {
-                    Network.Enqueue(new C.MoveItem { Grid = MirGridType.Inventory, From = tempCells[i].ItemSlot, To = Grid[i].ItemSlot });
-                    Grid[i].Locked = true;
-                }
+                Grid[i].Locked = true;
             }
         }
 

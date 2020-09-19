@@ -626,6 +626,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ConfirmItemRental:
                     ConfirmItemRental();
                     break;
+                case (short)ClientPacketIds.SortInventory:
+                    SortInventory((C.SortInventory)p);
+                    break;
                 default:
                     MessageQueue.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -915,6 +918,13 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.Chat(p.Message, p.LinkedItems);
+        }
+
+        private void SortInventory(C.SortInventory p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.SortInventory(true);
         }
 
         private void MoveItem(C.MoveItem p)

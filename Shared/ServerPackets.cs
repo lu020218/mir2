@@ -967,6 +967,56 @@ namespace ServerPackets
             Item.Save(writer);
         }
     }
+    public sealed class SortInventory : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.SortInventory; }
+        }
+
+        public uint ObjectID;
+        public bool Success;
+        public bool Order;
+        public UserItem[] InventoryArray;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Success = reader.ReadBoolean();
+            Order = reader.ReadBoolean();
+
+            if (reader.ReadBoolean())
+            {
+                InventoryArray = new UserItem[reader.ReadInt32()];
+                for (int i = 0; i < InventoryArray.Length; i++)
+                {
+                    if (!reader.ReadBoolean()) continue;
+                    InventoryArray[i] = new UserItem(reader);
+                    InventoryArray[i].Info = new ItemInfo(reader);
+                }
+            }
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Success);
+            writer.Write(Order);
+
+            writer.Write(InventoryArray != null);
+            if (InventoryArray != null)
+            {
+                writer.Write(InventoryArray.Length);
+                for (int i = 0; i < InventoryArray.Length; i++)
+                {
+                    writer.Write(InventoryArray[i] != null);
+                    if (InventoryArray[i] == null) continue;
+
+                    InventoryArray[i].Save(writer);
+                    InventoryArray[i].Info.Save(writer);
+                }
+
+            }
+        }
+    }
     public sealed class MoveItem : Packet
     {
         public override short Index

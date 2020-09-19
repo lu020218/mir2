@@ -265,6 +265,21 @@ namespace ClientPackets
                 LinkedItems[i].Save(writer);
         }
     }
+    public sealed class SortInventory : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.SortInventory; } }
+
+        public bool Order;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Order = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Order);
+        }
+    }
     public sealed class MoveItem : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.MoveItem; } }

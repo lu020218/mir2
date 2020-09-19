@@ -1749,6 +1749,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.UpdateNotice:
                     ShowNotice((S.UpdateNotice)p);
                     break;
+                case (short)ServerPacketIds.SortInventory:
+                    SortInventory((S.SortInventory)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -1879,6 +1882,20 @@ namespace Client.MirScenes
                 return;
             }
 
+        }
+        private void SortInventory(S.SortInventory p)
+        {
+            if (!p.Success) return;
+
+            for (int i = 0; i < InventoryDialog.Grid.Length && i < p.InventoryArray.Length; i++)
+            {
+                if (InventoryDialog.Grid == null) return;
+                InventoryDialog.Grid[i].Locked = false;
+                InventoryDialog.Grid[i].Item = p.InventoryArray[i + 10];
+            }
+
+            User.RefreshStats();
+            CharacterDuraPanel.GetCharacterDura();
         }
         private void MoveItem(S.MoveItem p)
         {
@@ -2966,7 +2983,7 @@ namespace Client.MirScenes
                 switch (item.Info.Type)
                 {
                     case ItemType.Mount:
-                        ChatDialog.ReceiveChat(string.Format("{0} is no longer loyal to you.", item.Info.FriendlyName), ChatType.System);
+                        ChatDialog.ReceiveChat(string.Format("{0}不再忠于您。", item.Info.FriendlyName), ChatType.System);
                         break;
                     default:
                         ChatDialog.ReceiveChat(string.Format("{0}'s dura has dropped to 0.", item.Info.FriendlyName), ChatType.System);

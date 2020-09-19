@@ -797,7 +797,7 @@ namespace Client.MirControls
                                         return;
                                     }
 
-                                    if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
+                                    if (GameScene.SelectedCell.Item.Info.IsCanMerge(Item.Info) && Item.Count < Item.Info.StackSize)
                                     {
                                         //Merge
                                         Network.Enqueue(new C.MergeItem { GridFrom = GameScene.SelectedCell.GridType, GridTo = GridType, IDFrom = GameScene.SelectedCell.Item.UniqueID, IDTo = Item.UniqueID });
@@ -1077,7 +1077,7 @@ namespace Client.MirControls
                             case MirGridType.Renting:
                                 if (GameScene.User.RentalItemLocked)
                                 {
-                                    GameScene.Scene.ChatDialog.ReceiveChat("Unable to remove locked item, cancel item rental and try again.", ChatType.System);
+                                    GameScene.Scene.ChatDialog.ReceiveChat("无法删除锁定的物品，取消租借的物品，然后重试。", ChatType.System);
                                     GameScene.SelectedCell = null;
                                     return;
                                 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientPackets;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using C = ClientPackets;
@@ -344,6 +345,8 @@ public abstract class Packet
                 return new C.ItemRentalLockItem();
             case (short)ClientPacketIds.ConfirmItemRental:
                 return new C.ConfirmItemRental();
+            case (short)ClientPacketIds.SortInventory:
+                return new C.SortInventory();
             default:
                 return null;
         }
@@ -837,6 +840,8 @@ public abstract class Packet
                 return new S.ExpireTimer();
             case (short)ServerPacketIds.UpdateNotice:
                 return new S.UpdateNotice();
+            case (short)ServerPacketIds.SortInventory:
+                return new S.SortInventory();
             default:
                 return null;
         }

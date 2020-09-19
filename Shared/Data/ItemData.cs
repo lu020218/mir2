@@ -50,7 +50,7 @@ public class ItemInfo
 
     public byte Slots;
 
-
+    
     public bool IsConsumable
     {
         get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform || Type == ItemType.Script; }
@@ -72,6 +72,18 @@ public class ItemInfo
         }
     }
 
+    public bool IsCanMerge(ItemInfo info2)
+    {
+        if (IsConsumable && info2.IsConsumable)
+        {
+            if (Type == info2.Type)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     public ItemInfo()
     {
     }

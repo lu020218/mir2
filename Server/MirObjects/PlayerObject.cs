@@ -11037,6 +11037,37 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
+
+        public void SortInventory(bool order)
+        {
+            S.SortInventory p = new S.SortInventory {
+                Order = order,
+                Success = false,
+                ObjectID = ObjectID,
+                InventoryArray = Info.Inventory
+            };
+
+            UserItem[] array = p.InventoryArray;
+            for (int i = 10; i < array.Length; i++)
+            {
+                for (int j = i + 1; j < array.Length; j++)
+                {
+                    if (array[j] == null) continue;
+
+                    if (array[i] == null || array[i].Info.Type < array[j].Info.Type)
+                    {
+                        UserItem t = array[j];
+                        array[j] = array[i];
+                        array[i] = t;
+                    }
+                }
+            }
+
+            p.Success = true;
+            Enqueue(p);
+            return;
+        }
+
         public void MoveItem(MirGridType grid, int from, int to)
         {
             S.MoveItem p = new S.MoveItem { Grid = grid, From = from, To = to, Success = false };
@@ -11407,11 +11438,11 @@ namespace Server.MirObjects
                         case 2: //MysteryWater
                             if (UnlockCurse)
                             {
-                                ReceiveChat("You can already unequip a cursed item.", ChatType.Hint);
+                                ReceiveChat("您已经可以取消装备被诅咒的物品。", ChatType.Hint);
                                 Enqueue(p);
                                 return;
                             }
-                            ReceiveChat("You can now unequip a cursed item.", ChatType.Hint);
+                            ReceiveChat("您现在可以取消装备被诅咒的物品。", ChatType.Hint);
                             UnlockCurse = true;
                             break;
                         case 3: //Buff
@@ -20127,13 +20158,13 @@ namespace Server.MirObjects
         {
             if (Dead)
             {
-                ReceiveChat("Unable to rent items while dead.", ChatType.System);
+                ReceiveChat("死亡时无法租借物品。", ChatType.System);
                 return;
             }
 
             if (ItemRentalPartner != null)
             {
-                ReceiveChat("You are already renting an item to another player.", ChatType.System);
+                ReceiveChat("您已经在向其他玩家租借物品。", ChatType.System);
                 return;
             }
 
@@ -20154,51 +20185,51 @@ namespace Server.MirObjects
 
             if (targetPlayer == null)
             {
-                ReceiveChat("Face the player you would like to rent an item too.", ChatType.System);
+                ReceiveChat("面对您也想租借物品的玩家。", ChatType.System);
                 return;
             }
 
             if (Info.RentedItems.Count >= 3)
             {
-                ReceiveChat("Unable to rent more than 3 items at a time.", ChatType.System);
+                ReceiveChat("一次不能租用3件以上。", ChatType.System);
                 return;
             }
 
             if (targetPlayer.Info.HasRentedItem)
             {
-                ReceiveChat($"{targetPlayer.Name} is unable to rent anymore items at this time.", ChatType.System);
+                ReceiveChat($"{targetPlayer.Name}目前无法租借任何物品。", ChatType.System);
                 return;
             }
 
             if (!Functions.FacingEachOther(Direction, CurrentLocation, targetPlayer.Direction,
                 targetPlayer.CurrentLocation))
             {
-                ReceiveChat("Face the player you would like to rent an item too.", ChatType.System);
+                ReceiveChat("面对您也想租借物品的玩家。", ChatType.System);
                 return;
             }
 
             if (targetPlayer == this)
             {
-                ReceiveChat("You are unable to rent items to yourself.", ChatType.System);
+                ReceiveChat("您无法将物品租给自己。", ChatType.System);
                 return;
             }
 
             if (targetPlayer.Dead)
             {
-                ReceiveChat($"Unable to rent items to {targetPlayer.Name} while dead.", ChatType.System);
+                ReceiveChat($"死亡时无法租借物品到{targetPlayer.Name}。", ChatType.System);
                 return;
             }
 
             if (!Functions.InRange(targetPlayer.CurrentLocation, CurrentLocation, Globals.DataRange)
                 || targetPlayer.CurrentMap != CurrentMap)
             {
-                ReceiveChat($"{targetPlayer.Name} is not within range.", ChatType.System);
+                ReceiveChat($"{targetPlayer.Name}不在范围内。", ChatType.System);
                 return;
             }
 
             if (targetPlayer.ItemRentalPartner != null)
             {
-                ReceiveChat($"{targetPlayer.Name} is currently busy, try again soon.", ChatType.System);
+                ReceiveChat($"{targetPlayer.Name}当前很忙，请稍后再试。", ChatType.System);
                 return;
             }
 
@@ -20272,21 +20303,21 @@ namespace Server.MirObjects
 
             if (item.RentalInformation?.RentalLocked == true)
             {
-                ReceiveChat($"Unable to rent {item.FriendlyName} until {item.RentalInformation.ExpiryDate}", ChatType.System);
+                ReceiveChat($"在{item.RentalInformation.ExpiryDate}之前无法租借{item.FriendlyName}", ChatType.System);
                 Enqueue(packet);
                 return;
             }
 
             if (item.Info.Bind.HasFlag(BindMode.UnableToRent))
             {
-                ReceiveChat($"Unable to rent {item.FriendlyName}", ChatType.System);
+                ReceiveChat($"无法租借{item.FriendlyName}", ChatType.System);
                 Enqueue(packet);
                 return;
             }
 
             if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.UnableToRent))
             {
-                ReceiveChat($"Unable to rent {item.FriendlyName} as it belongs to {item.RentalInformation.OwnerName}", ChatType.System);
+                ReceiveChat($"无法租用{item.FriendlyName}，因为它属于{item.RentalInformation.OwnerName}", ChatType.System);
                 Enqueue(packet);
                 return;
             }
@@ -20332,7 +20363,7 @@ namespace Server.MirObjects
 
             if (item.Weight + CurrentBagWeight > MaxBagWeight)
             {
-                ReceiveChat("Item is too heavy to retrieve.", ChatType.System);
+                ReceiveChat("物品太重而无法取回。", ChatType.System);
                 Enqueue(packet);
                 return;
             }

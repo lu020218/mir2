@@ -1567,7 +1567,8 @@ public enum ServerPacketIds : short
     PlaySound,
     SetTimer,
     ExpireTimer,
-    UpdateNotice
+    UpdateNotice,
+    SortInventory,
 }
 
 public enum ClientPacketIds : short
@@ -1710,7 +1711,9 @@ public enum ClientPacketIds : short
     CancelItemRental,
     ItemRentalLockFee,
     ItemRentalLockItem,
-    ConfirmItemRental
+    ConfirmItemRental,
+
+    SortInventory
 }
 
 public enum ConquestType : byte
