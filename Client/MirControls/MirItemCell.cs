@@ -229,7 +229,7 @@ namespace Client.MirControls
 
                             if (GameScene.Scene.ChatDialog.ChatTextBox.Text.Length + text.Length > Globals.MaxChatLength)
                             {
-                                GameScene.Scene.ChatDialog.ReceiveChat("Unable to link item, message exceeds allowed length", ChatType.System);
+                                GameScene.Scene.ChatDialog.ReceiveChat("无法链接项目，消息超过了允许的长度", ChatType.System);
                                 return;
                             }
 
@@ -254,13 +254,13 @@ namespace Client.MirControls
                             {
                                 if (FreeSpace() == 0)
                                 {
-                                    GameScene.Scene.ChatDialog.ReceiveChat("No room to split stack.", ChatType.System);
+                                    GameScene.Scene.ChatDialog.ReceiveChat("没有空间可用于拆分物品", ChatType.System);
                                     return;
                                 }
 
                                 if (Item.Count > 1)
                                 {
-                                    MirAmountBox amountBox = new MirAmountBox("Split Amount:", Item.Image, Item.Count - 1);
+                                    MirAmountBox amountBox = new MirAmountBox("拆分金额:", Item.Image, Item.Count - 1);
 
                                     amountBox.OKButton.Click += (o, a) =>
                                     {
