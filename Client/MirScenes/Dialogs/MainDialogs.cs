@@ -689,7 +689,7 @@ namespace Client.MirScenes.Dialogs
 
         public MainDialog()
         {
-            Index = Settings.Resolution == 800 ? 0 : Settings.Resolution == 1024 ? 1 : 2;
+            Index = Settings.Resolution < 1280 ? 0 : Settings.Resolution < 1920 ? 1 : 2;
             Library = Libraries.Prguse;
             Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)), Settings.ScreenHeight - Size.Height);
             PixelDetect = true;
@@ -1078,8 +1078,7 @@ namespace Client.MirScenes.Dialogs
 
         public ChatDialog()
         {
-            //Index = Settings.Resolution != 800 ? 2221 : 2201;
-            Index = 2221;
+            Index = Settings.Resolution < 1920 ? 2201 : 2221;
             Library = Libraries.Prguse;
             Location = new Point(GameScene.Scene.Location.X + 10, Settings.ScreenHeight - 180);
             PixelDetect = true;
@@ -1093,8 +1092,7 @@ namespace Client.MirScenes.Dialogs
                 BackColour = Color.DarkGray,
                 ForeColour = Color.Black,
                 Parent = this,
-                //Size = new Size(Settings.Resolution != 800 ? 627 : 403, 13),
-                Size = new Size(495, 13),
+                Size = new Size(Settings.Resolution < 1920 ? 305 : 495, 13),
                 Location = new Point(1, 150),
                 MaxLength = Globals.MaxChatLength,
                 Visible = false,
@@ -1702,35 +1700,26 @@ namespace Client.MirScenes.Dialogs
             {
                 case 0:
                     LineCount = 11;
-                    //Index = Settings.Resolution != 800 ? 2221 : 2201;
-                    Index = 2221;
+                    Index = Settings.Resolution < 1920 ? 2201 : 2221;
                     CountBar.Index = 2012;
-                    //DownButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 39);
-                    //EndButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 45);
-                    DownButton.Location = new Point(490, 135);
-                    EndButton.Location = new Point(490, 140);
+                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 135);
+                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 140);
                     ChatTextBox.Location = new Point(1, 150);
                     break;
                 case 1:
                     LineCount = 22;
-                    //Index = Settings.Resolution != 800 ? 2224 : 2204;
-                    Index = 2224;
+                    Index = Settings.Resolution < 1920 ? 2204 : 2224;
                     CountBar.Index = 2013;
-                    //DownButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 39 + 48);
-                    //EndButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 45 + 48);
-                    DownButton.Location = new Point(490, 135 + 135);
-                    EndButton.Location = new Point(490, 140 + 135);
+                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 135 + 135);
+                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 140 + 135);
                     ChatTextBox.Location = new Point(1, 150 + 135);
                     break;
                 case 2:
                     LineCount = 33;
-                    //Index = Settings.Resolution != 800 ? 2227 : 2207;
-                    Index = 2227;
+                    Index = Settings.Resolution < 1920 ? 2207 : 2227;
                     CountBar.Index = 2014;
-                    //DownButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 39 + 96);
-                    //EndButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 45 + 96);
-                    DownButton.Location = new Point(490, 135 + 285);
-                    EndButton.Location = new Point(490, 140 + 285);
+                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 135 + 285);
+                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 140 + 285);
                     ChatTextBox.Location = new Point(1, 150 + 285);
                     break;
             }
@@ -1749,16 +1738,13 @@ namespace Client.MirScenes.Dialogs
             switch (WindowSize)
             {
                 case 0:
-                    //Index = Settings.Resolution != 800 ? 2221 : 2201;
-                    Index = 2221;
+                    Index = Settings.Resolution < 1920 ? 2201 : 2221;
                     break;
                 case 1:
-                    //Index = Settings.Resolution != 800 ? 2224 : 2204;
-                    Index = 2224;
+                    Index = Settings.Resolution < 1920 ? 2204 : 2224;
                     break;
                 case 2:
-                    //Index = Settings.Resolution != 800 ? 2227 : 2207;
-                    Index = 2227;
+                    Index = Settings.Resolution < 1920 ? 2207 : 2227;
                     break;
             }
 
@@ -1778,7 +1764,7 @@ namespace Client.MirScenes.Dialogs
 
         public ChatControlBar()
         {
-            Index = 2034;
+            Index = Settings.Resolution < 1920 ? 2035 : 2034;
             Library = Libraries.Prguse;
             Location = new Point(GameScene.Scene.Location.X + 10, Settings.ScreenHeight - 195);
 
@@ -2428,37 +2414,107 @@ namespace Client.MirScenes.Dialogs
 
         public BeltDialog()
         {
-            Index = 2477;
+            Index = Settings.Resolution < 1280 ? 2483 : Settings.Resolution < 1920 ? 2482 : 2477;
             Library = Libraries.Prguse;
             Movable = false;
             Sort = true;
             Visible = true;
-            Location = new Point(GameScene.Scene.MainDialog.Location.X + (GameScene.Scene.MainDialog.Size.Width / 2) - 332, Settings.ScreenHeight - 90);
-
-            for (int i = 0; i < Key.Length; i++)
+            if (Settings.Resolution < 1280)
             {
-                Key[i] = new MirLabel
-                {
-                    Parent = this,
-                    Size = new Size(26, 14),
-                    Location = i < 5 ? new Point(1 + i * 56, 2) : new Point(110 + i * 56, 2),
-                    Text = i == 9 ? "0" : (i + 1).ToString()
-                };
+                Location = new Point(GameScene.Scene.MainDialog.Location.X + (GameScene.Scene.MainDialog.Size.Width / 2) - 197, Settings.ScreenHeight - 90 - 87);
+            }
+            else if (Settings.Resolution < 1920)
+            {
+                Location = new Point(GameScene.Scene.MainDialog.Location.X + (GameScene.Scene.MainDialog.Size.Width / 2) - 290, Settings.ScreenHeight - 90);
+            }
+            else
+            {
+                Location = new Point(GameScene.Scene.MainDialog.Location.X + (GameScene.Scene.MainDialog.Size.Width / 2) - 332, Settings.ScreenHeight - 90);
             }
 
-            Grid = new MirItemCell[10];
-
-            for (int x = 0; x < 10; x++)
+            if (Settings.Resolution < 1280)
             {
-                Grid[x] = new MirItemCell
+                for (int i = 0; i < Key.Length; i++)
                 {
-                    ItemSlot = x,
-                    Size = new Size(37, 37),
-                    GridType = MirGridType.Inventory,
-                    Library = Libraries.Items,
-                    Parent = this,
-                    Location = x < 5 ? new Point(x * 56 + 4, 4) : new Point(x * 56 + 113, 4),
-                };
+                    Key[i] = new MirLabel
+                    {
+                        Parent = this,
+                        Size = new Size(26, 14),
+                        Location = i < 3 ? new Point(1 + i * 47, 2 + 87) : i < 6 ? new Point(109 + i * 47, 2 + 87) : new Point(i * 48 - 185, 2),
+                        Text = i == 9 ? "0" : (i + 1).ToString()
+                    };
+                }
+
+                Grid = new MirItemCell[10];
+
+                for (int x = 0; x < 10; x++)
+                {
+                    Grid[x] = new MirItemCell
+                    {
+                        ItemSlot = x,
+                        Size = new Size(37, 37),
+                        GridType = MirGridType.Inventory,
+                        Library = Libraries.Items,
+                        Parent = this,
+                        Location = x < 3 ? new Point(x * 47 + 4, 4 + 87) : x < 6 ? new Point(x * 47 + 112, 4 + 87) : new Point(x * 48 - 185, 4),
+                    };
+                }
+            }
+            else if (Settings.Resolution < 1920)
+            {
+                for (int i = 0; i < Key.Length; i++)
+                {
+                    Key[i] = new MirLabel
+                    {
+                        Parent = this,
+                        Size = new Size(26, 14),
+                        Location = i < 5 ? new Point(1 + i * 47, 2) : new Point(107 + i * 47, 2),
+                        Text = i == 9 ? "0" : (i + 1).ToString()
+                    };
+                }
+
+                Grid = new MirItemCell[10];
+
+                for (int x = 0; x < 10; x++)
+                {
+                    Grid[x] = new MirItemCell
+                    {
+                        ItemSlot = x,
+                        Size = new Size(37, 37),
+                        GridType = MirGridType.Inventory,
+                        Library = Libraries.Items,
+                        Parent = this,
+                        Location = x < 5 ? new Point(x * 47 + 4, 4) : new Point(x * 47 + 110, 4),
+                    };
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Key.Length; i++)
+                {
+                    Key[i] = new MirLabel
+                    {
+                        Parent = this,
+                        Size = new Size(26, 14),
+                        Location = i < 5 ? new Point(1 + i * 56, 2) : new Point(110 + i * 56, 2),
+                        Text = i == 9 ? "0" : (i + 1).ToString()
+                    };
+                }
+
+                Grid = new MirItemCell[10];
+
+                for (int x = 0; x < 10; x++)
+                {
+                    Grid[x] = new MirItemCell
+                    {
+                        ItemSlot = x,
+                        Size = new Size(37, 37),
+                        GridType = MirGridType.Inventory,
+                        Library = Libraries.Items,
+                        Parent = this,
+                        Location = x < 5 ? new Point(x * 56 + 4, 4) : new Point(x * 56 + 113, 4),
+                    };
+                }
             }
         }
 

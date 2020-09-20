@@ -109,6 +109,9 @@ namespace Server
             this.MagiclistBox = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.textBoxName = new System.Windows.Forms.TextBox();
             this.lblDamageExample = new System.Windows.Forms.Label();
             this.lblDamageExplained = new System.Windows.Forms.Label();
             this.lblSelected = new System.Windows.Forms.Label();
@@ -158,9 +161,6 @@ namespace Server
             this.label1 = new System.Windows.Forms.Label();
             this.lblBookValid = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxName = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -213,32 +213,58 @@ namespace Server
             this.tabPage1.Text = "Basics";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(42, 37);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(59, 12);
+            this.label24.TabIndex = 12;
+            this.label24.Text = "技能名称:";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(293, 17);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(35, 12);
+            this.label23.TabIndex = 11;
+            this.label23.Text = "书籍:";
+            // 
+            // textBoxName
+            // 
+            this.textBoxName.Location = new System.Drawing.Point(111, 32);
+            this.textBoxName.Name = "textBoxName";
+            this.textBoxName.Size = new System.Drawing.Size(112, 21);
+            this.textBoxName.TabIndex = 10;
+            this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
+            // 
             // lblDamageExample
             // 
             this.lblDamageExample.AutoSize = true;
-            this.lblDamageExample.Location = new System.Drawing.Point(11, 394);
+            this.lblDamageExample.Location = new System.Drawing.Point(33, 408);
             this.lblDamageExample.Name = "lblDamageExample";
-            this.lblDamageExample.Size = new System.Drawing.Size(89, 12);
+            this.lblDamageExample.Size = new System.Drawing.Size(53, 12);
             this.lblDamageExample.TabIndex = 0;
-            this.lblDamageExample.Text = "Damage example";
+            this.lblDamageExample.Text = "伤害示例";
             // 
             // lblDamageExplained
             // 
             this.lblDamageExplained.AutoSize = true;
-            this.lblDamageExplained.Location = new System.Drawing.Point(11, 366);
+            this.lblDamageExplained.Location = new System.Drawing.Point(33, 380);
             this.lblDamageExplained.Name = "lblDamageExplained";
-            this.lblDamageExplained.Size = new System.Drawing.Size(47, 12);
+            this.lblDamageExplained.Size = new System.Drawing.Size(35, 12);
             this.lblDamageExplained.TabIndex = 9;
-            this.lblDamageExplained.Text = "Damage:";
+            this.lblDamageExplained.Text = "伤害:";
             // 
             // lblSelected
             // 
             this.lblSelected.AutoSize = true;
-            this.lblSelected.Location = new System.Drawing.Point(20, 3);
+            this.lblSelected.Location = new System.Drawing.Point(42, 17);
             this.lblSelected.Name = "lblSelected";
-            this.lblSelected.Size = new System.Drawing.Size(101, 12);
+            this.lblSelected.Size = new System.Drawing.Size(65, 12);
             this.lblSelected.TabIndex = 8;
-            this.lblSelected.Text = "Selected skill: ";
+            this.lblSelected.Text = "所选技能: ";
             // 
             // panel4
             // 
@@ -256,14 +282,14 @@ namespace Server
             this.panel4.Controls.Add(this.label17);
             this.panel4.Controls.Add(this.label16);
             this.panel4.Controls.Add(this.label15);
-            this.panel4.Location = new System.Drawing.Point(14, 166);
+            this.panel4.Location = new System.Drawing.Point(36, 176);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(233, 191);
             this.panel4.TabIndex = 6;
             // 
             // txtDmgMultBoost
             // 
-            this.txtDmgMultBoost.Location = new System.Drawing.Point(168, 157);
+            this.txtDmgMultBoost.Location = new System.Drawing.Point(190, 171);
             this.txtDmgMultBoost.Name = "txtDmgMultBoost";
             this.txtDmgMultBoost.Size = new System.Drawing.Size(46, 21);
             this.txtDmgMultBoost.TabIndex = 14;
@@ -272,7 +298,7 @@ namespace Server
             // 
             // txtDmgMultBase
             // 
-            this.txtDmgMultBase.Location = new System.Drawing.Point(168, 131);
+            this.txtDmgMultBase.Location = new System.Drawing.Point(190, 145);
             this.txtDmgMultBase.Name = "txtDmgMultBase";
             this.txtDmgMultBase.Size = new System.Drawing.Size(46, 21);
             this.txtDmgMultBase.TabIndex = 13;
@@ -282,24 +308,24 @@ namespace Server
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(12, 160);
+            this.label21.Location = new System.Drawing.Point(34, 174);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(197, 12);
+            this.label21.Size = new System.Drawing.Size(131, 12);
             this.label21.TabIndex = 12;
-            this.label21.Text = "Damage multiplyer boost/skilllvl";
+            this.label21.Text = "伤害倍数提升/技能等级";
             // 
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(12, 134);
+            this.label22.Location = new System.Drawing.Point(34, 148);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(137, 12);
+            this.label22.Size = new System.Drawing.Size(77, 12);
             this.label22.TabIndex = 11;
-            this.label22.Text = "Damage multiplyer base";
+            this.label22.Text = "伤害倍数基础";
             // 
             // txtDmgBonusMax
             // 
-            this.txtDmgBonusMax.Location = new System.Drawing.Point(168, 105);
+            this.txtDmgBonusMax.Location = new System.Drawing.Point(190, 119);
             this.txtDmgBonusMax.Name = "txtDmgBonusMax";
             this.txtDmgBonusMax.Size = new System.Drawing.Size(46, 21);
             this.txtDmgBonusMax.TabIndex = 10;
@@ -308,7 +334,7 @@ namespace Server
             // 
             // txtDmgBonusMin
             // 
-            this.txtDmgBonusMin.Location = new System.Drawing.Point(168, 79);
+            this.txtDmgBonusMin.Location = new System.Drawing.Point(190, 93);
             this.txtDmgBonusMin.Name = "txtDmgBonusMin";
             this.txtDmgBonusMin.Size = new System.Drawing.Size(46, 21);
             this.txtDmgBonusMin.TabIndex = 9;
@@ -319,24 +345,24 @@ namespace Server
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(12, 108);
+            this.label18.Location = new System.Drawing.Point(34, 122);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(161, 12);
+            this.label18.Size = new System.Drawing.Size(101, 12);
             this.label18.TabIndex = 8;
-            this.label18.Text = "Maximum skill lvl 3 damage";
+            this.label18.Text = "最高3级技能伤害:";
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(12, 82);
+            this.label19.Location = new System.Drawing.Point(34, 96);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(167, 12);
+            this.label19.Size = new System.Drawing.Size(101, 12);
             this.label19.TabIndex = 7;
-            this.label19.Text = "Minimum skill lvl 3 damage:";
+            this.label19.Text = "最低3级技能伤害:";
             // 
             // txtDmgBaseMax
             // 
-            this.txtDmgBaseMax.Location = new System.Drawing.Point(168, 53);
+            this.txtDmgBaseMax.Location = new System.Drawing.Point(190, 67);
             this.txtDmgBaseMax.Name = "txtDmgBaseMax";
             this.txtDmgBaseMax.Size = new System.Drawing.Size(46, 21);
             this.txtDmgBaseMax.TabIndex = 6;
@@ -345,7 +371,7 @@ namespace Server
             // 
             // txtDmgBaseMin
             // 
-            this.txtDmgBaseMin.Location = new System.Drawing.Point(168, 27);
+            this.txtDmgBaseMin.Location = new System.Drawing.Point(190, 41);
             this.txtDmgBaseMin.Name = "txtDmgBaseMin";
             this.txtDmgBaseMin.Size = new System.Drawing.Size(46, 21);
             this.txtDmgBaseMin.TabIndex = 5;
@@ -355,29 +381,29 @@ namespace Server
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(12, 56);
+            this.label17.Location = new System.Drawing.Point(34, 70);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(119, 12);
+            this.label17.Size = new System.Drawing.Size(83, 12);
             this.label17.TabIndex = 2;
-            this.label17.Text = "Maximum base damage";
+            this.label17.Text = "最大基础伤害:";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(12, 30);
+            this.label16.Location = new System.Drawing.Point(34, 44);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(125, 12);
+            this.label16.Size = new System.Drawing.Size(83, 12);
             this.label16.TabIndex = 1;
-            this.label16.Text = "Minimum base damage:";
+            this.label16.Text = "最小基础伤害:";
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(5, 8);
+            this.label15.Location = new System.Drawing.Point(27, 22);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(95, 12);
+            this.label15.Size = new System.Drawing.Size(53, 12);
             this.label15.TabIndex = 0;
-            this.label15.Text = "Damage settings";
+            this.label15.Text = "伤害设定";
             // 
             // panel3
             // 
@@ -389,7 +415,7 @@ namespace Server
             this.panel3.Controls.Add(this.label14);
             this.panel3.Controls.Add(this.label13);
             this.panel3.Controls.Add(this.label12);
-            this.panel3.Location = new System.Drawing.Point(253, 166);
+            this.panel3.Location = new System.Drawing.Point(275, 176);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(216, 191);
             this.panel3.TabIndex = 5;
@@ -398,15 +424,15 @@ namespace Server
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(12, 77);
+            this.label20.Location = new System.Drawing.Point(34, 98);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(113, 12);
+            this.label20.Size = new System.Drawing.Size(95, 12);
             this.label20.TabIndex = 15;
-            this.label20.Text = "Range (0 No limit)";
+            this.label20.Text = "范围（0无限制）";
             // 
             // txtRange
             // 
-            this.txtRange.Location = new System.Drawing.Point(121, 74);
+            this.txtRange.Location = new System.Drawing.Point(143, 95);
             this.txtRange.Name = "txtRange";
             this.txtRange.Size = new System.Drawing.Size(79, 21);
             this.txtRange.TabIndex = 14;
@@ -414,7 +440,7 @@ namespace Server
             // 
             // txtDelayReduction
             // 
-            this.txtDelayReduction.Location = new System.Drawing.Point(121, 47);
+            this.txtDelayReduction.Location = new System.Drawing.Point(143, 68);
             this.txtDelayReduction.Name = "txtDelayReduction";
             this.txtDelayReduction.Size = new System.Drawing.Size(79, 21);
             this.txtDelayReduction.TabIndex = 13;
@@ -423,7 +449,7 @@ namespace Server
             // 
             // txtDelayBase
             // 
-            this.txtDelayBase.Location = new System.Drawing.Point(121, 22);
+            this.txtDelayBase.Location = new System.Drawing.Point(143, 43);
             this.txtDelayBase.Name = "txtDelayBase";
             this.txtDelayBase.Size = new System.Drawing.Size(79, 21);
             this.txtDelayBase.TabIndex = 12;
@@ -433,29 +459,29 @@ namespace Server
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(12, 50);
+            this.label14.Location = new System.Drawing.Point(34, 71);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(137, 12);
+            this.label14.Size = new System.Drawing.Size(83, 12);
             this.label14.TabIndex = 2;
-            this.label14.Text = "Decrease / skill level";
+            this.label14.Text = "降低/技能水平";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(12, 25);
+            this.label13.Location = new System.Drawing.Point(34, 46);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(65, 12);
+            this.label13.Size = new System.Drawing.Size(53, 12);
             this.label13.TabIndex = 1;
-            this.label13.Text = "Base delay";
+            this.label13.Text = "基本延迟";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(12, 8);
+            this.label12.Location = new System.Drawing.Point(34, 22);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(149, 12);
+            this.label12.Size = new System.Drawing.Size(137, 12);
             this.label12.TabIndex = 0;
-            this.label12.Text = "Delay (in milliseconds!)";
+            this.label12.Text = "延迟（以毫秒为单位！）";
             // 
             // panel2
             // 
@@ -465,14 +491,14 @@ namespace Server
             this.panel2.Controls.Add(this.label11);
             this.panel2.Controls.Add(this.label10);
             this.panel2.Controls.Add(this.label9);
-            this.panel2.Location = new System.Drawing.Point(253, 53);
+            this.panel2.Location = new System.Drawing.Point(275, 63);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(216, 107);
             this.panel2.TabIndex = 4;
             // 
             // txtMPIncrease
             // 
-            this.txtMPIncrease.Location = new System.Drawing.Point(135, 47);
+            this.txtMPIncrease.Location = new System.Drawing.Point(131, 66);
             this.txtMPIncrease.Name = "txtMPIncrease";
             this.txtMPIncrease.Size = new System.Drawing.Size(46, 21);
             this.txtMPIncrease.TabIndex = 12;
@@ -481,7 +507,7 @@ namespace Server
             // 
             // txtMPBase
             // 
-            this.txtMPBase.Location = new System.Drawing.Point(135, 22);
+            this.txtMPBase.Location = new System.Drawing.Point(131, 41);
             this.txtMPBase.Name = "txtMPBase";
             this.txtMPBase.Size = new System.Drawing.Size(46, 21);
             this.txtMPBase.TabIndex = 11;
@@ -491,29 +517,29 @@ namespace Server
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(12, 50);
+            this.label11.Location = new System.Drawing.Point(32, 70);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(137, 12);
+            this.label11.Size = new System.Drawing.Size(89, 12);
             this.label11.TabIndex = 2;
-            this.label11.Text = "MP increase each level";
+            this.label11.Text = "MP增加每个等级";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 25);
+            this.label10.Location = new System.Drawing.Point(56, 45);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(83, 12);
+            this.label10.Size = new System.Drawing.Size(65, 12);
             this.label10.TabIndex = 1;
-            this.label10.Text = "Base mp usage";
+            this.label10.Text = "基本mp消耗";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 6);
+            this.label9.Location = new System.Drawing.Point(34, 20);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(53, 12);
+            this.label9.Size = new System.Drawing.Size(41, 12);
             this.label9.TabIndex = 0;
-            this.label9.Text = "MP usage";
+            this.label9.Text = "MP消耗";
             // 
             // panel1
             // 
@@ -531,14 +557,14 @@ namespace Server
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(13, 53);
+            this.panel1.Location = new System.Drawing.Point(35, 63);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(234, 107);
             this.panel1.TabIndex = 3;
             // 
             // txtSkillLvl3Points
             // 
-            this.txtSkillLvl3Points.Location = new System.Drawing.Point(169, 72);
+            this.txtSkillLvl3Points.Location = new System.Drawing.Point(191, 86);
             this.txtSkillLvl3Points.Name = "txtSkillLvl3Points";
             this.txtSkillLvl3Points.Size = new System.Drawing.Size(46, 21);
             this.txtSkillLvl3Points.TabIndex = 12;
@@ -546,7 +572,7 @@ namespace Server
             // 
             // txtSkillLvl2Points
             // 
-            this.txtSkillLvl2Points.Location = new System.Drawing.Point(169, 47);
+            this.txtSkillLvl2Points.Location = new System.Drawing.Point(191, 61);
             this.txtSkillLvl2Points.Name = "txtSkillLvl2Points";
             this.txtSkillLvl2Points.Size = new System.Drawing.Size(46, 21);
             this.txtSkillLvl2Points.TabIndex = 11;
@@ -554,7 +580,7 @@ namespace Server
             // 
             // txtSkillLvl1Points
             // 
-            this.txtSkillLvl1Points.Location = new System.Drawing.Point(169, 22);
+            this.txtSkillLvl1Points.Location = new System.Drawing.Point(191, 36);
             this.txtSkillLvl1Points.Name = "txtSkillLvl1Points";
             this.txtSkillLvl1Points.Size = new System.Drawing.Size(46, 21);
             this.txtSkillLvl1Points.TabIndex = 10;
@@ -563,33 +589,33 @@ namespace Server
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(110, 75);
+            this.label6.Location = new System.Drawing.Point(146, 89);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(77, 12);
+            this.label6.Size = new System.Drawing.Size(41, 12);
             this.label6.TabIndex = 9;
-            this.label6.Text = "Skill points";
+            this.label6.Text = "技能点";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(110, 50);
+            this.label7.Location = new System.Drawing.Point(146, 64);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(77, 12);
+            this.label7.Size = new System.Drawing.Size(41, 12);
             this.label7.TabIndex = 8;
-            this.label7.Text = "Skill points";
+            this.label7.Text = "技能点";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(110, 25);
+            this.label8.Location = new System.Drawing.Point(146, 39);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(77, 12);
+            this.label8.Size = new System.Drawing.Size(41, 12);
             this.label8.TabIndex = 7;
-            this.label8.Text = "Skill points";
+            this.label8.Text = "技能点";
             // 
             // txtSkillLvl3Req
             // 
-            this.txtSkillLvl3Req.Location = new System.Drawing.Point(57, 72);
+            this.txtSkillLvl3Req.Location = new System.Drawing.Point(79, 86);
             this.txtSkillLvl3Req.Name = "txtSkillLvl3Req";
             this.txtSkillLvl3Req.Size = new System.Drawing.Size(46, 21);
             this.txtSkillLvl3Req.TabIndex = 6;
@@ -597,7 +623,7 @@ namespace Server
             // 
             // txtSkillLvl2Req
             // 
-            this.txtSkillLvl2Req.Location = new System.Drawing.Point(57, 47);
+            this.txtSkillLvl2Req.Location = new System.Drawing.Point(79, 61);
             this.txtSkillLvl2Req.Name = "txtSkillLvl2Req";
             this.txtSkillLvl2Req.Size = new System.Drawing.Size(46, 21);
             this.txtSkillLvl2Req.TabIndex = 5;
@@ -605,7 +631,7 @@ namespace Server
             // 
             // txtSkillLvl1Req
             // 
-            this.txtSkillLvl1Req.Location = new System.Drawing.Point(57, 22);
+            this.txtSkillLvl1Req.Location = new System.Drawing.Point(79, 36);
             this.txtSkillLvl1Req.Name = "txtSkillLvl1Req";
             this.txtSkillLvl1Req.Size = new System.Drawing.Size(46, 21);
             this.txtSkillLvl1Req.TabIndex = 4;
@@ -614,7 +640,7 @@ namespace Server
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 75);
+            this.label5.Location = new System.Drawing.Point(31, 89);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(47, 12);
             this.label5.TabIndex = 3;
@@ -623,7 +649,7 @@ namespace Server
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 50);
+            this.label4.Location = new System.Drawing.Point(31, 64);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(47, 12);
             this.label4.TabIndex = 2;
@@ -632,7 +658,7 @@ namespace Server
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 25);
+            this.label3.Location = new System.Drawing.Point(31, 39);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(47, 12);
             this.label3.TabIndex = 1;
@@ -641,15 +667,15 @@ namespace Server
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 6);
+            this.label2.Location = new System.Drawing.Point(28, 20);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(203, 12);
+            this.label2.Size = new System.Drawing.Size(101, 12);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Skill level increase requirements";
+            this.label2.Text = "技能水平提高要求";
             // 
             // txtSkillIcon
             // 
-            this.txtSkillIcon.Location = new System.Drawing.Point(311, 20);
+            this.txtSkillIcon.Location = new System.Drawing.Point(449, 34);
             this.txtSkillIcon.Name = "txtSkillIcon";
             this.txtSkillIcon.Size = new System.Drawing.Size(41, 21);
             this.txtSkillIcon.TabIndex = 2;
@@ -658,46 +684,20 @@ namespace Server
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(250, 23);
+            this.label1.Location = new System.Drawing.Point(388, 37);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 12);
+            this.label1.Size = new System.Drawing.Size(65, 12);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Skill icon: ";
+            this.label1.Text = "技能图标: ";
             // 
             // lblBookValid
             // 
             this.lblBookValid.AutoSize = true;
-            this.lblBookValid.Location = new System.Drawing.Point(222, 3);
+            this.lblBookValid.Location = new System.Drawing.Point(334, 17);
             this.lblBookValid.Name = "lblBookValid";
-            this.lblBookValid.Size = new System.Drawing.Size(119, 12);
+            this.lblBookValid.Size = new System.Drawing.Size(53, 12);
             this.lblBookValid.TabIndex = 0;
-            this.lblBookValid.Text = "Searching for books";
-            // 
-            // textBoxName
-            // 
-            this.textBoxName.Location = new System.Drawing.Point(89, 18);
-            this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(112, 21);
-            this.textBoxName.TabIndex = 10;
-            this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(181, 3);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(35, 12);
-            this.label23.TabIndex = 11;
-            this.label23.Text = "book:";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(20, 23);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(65, 12);
-            this.label24.TabIndex = 12;
-            this.label24.Text = "SkillName:";
+            this.lblBookValid.Text = "搜寻书籍";
             // 
             // MagicInfoForm
             // 
@@ -705,7 +705,7 @@ namespace Server
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.MagiclistBox);
             this.Name = "MagicInfoForm";
-            this.Text = "Magic Settings";
+            this.Text = "魔法设置";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MagicInfoForm_FormClosed);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

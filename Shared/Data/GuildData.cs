@@ -239,92 +239,92 @@ public class GuildBuffInfo
         //text = name + "\n";
         if (BuffAc > 0)
         {
-            text += string.Format("Increases AC by: 0-{0}.", BuffAc);
+            text += string.Format("增加物防: 0-{0}.", BuffAc);
             if (text != "") text += "\n";
         }
         if (BuffMac > 0)
         {
-            text += string.Format("Increases MAC by: 0-{0}.", BuffMac);
+            text += string.Format("增加魔防: 0-{0}.", BuffMac);
             if (text != "") text += "\n";
         }
         if (BuffDc > 0)
         {
-            text += string.Format("Increases DC by: 0-{0}.", BuffDc);
+            text += string.Format("增加攻击: 0-{0}.", BuffDc);
             if (text != "") text += "\n";
         }
         if (BuffMc > 0)
         {
-            text += string.Format("Increases MC by: 0-{0}.", BuffMc);
+            text += string.Format("增加魔攻: 0-{0}.", BuffMc);
             if (text != "") text += "\n";
         }
         if (BuffSc > 0)
         {
-            text += string.Format("Increases SC by: 0-{0}.", BuffSc);
+            text += string.Format("增加道术: 0-{0}.", BuffSc);
             if (text != "") text += "\n";
         }
         if (BuffMaxHp > 0)
         {
-            text += string.Format("Increases Hp by: {0}.", BuffMaxHp);
+            text += string.Format("增加Hp: {0}.", BuffMaxHp);
             if (text != "") text += "\n";
         }
         if (BuffMaxMp > 0)
         {
-            text += string.Format("Increases MP by: {0}.", BuffMaxMp);
+            text += string.Format("增加MP: {0}.", BuffMaxMp);
             if (text != "") text += "\n";
         }
         if (BuffHpRegen > 0)
         {
-            text += string.Format("Increases Health regen by: {0}.", BuffHpRegen);
+            text += string.Format("增加HP恢复: {0}.", BuffHpRegen);
             if (text != "") text += "\n";
         }
         if (BuffMPRegen > 0)
         {
-            text += string.Format("Increases Mana regen by: {0}.", BuffMPRegen);
+            text += string.Format("增加MP恢复: {0}.", BuffMPRegen);
             if (text != "") text += "\n";
         }
         if (BuffMineRate > 0)
         {
-            text += string.Format("Increases Mining success by: {0}%.", BuffMineRate * 5);
+            text += string.Format("增加采矿成功几率: {0}%.", BuffMineRate * 5);
             if (text != "") text += "\n";
         }
         if (BuffGemRate > 0)
         {
-            text += string.Format("Increases Gem success by: {0}%.", BuffGemRate * 5);
+            text += string.Format("增加宝石的成功几率: {0}%.", BuffGemRate * 5);
             if (text != "") text += "\n";
         }
         if (BuffFishRate > 0)
         {
-            text += string.Format("Increases Fishing success by: {0}%.", BuffFishRate * 5);
+            text += string.Format("捕鱼成功率提高: {0}%.", BuffFishRate * 5);
             if (text != "") text += "\n";
         }
         if (BuffExpRate > 0)
         {
-            text += string.Format("Increases Experience by: {0}%.", BuffExpRate);
+            text += string.Format("经验增加: {0}%.", BuffExpRate);
             if (text != "") text += "\n";
         }
         if (BuffCraftRate > 0)
         {
-            text += string.Format("Increases Crafting success by: {0}%.", BuffCraftRate * 5);
+            text += string.Format("提高手工制作成功率: {0}%.", BuffCraftRate * 5);
             if (text != "") text += "\n";
         }
         if (BuffSkillRate > 0)
         {
-            text += string.Format("Increases Skill training by: {0}.", BuffSkillRate);
+            text += string.Format("增加技能训练速度: {0}.", BuffSkillRate);
             if (text != "") text += "\n";
         }
         if (BuffAttack > 0)
         {
-            text += string.Format("Increases Damage by: {0}.", BuffAttack);
+            text += string.Format("增加伤害: {0}.", BuffAttack);
             if (text != "") text += "\n";
         }
         if (BuffDropRate > 0)
         {
-            text += string.Format("Droprate increased by: {0}%.", BuffDropRate);
+            text += string.Format("掉落率提高: {0}%.", BuffDropRate);
             if (text != "") text += "\n";
         }
         if (BuffGoldRate > 0)
         {
-            text += string.Format("Goldrate increased by: 0-{0}.", BuffGoldRate);
+            text += string.Format("黄金利率上升: 0-{0}.", BuffGoldRate);
             if (text != "") text += "\n";
         }
 
