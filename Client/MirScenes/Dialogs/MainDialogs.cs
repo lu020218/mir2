@@ -707,7 +707,7 @@ namespace Client.MirScenes.Dialogs
             HealthOrb = new MirControl
             {
                 Parent = this,
-                Location = new Point(((Settings.ScreenWidth / 2) - 42), 31),
+                Location = new Point(((Settings.ScreenWidth / 2) - 42), 33),
                 NotControl = true,
             };
 
@@ -1080,7 +1080,7 @@ namespace Client.MirScenes.Dialogs
         {
             Index = Settings.Resolution < 1920 ? 2201 : 2221;
             Library = Libraries.Prguse;
-            Location = new Point(GameScene.Scene.Location.X + 10, Settings.ScreenHeight - 180);
+            Location = new Point(GameScene.Scene.Location.X + 10, Settings.Resolution < 1920 ? Settings.ScreenHeight - 90 : Settings.ScreenHeight - 180);
             PixelDetect = true;
 
             KeyPress += ChatPanel_KeyPress;
@@ -1093,7 +1093,7 @@ namespace Client.MirScenes.Dialogs
                 ForeColour = Color.Black,
                 Parent = this,
                 Size = new Size(Settings.Resolution < 1920 ? 305 : 495, 13),
-                Location = new Point(1, 150),
+                Location = new Point(1, Settings.Resolution < 1920 ? 54 : 150),
                 MaxLength = Globals.MaxChatLength,
                 Visible = false,
                 Font = ChatFont,
@@ -1107,8 +1107,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 2018,
                 HoverIndex = 2019,
                 Library = Libraries.Prguse,
-                //Location = new Point(Settings.Resolution != 800 ? 618 : 394, 1),
-                Location = new Point(490, 1),
+                Location = new Point(Settings.Resolution < 1920 ? 300 : 490, 1),
                 Parent = this,
                 PressedIndex = 2020,
                 Sound = SoundList.ButtonA,
@@ -1126,8 +1125,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 2021,
                 HoverIndex = 2022,
                 Library = Libraries.Prguse,
-                //Location = new Point(Settings.Resolution != 800 ? 618 : 394, 9),
-                Location = new Point(490, 9),
+                Location = new Point(Settings.Resolution < 1920 ? 300 : 490, 9),
                 Parent = this,
                 PressedIndex = 2023,
                 Sound = SoundList.ButtonA,
@@ -1145,8 +1143,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 2027,
                 HoverIndex = 2028,
                 Library = Libraries.Prguse,
-                //Location = new Point(Settings.Resolution != 800 ? 618 : 394, 45),
-                Location = new Point(490, 141),
+                Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 45 : 141),
                 Parent = this,
                 PressedIndex = 2029,
                 Sound = SoundList.ButtonA,
@@ -1163,8 +1160,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 2024,
                 HoverIndex = 2025,
                 Library = Libraries.Prguse,
-                //Location = new Point(Settings.Resolution != 800 ? 618 : 394, 39),
-                Location = new Point(490, 135),
+                Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 39 : 135),
                 Parent = this,
                 PressedIndex = 2026,
                 Sound = SoundList.ButtonA,
@@ -1180,10 +1176,9 @@ namespace Client.MirScenes.Dialogs
 
             CountBar = new MirImageControl
             {
-                Index = 2012,
+                Index = Settings.Resolution < 1920 ? 2484 : 2012,
                 Library = Libraries.Prguse,
-                //Location = new Point(Settings.Resolution != 800 ? 622 : 398, 16),
-                Location = new Point(494, 16),
+                Location = new Point(Settings.Resolution < 1920 ? 304 : 494, 16),
                 Parent = this,
             };
 
@@ -1192,8 +1187,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 2015,
                 HoverIndex = 2016,
                 Library = Libraries.Prguse,
-                //Location = new Point(Settings.Resolution != 800 ? 619 : 395, 16),
-                Location = new Point(490, 16),
+                Location = new Point(Settings.Resolution < 1920 ? 300 : 490, 16),
                 Parent = this,
                 PressedIndex = 2017,
                 Movable = true,
@@ -1263,8 +1257,7 @@ namespace Client.MirScenes.Dialogs
 
         void PositionBar_OnMoving(object sender, MouseEventArgs e)
         {
-            //int x = Settings.Resolution != 800 ? 619 : 395;
-            int x = 490;
+            int x = Settings.Resolution < 1920 ? 300 : 490;
             int y = PositionBar.Location.Y;
             if (y >= 16 + CountBar.Size.Height - PositionBar.Size.Height) y = 16 + CountBar.Size.Height - PositionBar.Size.Height;
             if (y < 16) y = 16;
@@ -1451,8 +1444,7 @@ namespace Client.MirScenes.Dialogs
             {
                 int h = CountBar.Size.Height - PositionBar.Size.Height;
                 h = (int)((h / (float)(History.Count - 1)) * StartIndex);
-                //PositionBar.Location = new Point(Settings.Resolution != 800 ? 619 : 395, 16 + h);
-                PositionBar.Location = new Point(490, 16 + h);
+                PositionBar.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, 16 + h);
             }
 
             int y = 1;
@@ -1699,28 +1691,28 @@ namespace Client.MirScenes.Dialogs
             switch (WindowSize)
             {
                 case 0:
-                    LineCount = 11;
+                    LineCount = Settings.Resolution < 1920 ? 4 : 11;
                     Index = Settings.Resolution < 1920 ? 2201 : 2221;
-                    CountBar.Index = 2012;
-                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 135);
-                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 140);
-                    ChatTextBox.Location = new Point(1, 150);
+                    CountBar.Index = Settings.Resolution < 1920 ? 2484 : 2012;
+                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 39 : 135);
+                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 45 : 140);
+                    ChatTextBox.Location = new Point(1, Settings.Resolution < 1920 ? 54 : 150);
                     break;
                 case 1:
-                    LineCount = 22;
+                    LineCount = Settings.Resolution < 1920 ? 7 : 22;
                     Index = Settings.Resolution < 1920 ? 2204 : 2224;
-                    CountBar.Index = 2013;
-                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 135 + 135);
-                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 140 + 135);
-                    ChatTextBox.Location = new Point(1, 150 + 135);
+                    CountBar.Index = Settings.Resolution < 1920 ? 2485 : 2013;
+                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 39 + 48 : 135 + 135);
+                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 45 + 48 : 140 + 135);
+                    ChatTextBox.Location = new Point(1, Settings.Resolution < 1920 ? 54 + 48 : 150 + 135);
                     break;
                 case 2:
-                    LineCount = 33;
+                    LineCount = Settings.Resolution < 1920 ? 11 : 33;
                     Index = Settings.Resolution < 1920 ? 2207 : 2227;
-                    CountBar.Index = 2014;
-                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 135 + 285);
-                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 310 : 490, 140 + 285);
-                    ChatTextBox.Location = new Point(1, 150 + 285);
+                    CountBar.Index = Settings.Resolution < 1920 ? 2486 : 2014;
+                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 39 + 96 : 135 + 285);
+                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 45 +96 : 140 + 285);
+                    ChatTextBox.Location = new Point(1, Settings.Resolution < 1920 ? 54 + 96 : 150 + 285);
                     break;
             }
 
@@ -1766,7 +1758,7 @@ namespace Client.MirScenes.Dialogs
         {
             Index = Settings.Resolution < 1920 ? 2035 : 2034;
             Library = Libraries.Prguse;
-            Location = new Point(GameScene.Scene.Location.X + 10, Settings.ScreenHeight - 195);
+            Location = new Point(GameScene.Scene.Location.X + 10, Settings.Resolution < 1920 ? Settings.ScreenHeight - 105 : Settings.ScreenHeight - 195);
 
             SizeButton = new MirButton
             {
@@ -1775,7 +1767,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 2059,
                 Library = Libraries.Prguse,
                 Parent = this,
-                Location = new Point(440, 1),
+                Location = new Point(Settings.Resolution < 1920 ? 250 : 440, 1),
                 Visible = true,
                 Sound = SoundList.ButtonA,
                 Hint = GameLanguage.Size
@@ -1784,8 +1776,6 @@ namespace Client.MirScenes.Dialogs
             {
                 GameScene.Scene.ChatDialog.ChangeSize();
                 Location = new Point(Location.X, GameScene.Scene.ChatDialog.DisplayRectangle.Top - Size.Height);
-                if (GameScene.Scene.BeltDialog.Index == 1932)
-                    GameScene.Scene.BeltDialog.Location = new Point(GameScene.Scene.Location.X + 230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
             };
 
             SettingsButton = new MirButton
@@ -1795,7 +1785,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 2062,
                 Library = Libraries.Prguse,
                 Parent = this,
-                Location = new Point(463, 1),
+                Location = new Point(Settings.Resolution < 1920 ? 273 : 463, 1),
                 Sound = SoundList.ButtonA,
                 Hint = GameLanguage.ChatSettings
             };
