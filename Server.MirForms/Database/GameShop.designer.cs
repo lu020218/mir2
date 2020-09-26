@@ -50,9 +50,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.Class_combo = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.ServerLog_button = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.CredxGold_textbox = new System.Windows.Forms.TextBox();
-            this.ServerLog_button = new System.Windows.Forms.Button();
             this.Remove_button = new System.Windows.Forms.Button();
             this.ClassFilter_lb = new System.Windows.Forms.ComboBox();
             this.SectionFilter_lb = new System.Windows.Forms.ComboBox();
@@ -65,12 +65,11 @@
             // GameShopListBox
             // 
             this.GameShopListBox.FormattingEnabled = true;
-            this.GameShopListBox.ItemHeight = 12;
-            this.GameShopListBox.Location = new System.Drawing.Point(12, 71);
+            this.GameShopListBox.Location = new System.Drawing.Point(12, 77);
             this.GameShopListBox.Name = "GameShopListBox";
             this.GameShopListBox.ScrollAlwaysVisible = true;
             this.GameShopListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.GameShopListBox.Size = new System.Drawing.Size(201, 304);
+            this.GameShopListBox.Size = new System.Drawing.Size(201, 329);
             this.GameShopListBox.TabIndex = 11;
             this.GameShopListBox.SelectedIndexChanged += new System.EventHandler(this.GameShopListBox_SelectedIndexChanged);
             // 
@@ -304,6 +303,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "游戏商城设置";
             // 
+            // ServerLog_button
+            // 
+            this.ServerLog_button.Location = new System.Drawing.Point(220, 407);
+            this.ServerLog_button.Name = "ServerLog_button";
+            this.ServerLog_button.Size = new System.Drawing.Size(266, 23);
+            this.ServerLog_button.TabIndex = 112;
+            this.ServerLog_button.Text = "Reset Purchase Logs (Stock Levels will reset)";
+            this.ServerLog_button.UseVisualStyleBackColor = true;
+            this.ServerLog_button.Click += new System.EventHandler(this.ServerLog_button_Click);
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -321,16 +330,6 @@
             this.CredxGold_textbox.Size = new System.Drawing.Size(134, 21);
             this.CredxGold_textbox.TabIndex = 88;
             this.CredxGold_textbox.TextChanged += new System.EventHandler(this.CredxGold_textbox_TextChanged);
-            // 
-            // ServerLog_button
-            // 
-            this.ServerLog_button.Location = new System.Drawing.Point(220, 376);
-            this.ServerLog_button.Name = "ServerLog_button";
-            this.ServerLog_button.Size = new System.Drawing.Size(266, 21);
-            this.ServerLog_button.TabIndex = 112;
-            this.ServerLog_button.Text = "重置采购日志（库存水平将重置）";
-            this.ServerLog_button.UseVisualStyleBackColor = true;
-            this.ServerLog_button.Click += new System.EventHandler(this.ServerLog_button_Click);
             // 
             // Remove_button
             // 

@@ -10790,6 +10790,32 @@ namespace Server.MirObjects
                     temp.Identified = true;
                     Enqueue(new S.RefreshItem { Item = temp });
                 }
+
+                switch(temp.Info.Shape)
+                {
+                    case 1:
+                        if (Item.Info.Type != ItemType.Weapon)
+                        {
+                            Enqueue(p);
+                            return;
+                        }
+                        break;
+                    case 2:
+                        if (Item.Info.Type != ItemType.Armour)
+                        {
+                            Enqueue(p);
+                            return;
+                        }
+                        break;
+                    case 3:
+                        if (Item.Info.Type != ItemType.Ring || Item.Info.Type != ItemType.Bracelet || Item.Info.Type != ItemType.Necklace)
+                        {
+                            Enqueue(p);
+                            return;
+                        }
+                        break;
+                }
+
                 //if ((temp.Info.BindOnEquip) && (temp.SoulBoundId == -1))
                 //{
                 //    temp.SoulBoundId = Info.Index;
@@ -16726,7 +16752,8 @@ namespace Server.MirObjects
             Cell cell = CurrentMap.GetCell(target);
             PlayerObject player = null;
 
-            if (cell.Objects == null || cell.Objects.Count < 1) {
+            if (cell.Objects == null || cell.Objects.Count == 0) 
+            {
                 ReceiveChat(GameLanguage.FaceToTrade, ChatType.System);
                 return;
             } 

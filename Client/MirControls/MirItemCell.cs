@@ -203,7 +203,7 @@ namespace Client.MirControls
 
             if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.QuestInventory) return;
 
-            if(GameScene.SelectedCell == null && (GridType == MirGridType.Mail)) return;
+            if (GameScene.SelectedCell == null && (GridType == MirGridType.Mail)) return;
 
             base.OnMouseClick(e);
             
@@ -535,8 +535,21 @@ namespace Client.MirControls
             switch (Item.Info.Type)
             {
                 case ItemType.Socket:
-                    if (GameScene.SelectedItem != null && !GameScene.SelectedItem.Info.IsFishingRod)
+                    if (GameScene.SelectedItem != null && !GameScene.SelectedItem.Info.IsFishingRod && GameScene.SelectedItem.Info.Type != ItemType.Mount)
                     {
+                        switch (Item.Info.Shape)
+                        {
+                            case 1:
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Weapon) return;
+                                break;
+                            case 2:
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Armour) return;
+                                break;
+                            case 3:
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Ring && GameScene.SelectedItem.Info.Type != ItemType.Bracelet && GameScene.SelectedItem.Info.Type != ItemType.Necklace) return;
+                                break;
+                        }
+
                         MirItemCell cell = null;
                         for (int i = 0; i < GameScene.Scene.SocketDialog.Grid.Length; i++)
                         {
@@ -677,6 +690,7 @@ namespace Client.MirControls
             for (int i = 0; i < GameScene.User.Inventory.Length; i++)
             {
                 MirItemCell itemCell = i < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[i] : GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx];
+
                 if (itemCell.Item == null) count++;
             }
 
@@ -689,6 +703,7 @@ namespace Client.MirControls
                 for (int i = 0; i < GameScene.User.Inventory.Length; i++)
                 {
                     MirItemCell itemCell = i < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[i] : GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx];
+
                     if (itemCell.Item == null || itemCell.Item.Info != Item.Info) continue;
 
                     item = itemCell.Item;

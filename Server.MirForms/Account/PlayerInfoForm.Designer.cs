@@ -40,7 +40,6 @@
             this.SendMessageButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.OpenAccountButton = new System.Windows.Forms.Button();
             this.SafeZoneButton = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.ChatBanExpiryTextBox = new System.Windows.Forms.TextBox();
@@ -59,6 +58,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.CurrentIPLabel = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.OpenAccountButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -153,16 +153,16 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.NameTextBox);
             this.groupBox1.Controls.Add(this.IndexTextBox);
             this.groupBox1.Controls.Add(this.UpdateButton);
             this.groupBox1.Controls.Add(this.LevelTextBox);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(6, 11);
+            this.groupBox1.Location = new System.Drawing.Point(6, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(168, 126);
+            this.groupBox1.Size = new System.Drawing.Size(168, 136);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Character Info";
@@ -171,28 +171,18 @@
             // 
             this.groupBox2.Controls.Add(this.OpenAccountButton);
             this.groupBox2.Controls.Add(this.SafeZoneButton);
+            this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.ChatBanExpiryTextBox);
             this.groupBox2.Controls.Add(this.ChatBanButton);
             this.groupBox2.Controls.Add(this.KillPetsButton);
             this.groupBox2.Controls.Add(this.KillButton);
             this.groupBox2.Controls.Add(this.KickButton);
-            this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Location = new System.Drawing.Point(180, 11);
+            this.groupBox2.Location = new System.Drawing.Point(180, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(278, 126);
+            this.groupBox2.Size = new System.Drawing.Size(278, 136);
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Actions";
-            // 
-            // OpenAccountButton
-            // 
-            this.OpenAccountButton.Location = new System.Drawing.Point(182, 18);
-            this.OpenAccountButton.Name = "OpenAccountButton";
-            this.OpenAccountButton.Size = new System.Drawing.Size(85, 21);
-            this.OpenAccountButton.TabIndex = 23;
-            this.OpenAccountButton.Text = "打开账户信息";
-            this.OpenAccountButton.UseVisualStyleBackColor = true;
-            this.OpenAccountButton.Click += new System.EventHandler(this.OpenAccountButton_Click);
             // 
             // SafeZoneButton
             // 
@@ -364,18 +354,28 @@
             this.groupBox4.Controls.Add(this.PKPointsLabel);
             this.groupBox4.Controls.Add(this.OnlineTimeLabel);
             this.groupBox4.Controls.Add(this.label6);
-            this.groupBox4.Location = new System.Drawing.Point(6, 142);
+            this.groupBox4.Location = new System.Drawing.Point(6, 154);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(197, 104);
+            this.groupBox4.Size = new System.Drawing.Size(197, 113);
             this.groupBox4.TabIndex = 25;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Details";
             // 
+            // OpenAccountButton
+            // 
+            this.OpenAccountButton.Location = new System.Drawing.Point(168, 19);
+            this.OpenAccountButton.Name = "OpenAccountButton";
+            this.OpenAccountButton.Size = new System.Drawing.Size(99, 23);
+            this.OpenAccountButton.TabIndex = 23;
+            this.OpenAccountButton.Text = "Open Account";
+            this.OpenAccountButton.UseVisualStyleBackColor = true;
+            this.OpenAccountButton.Click += new System.EventHandler(this.OpenAccountButton_Click);
+            // 
             // PlayerInfoForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(466, 303);
+            this.ClientSize = new System.Drawing.Size(466, 328);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);

@@ -44,8 +44,6 @@ namespace Client
         public static bool Shift, Alt, Ctrl, Tilde;
         public static double BytesSent, BytesReceived;
 
-
-
         public static KeyBindSettings InputKeys = new KeyBindSettings();
 
         public CMain()
@@ -525,36 +523,40 @@ namespace Client
 
         public void CreateScreenShot()
         {
-            Point location = PointToClient(Location);
-
-            location = new Point(-location.X, -location.Y);
-
-            string text = string.Format("[{0} Server {1}] {2} {3:hh\\:mm\\:ss}", 
-                Settings.P_ServerName.Length > 0 ? Settings.P_ServerName : "Crystal", 
-                MapControl.User != null ? MapControl.User.Name : "", 
-                Now.ToShortDateString(), 
+            string text = string.Format("[{0} Server {1}] {2} {3:hh\\:mm\\:ss}",
+                Settings.P_ServerName.Length > 0 ? Settings.P_ServerName : "Crystal",
+                MapControl.User != null ? MapControl.User.Name : "",
+                Now.ToShortDateString(),
                 Now.TimeOfDay);
 
-            using (Bitmap image = GetImage(Handle, new Rectangle(location, ClientSize)))
-            using (Graphics graphics = Graphics.FromImage(image))
+            Surface backbuffer = DXManager.Device.GetBackBuffer(0, 0);
+
+            using (var stream = Surface.ToStream(backbuffer, ImageFileFormat.Png))
             {
-                StringFormat sf = new StringFormat();
-                sf.LineAlignment = StringAlignment.Center;
-                sf.Alignment = StringAlignment.Center;
+                Bitmap image = new Bitmap(stream);
 
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 3, 10), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 9), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 5, 10), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 11), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.White, new Point((Settings.ScreenWidth / 2) + 4, 10), sf);//SandyBrown               
+                using (Graphics graphics = Graphics.FromImage(image))
+                {
+                    StringFormat sf = new StringFormat
+                    {
+                        LineAlignment = StringAlignment.Center,
+                        Alignment = StringAlignment.Center
+                    };
 
-                string path = Path.Combine(Application.StartupPath, @"Screenshots\");
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 3, 10), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 9), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 5, 10), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 11), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.White, new Point((Settings.ScreenWidth / 2) + 4, 10), sf);//SandyBrown               
 
-                int count = Directory.GetFiles(path, "*.png").Length;
+                    string path = Path.Combine(Application.StartupPath, @"Screenshots\");
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
 
-                image.Save(Path.Combine(path, string.Format("Image {0}.Png", count)), ImageFormat.Png);
+                    int count = Directory.GetFiles(path, "*.png").Length;
+
+                    image.Save(Path.Combine(path, string.Format("Image {0}.png", count)), ImageFormat.Png);
+                }
             }
         }
 
@@ -591,48 +593,11 @@ namespace Client
 
         #region ScreenCapture
 
-        [DllImport("user32.dll")]
-        static extern IntPtr GetWindowDC(IntPtr handle);
-        [DllImport("gdi32.dll")]
-        public static extern IntPtr CreateCompatibleDC(IntPtr handle);
-        [DllImport("gdi32.dll")]
-        public static extern IntPtr CreateCompatibleBitmap(IntPtr handle, int width, int height);
-        [DllImport("gdi32.dll")]
-        public static extern IntPtr SelectObject(IntPtr handle, IntPtr handle2);
-        [DllImport("gdi32.dll")]
-        public static extern bool BitBlt(IntPtr handle, int destX, int desty, int width, int height,
-                                         IntPtr handle2, int sourX, int sourY, int flag);
-        [DllImport("gdi32.dll")]
-        public static extern int DeleteDC(IntPtr handle);
-        [DllImport("user32.dll")]
-        public static extern int ReleaseDC(IntPtr handle, IntPtr handle2);
-        [DllImport("gdi32.dll")]
-        public static extern int DeleteObject(IntPtr handle);
+        //private Bitmap CaptureScreen()
+        //{
+            
+        //}
 
-        public static Bitmap GetImage(IntPtr handle, Rectangle r)
-        {
-            IntPtr sourceDc = GetWindowDC(handle);
-            IntPtr destDc = CreateCompatibleDC(sourceDc);
-
-            IntPtr hBmp = CreateCompatibleBitmap(sourceDc, r.Width, r.Height);
-            if (hBmp != IntPtr.Zero)
-            {
-                IntPtr hOldBmp = SelectObject(destDc, hBmp);
-                BitBlt(destDc, 0, 0, r.Width, r.Height, sourceDc, r.X, r.Y, 0xCC0020); //0, 0, 13369376);
-                SelectObject(destDc, hOldBmp);
-                DeleteDC(destDc);
-                ReleaseDC(handle, sourceDc);
-
-                Bitmap bmp = Image.FromHbitmap(hBmp);
-
-
-                DeleteObject(hBmp);
-
-                return bmp;
-            }
-
-            return null;
-        }
         #endregion
 
         #region Idle Check

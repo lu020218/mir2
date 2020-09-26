@@ -82,6 +82,7 @@ namespace Client.MirScenes
 
         public SelObjDialog SelObjDialog;
         public SocketDialog SocketDialog;
+
         //public SkillBarDialog SkillBarDialog;
         public List<SkillBarDialog> SkillBarDialogs = new List<SkillBarDialog>();
         public ChatOptionDialog ChatOptionDialog;
@@ -5567,8 +5568,6 @@ namespace Client.MirScenes
 
                 item.Info = ItemInfoList[i];
 
-                item.SetSlotSize();
-
                 for (int s = 0; s < item.Slots.Length; s++)
                 {
                     if (item.Slots[s] == null) continue;
@@ -7142,11 +7141,10 @@ namespace Client.MirScenes
                 MirLabel SOCKETLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = Color.Yellow,
+                    ForeColour = (count > realItem.Slots && !realItem.IsFishingRod && realItem.Type != ItemType.Mount) ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Hand Weight + {0}", minValue + addValue)
                     Text = string.Format("Socket : {0}", item.Slots[i] == null ? "Empty" : item.Slots[i].FriendlyName)
                 };
 
@@ -7160,22 +7158,19 @@ namespace Client.MirScenes
             {
                 #region SOCKET
 
-                if (realItem.Slots > 0)
+                count++;
+                MirLabel SOCKETLabel = new MirLabel
                 {
-                    count++;
-                    MirLabel SOCKETLabel = new MirLabel
-                    {
-                        AutoSize = true,
-                        ForeColour = Color.White,
-                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
-                        OutLine = true,
-                        Parent = ItemLabel,
-                        Text = "Ctrl +右键单击以打开套接字"
-                    };
+                    AutoSize = true,
+                    ForeColour = Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = "Ctrl + Right Click To Open Sockets"
+                };
 
-                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SOCKETLabel.DisplayRectangle.Right + 4),
-                        Math.Max(ItemLabel.Size.Height, SOCKETLabel.DisplayRectangle.Bottom));
-                }
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SOCKETLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, SOCKETLabel.DisplayRectangle.Bottom));
 
                 #endregion
 

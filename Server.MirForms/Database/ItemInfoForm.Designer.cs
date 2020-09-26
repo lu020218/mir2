@@ -31,8 +31,6 @@
             this.ItemInfoPanel = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label57 = new System.Windows.Forms.Label();
-            this.SlotsTextBox = new System.Windows.Forms.TextBox();
             this.globalDropNotify_CheckBox = new System.Windows.Forms.CheckBox();
             this.CanAwaken = new System.Windows.Forms.CheckBox();
             this.label56 = new System.Windows.Forms.Label();
@@ -195,6 +193,8 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
+            this.SlotsTextBox = new System.Windows.Forms.TextBox();
+            this.label57 = new System.Windows.Forms.Label();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -211,9 +211,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ItemInfoPanel.Controls.Add(this.tabControl1);
             this.ItemInfoPanel.Enabled = false;
-            this.ItemInfoPanel.Location = new System.Drawing.Point(174, 38);
+            this.ItemInfoPanel.Location = new System.Drawing.Point(174, 41);
             this.ItemInfoPanel.Name = "ItemInfoPanel";
-            this.ItemInfoPanel.Size = new System.Drawing.Size(626, 390);
+            this.ItemInfoPanel.Size = new System.Drawing.Size(626, 423);
             this.ItemInfoPanel.TabIndex = 11;
             // 
             // tabControl1
@@ -222,11 +222,10 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(609, 384);
+            this.tabControl1.Size = new System.Drawing.Size(609, 416);
             this.tabControl1.TabIndex = 117;
             // 
             // tabPage1
@@ -284,34 +283,17 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(601, 358);
+            this.tabPage1.Size = new System.Drawing.Size(601, 390);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // label57
-            // 
-            this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(424, 94);
-            this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(35, 12);
-            this.label57.TabIndex = 126;
-            this.label57.Text = "插槽:";
-            // 
-            // SlotsTextBox
-            // 
-            this.SlotsTextBox.Location = new System.Drawing.Point(462, 91);
-            this.SlotsTextBox.Name = "SlotsTextBox";
-            this.SlotsTextBox.Size = new System.Drawing.Size(30, 21);
-            this.SlotsTextBox.TabIndex = 125;
-            this.SlotsTextBox.TextChanged += new System.EventHandler(this.SlotsTextBox_TextChanged);
-            // 
             // globalDropNotify_CheckBox
             // 
             this.globalDropNotify_CheckBox.AutoSize = true;
-            this.globalDropNotify_CheckBox.Location = new System.Drawing.Point(468, 314);
+            this.globalDropNotify_CheckBox.Location = new System.Drawing.Point(468, 340);
             this.globalDropNotify_CheckBox.Name = "globalDropNotify_CheckBox";
-            this.globalDropNotify_CheckBox.Size = new System.Drawing.Size(150, 16);
+            this.globalDropNotify_CheckBox.Size = new System.Drawing.Size(128, 17);
             this.globalDropNotify_CheckBox.TabIndex = 124;
             this.globalDropNotify_CheckBox.Text = "Notify Server on Drop";
             this.globalDropNotify_CheckBox.UseVisualStyleBackColor = true;
@@ -827,7 +809,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(601, 358);
+            this.tabPage2.Size = new System.Drawing.Size(601, 390);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Basic Stats";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -842,9 +824,9 @@
             this.groupBox1.Controls.Add(this.CriticalDamagetextBox);
             this.groupBox1.Controls.Add(this.CriticalRatetextBox);
             this.groupBox1.Controls.Add(this.label51);
-            this.groupBox1.Location = new System.Drawing.Point(16, 256);
+            this.groupBox1.Location = new System.Drawing.Point(16, 277);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(304, 87);
+            this.groupBox1.Size = new System.Drawing.Size(304, 94);
             this.groupBox1.TabIndex = 123;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "New Stats";
@@ -1953,6 +1935,23 @@
             this.Gameshop_button.Text = "+ 游戏商城";
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
+            // 
+            // SlotsTextBox
+            // 
+            this.SlotsTextBox.Location = new System.Drawing.Point(561, 99);
+            this.SlotsTextBox.Name = "SlotsTextBox";
+            this.SlotsTextBox.Size = new System.Drawing.Size(30, 20);
+            this.SlotsTextBox.TabIndex = 125;
+            this.SlotsTextBox.TextChanged += new System.EventHandler(this.SlotsTextBox_TextChanged);
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.Location = new System.Drawing.Point(522, 102);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(33, 13);
+            this.label57.TabIndex = 126;
+            this.label57.Text = "Slots:";
             // 
             // ItemInfoForm
             // 
