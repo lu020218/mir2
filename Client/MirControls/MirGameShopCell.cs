@@ -74,7 +74,7 @@ namespace Client.MirControls
                 NotControl = true,
                 ForeColour = Color.Gray,
                 Font = new Font(Settings.FontName, 7F),
-                Text = "库存:"
+                Text = "STOCK:"
             };
 
             stockLabel = new MirLabel
@@ -200,7 +200,7 @@ namespace Client.MirControls
             if (Item.CreditPrice * Quantity <= GameScene.Credit)
             {
                 CreditCost = Item.CreditPrice * Quantity;
-                messageBox = new MirMessageBox(string.Format("您确定要购买{2}积分的{1} x {0}（{3}）吗？", Item.Info.FriendlyName, Quantity, CreditCost, Item.Count), MirMessageBoxButtons.YesNo);
+                messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} Credits?", Item.Info.FriendlyName, Quantity, CreditCost, Item.Count), MirMessageBoxButtons.YesNo);
             }
             else
             { //Needs to attempt to pay with gold and credits
@@ -210,11 +210,11 @@ namespace Client.MirControls
                     CreditCost = GameScene.Credit;
                     if (CreditCost == 0)
                     {
-                        messageBox = new MirMessageBox(string.Format("您确定要购买{2}金的{1} x {0}（{3}）吗？", Item.Info.FriendlyName, Quantity, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
+                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} Gold?", Item.Info.FriendlyName, Quantity, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
                     }
                     else
                     {
-                        messageBox = new MirMessageBox(string.Format("您确定要以{2}信用额和{3}金购买{1} x {0}（{4}）吗？", Item.Info.FriendlyName, Quantity, CreditCost, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
+                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({4}) for {2} Credit and {3} Gold?", Item.Info.FriendlyName, Quantity, CreditCost, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
                     }
                 }
                 else
@@ -256,7 +256,7 @@ namespace Client.MirControls
 
         public void UpdateText()
         {
-            nameLabel.Text = (Item.Info.Type == ItemType.Pets && Item.Info.Shape == 26 && Item.Info.Effect != 7) ? "神奇药" : Item.Info.FriendlyName;
+            nameLabel.Text = Item.Info.FriendlyName;
             nameLabel.Text = nameLabel.Text.Length > 17 ? nameLabel.Text.Substring(0, 17) : nameLabel.Text;
             nameLabel.ForeColour = GameScene.Scene.GradeNameColor(Item.Info.Grade);
             quantity.Text = Quantity.ToString();

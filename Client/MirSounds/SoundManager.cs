@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using SlimDX.DirectSound;
 
 namespace Client.MirSounds
@@ -7,10 +8,12 @@ namespace Client.MirSounds
     static class SoundManager
     {
         public static DirectSound Device;
-        private static readonly List<SoundLibrary> Sounds = new List<SoundLibrary>();
+        private static readonly List<ISoundLibrary> Sounds = new List<ISoundLibrary>();
         private static readonly Dictionary<int, string> IndexList = new Dictionary<int, string>();
 
-        public static SoundLibrary Music;
+        private static readonly List<KeyValuePair<long, int>> DelayList = new List<KeyValuePair<long, int>>();
+
+        public static ISoundLibrary Music;
 
         private static int _vol;
         public static int Vol
@@ -34,6 +37,21 @@ namespace Client.MirSounds
                 _musicVol = value;
             }
         }
+
+        public static void ProcessDelayedSounds()
+        {
+            if (DelayList.Count == 0) return;
+
+            var sounds = DelayList.Where(x => x.Key <= CMain.Time).ToList();
+
+            foreach (var sound in sounds)
+            {
+                DelayList.Remove(sound);
+
+                PlaySound(sound.Value);
+            }
+        }
+
 
         public static void Create()
         {
@@ -78,8 +96,14 @@ namespace Client.MirSounds
             }
         }
 
-        public static void PlaySound(int index, bool loop = false)
+        public static void PlaySound(int index, bool loop = false, int delay = 0)
         {
+            if (delay > 0)
+            {
+                DelayList.Add(new KeyValuePair<long, int>(CMain.Time + delay, index));
+                return;
+            }
+
             if (Device == null) return;
             
             if (_vol <= -3000) return;
@@ -92,21 +116,24 @@ namespace Client.MirSounds
             }
 
             if (IndexList.ContainsKey(index))
-                Sounds.Add(new SoundLibrary(index, IndexList[index], loop));
+                Sounds.Add(GetSound(index, IndexList[index], loop));
             else
             {
                 string filename;
                 if (index > 20000)
                 {
                     index -= 20000;
-                    filename = string.Format("M{0:0}-{1:0}.wav", index/10, index%10);
-                    Sounds.Add(new SoundLibrary(index + 20000, filename, loop));
+                    filename = string.Format("M{0:0}-{1:0}", index/10, index%10);
+
+                    Sounds.Add(GetSound(index + 20000, filename, loop));
                 }
                 else if (index < 10000)
                 {
+                    filename = string.Format("{0:000}-{1:0}", index/10, index%10);
 
-                    filename = string.Format("{0:000}-{1:0}.wav", index/10, index%10);
-                    Sounds.Add(new SoundLibrary(index, filename, loop));
+                    var sound = GetSound(index, filename, loop);
+
+                    Sounds.Add(GetSound(index, filename, loop));
                 }
             }
         }
@@ -115,7 +142,7 @@ namespace Client.MirSounds
         {
             if (Device == null) return;
 
-            Music = new SoundLibrary(index, index + ".wav", true);
+            Music = GetSound(index, index.ToString(), true);
             Music.SetVolume(MusicVol);
             Music.Play();
         }
@@ -125,6 +152,18 @@ namespace Client.MirSounds
             for (int i = 0; i < Sounds.Count; i++)
                 Sounds[i].Dispose();
             Sounds.Clear();
+        }
+
+        static ISoundLibrary GetSound(int index, string fileName, bool loop)
+        {
+            var sound = WavLibrary.TryCreate(index, fileName, loop);
+
+            if (sound != null)
+            {
+                return sound;
+            }
+
+            return new NullLibrary(index, fileName, loop);
         }
     }
 

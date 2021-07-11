@@ -20,248 +20,114 @@ using Effect = Client.MirObjects.Effect;
 
 using Client.MirScenes.Dialogs;
 using System.Drawing.Imaging;
-using SlimDX.Direct3D11;
-using System.CodeDom;
 
 namespace Client.MirScenes.Dialogs
 {
-    public sealed class SkillDialog : MirImageControl
+    public sealed class SystemPannel : MirImageControl
     {
-        public MirButton CloseButton;
-        public MirLabel TitleLabel;
-        public MirImageControl SkillPage;
-        public MagicButton[] Magics;
-        public MirButton NextButton, BackButton;
-        public int StartIndex;
+        public MirButton OptionButton, HotkeyButton, LogooutButton, ExitButton, HelpButton, SystemButton;
 
-        public SkillDialog()
+        public SystemPannel()
         {
-            Index = 823;
-            Library = Libraries.Title;
-            Location = new Point((Settings.ScreenWidth / 2) - (300 / 2), 0);
+            Index = 37;
+            Library = Libraries.GameUI;
+            Location = new Point(Settings.ScreenWidth - 400 + 165 + 163, Settings.ScreenHeight - Size.Height - 40 + 30);
             Movable = true;
-            Sort = true;
-
-            TitleLabel = new MirLabel
+            MouseLeave += (o, e) =>
             {
-                DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
-                Parent = this,
-                Location = new Point(0, 12),
-                Size = new Size(264, 20),
-                NotControl = true,
+                OptionButton.Visible = false;
+                HotkeyButton.Visible = false;
+                LogooutButton.Visible = false;
+                ExitButton.Visible = false;
+                HelpButton.Visible = false;
             };
 
-            SkillPage = new MirImageControl
+            SystemButton = new MirButton
             {
-                Index = 508,
+                HoverIndex = 32,
+                Index = 25,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 152),
                 Parent = this,
-                Library = Libraries.Title,
-                Location = new Point(6, 36),
+                Sound = SoundList.ButtonA,
+                //Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
+            };
+            SystemButton.Click += (o, e) =>
+            {
+                OptionButton.Visible = !OptionButton.Visible;
+                HotkeyButton.Visible = !OptionButton.Visible;
+                LogooutButton.Visible = !OptionButton.Visible;
+                ExitButton.Visible = !OptionButton.Visible;
+                HelpButton.Visible = !OptionButton.Visible;
+            };
+
+            OptionButton = new MirButton
+            {
+                HoverIndex = 68,
+                Index = 51,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 123),
+                Parent = this,
+                Sound = SoundList.ButtonA,
                 Visible = true
             };
-
-            CloseButton = new MirButton
+            OptionButton.Click += (o, e) =>
             {
-                HoverIndex = 361,
-                Index = 360,
-                Location = new Point(260 - 24, 3),
-                Library = Libraries.Prguse2,
+                if (!GameScene.Scene.OptionDialog.Visible)
+                    GameScene.Scene.OptionDialog.Show();
+                else GameScene.Scene.OptionDialog.Hide();
+            };
+
+            HotkeyButton = new MirButton
+            {
+                HoverIndex = 69,
+                Index = 52,
+                Library = Libraries.GameUI,
+                Location = new Point(1, 94),
                 Parent = this,
-                PressedIndex = 362,
                 Sound = SoundList.ButtonA,
+                Visible = false
             };
-            CloseButton.Click += (o, e) => Hide();
-
-            Magics = new MagicButton[7];
-
-            for (int i = 0; i < Magics.Length; i++)
-                Magics[i] = new MagicButton { Parent = SkillPage, Visible = false, Location = new Point(8, 8 + i * 33) };
-
-            NextButton = new MirButton
+            HotkeyButton.Click += (o, e) =>
             {
-                Index = 396,
-                Location = new Point(140, 250),
-                Library = Libraries.Prguse,
-                Parent = SkillPage,
-                PressedIndex = 397,
+                if (GameScene.Scene.KeyboardLayoutDialog.Visible)
+                    GameScene.Scene.KeyboardLayoutDialog.Hide();
+                else GameScene.Scene.KeyboardLayoutDialog.Show();
+            };
+
+            LogooutButton = new MirButton
+            {
+                HoverIndex = 70,
+                Index = 53,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 65),
+                Parent = this,
                 Sound = SoundList.ButtonA,
+                Visible = false
             };
-            NextButton.Click += (o, e) =>
-            {
-                if (StartIndex + 7 >= MapObject.User.Magics.Count) return;
+            LogooutButton.Click += (o, e) => GameScene.Scene.LogOut();
 
-                StartIndex += 7;
-                RefreshInterface();
-                ClearCoolDowns();
-            };
-
-            BackButton = new MirButton
+            ExitButton = new MirButton
             {
-                Index = 398,
-                Location = new Point(90, 250),
-                Library = Libraries.Prguse,
-                Parent = SkillPage,
-                PressedIndex = 399,
+                HoverIndex = 71,
+                Index = 54,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 35),
+                Parent = this,
                 Sound = SoundList.ButtonA,
+                Visible = false
             };
-            BackButton.Click += (o, e) =>
-            {
-                if (StartIndex - 7 < 0) return;
-
-                StartIndex -= 7;
-                RefreshInterface();
-
-                ClearCoolDowns();
-            };
-        }
-
-        private void ClearCoolDowns()
-        {
-            for (int i = 0; i < Magics.Length; i++)
-            {
-                Magics[i].CoolDown.Dispose();
-            }
-        }
-
-        private void RefreshInterface()
-        {
-            TitleLabel.Text = "技能列表";
-            TitleLabel.Location = new Point((260 / 2) - (TitleLabel.Size.Width / 2), 12);
-
-            for (int i = 0; i < Magics.Length; i++)
-            {
-                if (i + StartIndex >= MapObject.User.Magics.Count)
-                {
-                    Magics[i].Visible = false;
-                    continue;
-                }
-
-                Magics[i].Visible = true;
-                Magics[i].Update(MapObject.User.Magics[i + StartIndex]);
-            }
-        }
-
-        public void ShowSkillPage()
-        {
-            SkillPage.Visible = true;
-            StartIndex = 0;
-            RefreshInterface();
-            ClearCoolDowns();
-        }
-
-        public override void Show()
-        {
-            if (Visible) return;
-            Visible = true;
-
-            ClearCoolDowns();
-        }
-    }
-    public sealed class SelObjDialog : MirImageControl
-    {
-        public MirLabel NameLabel, JobLabel, LevelLabel, HealthLabel;
-        public MirImageControl HPImageControl, AvatarImageControl;
-
-        public SelObjDialog()
-        {
-            Index = 2478;
-            Library = Libraries.Prguse;
-            Location = new Point((Settings.ScreenWidth / 2) - (300 / 2), 0);
-            Visible = false;
-            PixelDetect = true;
-
-            NameLabel = new MirLabel
-            {
-                AutoSize = true,
-                DrawFormat = TextFormatFlags.HorizontalCenter,
-                Location = new Point((300 / 2), 5),
-                Parent = this,
-            };
-
-            JobLabel = new MirLabel
-            {
-                AutoSize = true,
-                DrawFormat = TextFormatFlags.HorizontalCenter,
-                Location = new Point((54 / 2), 50),
-                Parent = this,
-            };
-
-            LevelLabel = new MirLabel
-            {
-                AutoSize = true,
-                DrawFormat = TextFormatFlags.HorizontalCenter,
-                Location = new Point((54 / 2), 5),
-                Parent = this,
-            };
-
-            HPImageControl = new MirImageControl
-            {
-                Index = 2479,
-                Library = Libraries.Prguse,
-                Location = new Point(60, 35),
-                Parent = this,
-                DrawImage = false,
-                NotControl = true,
-                Visible = true
-            };
-            HPImageControl.BeforeDraw += HPImageControl_BeforeDraw;
-
-            HealthLabel = new MirLabel
-            {
-                AutoSize = true,
-                DrawFormat = TextFormatFlags.HorizontalCenter,
-                Location = new Point(((300 + 53) / 2) - (237 / 2), 40),
-                Parent = this,
-            };
-        }
-
-        private void HPImageControl_BeforeDraw(object sender, EventArgs e)
-        {
-            if (HPImageControl.Library == null || MapObject.TargetObject == null) return;
-
-            double percent = 0;
-            if (MapObject.TargetObject is MonsterObject)
-            {
-                MonsterObject monster = MapObject.TargetObject as MonsterObject;
-                percent = monster.PercentHealth / 100F;
-            }
-            
-            if (percent > 1) percent = 1;
-            if (percent <= 0) percent = 0;
-
-            HPImageControl.Library.Draw(2479, new Rectangle(0, 0, (int)(237 * percent), HPImageControl.Size.Height), HPImageControl.DisplayLocation, Color.White, false);
-        }
-
-        public void Process()
-        {
-            if (MapObject.TargetObject == null) return;
-
-            HealthLabel.Text = MapObject.TargetObject.PercentHealth.ToString();
-        }
-    }
-
-    public sealed class SettingPanel : MirImageControl
-    {
-        public MirButton HelpButton, KeyboardLayoutButton, LogoutButton, ExitButton;
-
-        public SettingPanel(MirControl parent)
-        {
-            Index = 2469;
-            Library = Libraries.Prguse;
-            Location = new Point(Settings.ScreenWidth - 15 - 433 + (73 * 5), Settings.ScreenHeight - 28 - Size.Height - 13);
-            PixelDetect = true;
-            Visible = false;
-            Parent = parent;
+            ExitButton.Click += (o, e) => GameScene.Scene.QuitGame();
 
             HelpButton = new MirButton
             {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 122 - (30 * 1)),
+                HoverIndex = 72,
+                Index = 55,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 5),
                 Parent = this,
-                PressedIndex = 2470,
                 Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Help, CMain.InputKeys.GetKey(KeybindOptions.Help))
+                Visible = false
             };
             HelpButton.Click += (o, e) =>
             {
@@ -269,89 +135,148 @@ namespace Client.MirScenes.Dialogs
                     GameScene.Scene.HelpDialog.Hide();
                 else GameScene.Scene.HelpDialog.Show();
             };
-
-            KeyboardLayoutButton = new MirButton
-            {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 122 - (30 * 2)),
-                Parent = this,
-                PressedIndex = 2471,
-                Sound = SoundList.ButtonA,
-                Hint = "键盘 (" + CMain.InputKeys.GetKey(KeybindOptions.Keybind) + ")"
-            };
-            KeyboardLayoutButton.Click += (o, e) =>
-            {
-                if (GameScene.Scene.KeyboardLayoutDialog.Visible)
-                    GameScene.Scene.KeyboardLayoutDialog.Hide();
-                else GameScene.Scene.KeyboardLayoutDialog.Show();
-            };
-
-            LogoutButton = new MirButton
-            {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 122 - (30 * 3)),
-                Parent = this,
-                PressedIndex = 2472,
-                Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.LogOut, CMain.InputKeys.GetKey(KeybindOptions.Logout))
-            };
-            LogoutButton.Click += (o, e) => GameScene.Scene.LogOut();
-
-            ExitButton = new MirButton
-            {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 122 - (30 * 4)),
-                Parent = this,
-                PressedIndex = 2473,
-                Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Exit, CMain.InputKeys.GetKey(KeybindOptions.Exit))
-            };
-            ExitButton.Click += (o, e) => GameScene.Scene.QuitGame();
         }
     }
 
-    public sealed class SocialPanel : MirImageControl
+    public sealed class PetPannel : MirImageControl
     {
-        public MirButton MentorButton, FriendButton, LoverButton, GuildButton, GroupButton;
+        public MirButton IntelligentCreatureButton, MountButton;
 
-        public SocialPanel(MirControl parent)
+        public PetPannel()
         {
-            Index = 2462;
-            Library = Libraries.Prguse;
-            Location = new Point(Settings.ScreenWidth - 12 - 433 + (73 * 3), Settings.ScreenHeight - 28 - Size.Height - 13);
-            PixelDetect = true;
-            Visible = false;
-            Parent = parent;
+            Index = 34;
+            Library = Libraries.GameUI;
+            Location = new Point(Settings.ScreenWidth - 400 + 162, Settings.ScreenHeight - Size.Height - 40);
 
-            MentorButton = new MirButton
+            IntelligentCreatureButton = new MirButton
             {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 152 - (30 * 1)),
+                HoverIndex = 66,
+                Index = 49,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 35),
                 Parent = this,
-                PressedIndex = 2463,
                 Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
             };
-            MentorButton.Click += (o, e) =>
+            IntelligentCreatureButton.Click += (o, e) =>
             {
-                if (GameScene.Scene.MentorDialog.Visible)
-                    GameScene.Scene.MentorDialog.Hide();
-                else GameScene.Scene.MentorDialog.Show();
+                if (GameScene.Scene.IntelligentCreatureDialog.Visible)
+                    GameScene.Scene.IntelligentCreatureDialog.Hide();
+                else GameScene.Scene.IntelligentCreatureDialog.Show();
+            };
+
+            MountButton = new MirButton
+            {
+                HoverIndex = 66,
+                Index = 50,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 5),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            MountButton.Click += (o, e) =>
+            {
+                if (GameScene.Scene.MountDialog.Visible)
+                    GameScene.Scene.MountDialog.Hide();
+                else GameScene.Scene.MountDialog.Show();
+            };
+        }
+    }
+
+    public sealed class ContentPannel : MirImageControl
+    {
+        public MirButton FishingButton, QuestButton;
+
+        public ContentPannel()
+        {
+            Index = 34;
+            Library = Libraries.GameUI;
+            Location = new Point(Settings.ScreenWidth - 400 + 108, Settings.ScreenHeight - Size.Height - 40);
+
+            FishingButton = new MirButton
+            {
+                HoverIndex = 64,
+                Index = 47,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 35),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            FishingButton.Click += (o, e) =>
+            {
+                if (GameScene.Scene.FishingDialog.Visible)
+                    GameScene.Scene.FishingDialog.Hide();
+                else GameScene.Scene.FishingDialog.Show();
+            };
+
+            QuestButton = new MirButton
+            {
+                HoverIndex = 65,
+                Index = 48,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 5),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            QuestButton.Click += (o, e) =>
+            {
+                if (!GameScene.Scene.QuestLogDialog.Visible)
+                    GameScene.Scene.QuestLogDialog.Show();
+                else GameScene.Scene.QuestLogDialog.Hide();
+            };
+        }
+    }
+
+    public sealed class SocialPannel : MirImageControl
+    {
+        public MirButton TeamButton, GuildButton, FriendButton, LoverButton, MasterButton;
+
+        public SocialPannel()
+        {
+            Index = 37;
+            Library = Libraries.GameUI;
+            //Location = new Point(Settings.ScreenWidth - 12 - 425 + 60, Settings.ScreenHeight - 40 - Size.Height);
+            Location = new Point(Settings.ScreenWidth - 400 + 54, Settings.ScreenHeight - Size.Height - 40);
+
+            TeamButton = new MirButton
+            {
+                HoverIndex = 59,
+                Index = 42,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 123),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            TeamButton.Click += (o, e) =>
+            {
+                if (GameScene.Scene.GroupDialog.Visible)
+                    GameScene.Scene.GroupDialog.Hide();
+                else GameScene.Scene.GroupDialog.Show();
+            };
+
+            GuildButton = new MirButton
+            {
+                HoverIndex = 60,
+                Index = 43,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 94),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            GuildButton.Click += (o, e) =>
+            {
+                if (GameScene.Scene.GuildDialog.Visible)
+                    GameScene.Scene.GuildDialog.Hide();
+                else GameScene.Scene.GuildDialog.Show();
             };
 
             FriendButton = new MirButton
             {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 152 - (30 * 2)),
+                HoverIndex = 61,
+                Index = 44,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 65),
                 Parent = this,
-                PressedIndex = 2464,
                 Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Friends, CMain.InputKeys.GetKey(KeybindOptions.Friends))
             };
             FriendButton.Click += (o, e) =>
             {
@@ -362,13 +287,12 @@ namespace Client.MirScenes.Dialogs
 
             LoverButton = new MirButton
             {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 152 - (30 * 3)),
+                HoverIndex = 62,
+                Index = 45,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 35),
                 Parent = this,
-                PressedIndex = 2465,
                 Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Relationship, CMain.InputKeys.GetKey(KeybindOptions.Relationship))
             };
             LoverButton.Click += (o, e) =>
             {
@@ -377,115 +301,44 @@ namespace Client.MirScenes.Dialogs
                 else GameScene.Scene.RelationshipDialog.Show();
             };
 
-            GuildButton = new MirButton
+            MasterButton = new MirButton
             {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 152 - (30 * 4)),
+                HoverIndex = 63,
+                Index = 46,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 5),
                 Parent = this,
-                PressedIndex = 2466,
                 Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Guild, CMain.InputKeys.GetKey(KeybindOptions.Guilds))
             };
-            GuildButton.Click += (o, e) =>
+            MasterButton.Click += (o, e) =>
             {
-                if (GameScene.Scene.GuildDialog.Visible)
-                    GameScene.Scene.GuildDialog.Hide();
-                else GameScene.Scene.GuildDialog.Show();
-            };
-
-            GroupButton = new MirButton
-            {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 152 - (30 * 5)),
-                Parent = this,
-                PressedIndex = 2467,
-                Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Groups, CMain.InputKeys.GetKey(KeybindOptions.Group))
-            };
-            GroupButton.Click += (o, e) =>
-            {
-                if (GameScene.Scene.GroupDialog.Visible)
-                    GameScene.Scene.GroupDialog.Hide();
-                else GameScene.Scene.GroupDialog.Show();
+                if (GameScene.Scene.MentorDialog.Visible)
+                    GameScene.Scene.MentorDialog.Hide();
+                else GameScene.Scene.MentorDialog.Show();
             };
         }
     }
 
-    public sealed class PlayContentPanel : MirImageControl
+    public sealed class CharacterPannel : MirImageControl
     {
-        public MirButton TaskButton, FishingButton;
+        public MirButton CharacterBtn, SkillBtn, BagBtn;
 
-        public PlayContentPanel(MirControl parent)
+        public CharacterPannel()
         {
-            Index = 2459;
-            Library = Libraries.Prguse;
-            Location = new Point(Settings.ScreenWidth - 11 - 433 + 73, Settings.ScreenHeight - 28 - Size.Height - 13);
-            PixelDetect = true;
-            Visible = false;
-            Parent = parent;
+            Index = 35;
+            Library = Libraries.GameUI;
+            Location = new Point(Settings.ScreenWidth - 400, Settings.ScreenHeight - Size.Height - 40);
 
-            TaskButton = new MirButton
+            CharacterBtn = new MirButton
             {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 62 - 30),
+                HoverIndex = 56,
+                Index = 39,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 65),
                 Parent = this,
-                PressedIndex = 2460,
                 Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Quests, CMain.InputKeys.GetKey(KeybindOptions.Quests))
             };
-            TaskButton.Click += (o, e) =>
-            {
-                if (!GameScene.Scene.QuestLogDialog.Visible)
-                    GameScene.Scene.QuestLogDialog.Show();
-                else GameScene.Scene.QuestLogDialog.Hide();
-            };
-
-            FishingButton = new MirButton
-            {
-                Index = 2447,
-                PressedIndex = 2461,
-                Parent = this,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 62 - (30 * 2)),
-                Hint = string.Format(GameLanguage.Fishing, CMain.InputKeys.GetKey(KeybindOptions.Fishing))
-            };
-            FishingButton.Click += (o, e) =>
-            {
-                if (GameScene.Scene.FishingDialog.Visible)
-                    GameScene.Scene.FishingDialog.Hide();
-                else GameScene.Scene.FishingDialog.Show();
-            };
-        }
-    }
-
-    public sealed class PersonalPanel : MirImageControl
-    {
-        public MirButton CharacterButton, BagButton, SkillButton, RideButton;
-
-        public PersonalPanel(MirControl parent)
-        {
-            Index = 2454;
-            Library = Libraries.Prguse;
-            Location = new Point(Settings.ScreenWidth - 10 - 433, Settings.ScreenHeight - 28 - Size.Height - 13);
-            PixelDetect = true;
-            Visible = false;
-            Parent = parent;
-
-            CharacterButton = new MirButton
-            {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 122 - 30),
-                Parent = this,
-                PressedIndex = 2455,
-                Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Character, CMain.InputKeys.GetKey(KeybindOptions.Equipment)),
-                Visible = true
-            };
-            CharacterButton.Click += (o, e) =>
+            CharacterBtn.Click += (o, e) =>
             {
                 if (GameScene.Scene.CharacterDialog.Visible && GameScene.Scene.CharacterDialog.CharacterPage.Visible)
                     GameScene.Scene.CharacterDialog.Hide();
@@ -496,177 +349,191 @@ namespace Client.MirScenes.Dialogs
                 }
             };
 
-            BagButton = new MirButton
+            SkillBtn = new MirButton
             {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 122 - (30 * 2)),
+                HoverIndex = 57,
+                Index = 40,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 35),
                 Parent = this,
-                PressedIndex = 2456,
                 Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Character, CMain.InputKeys.GetKey(KeybindOptions.Equipment)),
-                Visible = true
             };
-            BagButton.Click += (o, e) =>
+            SkillBtn.Click += (o, e) =>
+            {
+                if (GameScene.Scene.CharacterDialog.Visible && GameScene.Scene.CharacterDialog.SkillPage.Visible)
+                    GameScene.Scene.CharacterDialog.Hide();
+                else
+                {
+                    GameScene.Scene.CharacterDialog.Show();
+                    GameScene.Scene.CharacterDialog.ShowSkillPage();
+                }
+            };
+
+            BagBtn = new MirButton
+            {
+                HoverIndex = 58,
+                Index = 41,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 5),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            BagBtn.Click += (o, e) =>
             {
                 if (GameScene.Scene.InventoryDialog.Visible)
                     GameScene.Scene.InventoryDialog.Hide();
                 else
                     GameScene.Scene.InventoryDialog.Show();
             };
-
-            SkillButton = new MirButton
-            {
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 122 - (30 * 3)),
-                Parent = this,
-                PressedIndex = 2457,
-                Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Skills, CMain.InputKeys.GetKey(KeybindOptions.Skills))
-            };
-            SkillButton.Click += (o, e) =>
-            {
-                if (GameScene.Scene.SkillDialog.Visible)
-                {
-                    GameScene.Scene.SkillDialog.Hide();
-                }
-                else
-                {
-                    GameScene.Scene.SkillDialog.Show();
-                    GameScene.Scene.SkillDialog.ShowSkillPage();
-                }
-            };
-
-            RideButton = new MirButton
-            {
-                Index = 2447,
-                Location = new Point(0, 122 - (30 * 4)),
-                PressedIndex = 2458,
-                Parent = this,
-                Library = Libraries.Prguse,
-                Hint = string.Format(GameLanguage.Mount, CMain.InputKeys.GetKey(KeybindOptions.MountWindow))
-            };
-            RideButton.Click += (o, e) =>
-            {
-                if (GameScene.Scene.MountDialog.Visible)
-                    GameScene.Scene.MountDialog.Hide();
-                else GameScene.Scene.MountDialog.Show();
-            };
         }
     }
 
-    public sealed class MenuBarDialog : MirImageControl
+    public sealed class MenuPannel : MirImageControl
     {
-        public MirButton PersonalButton, PlayContentButton, RankingButton, SocialButton, GameShopButton, SettingButton;
-        public MirButton TaskButton, FishingButton, MasterButton, FriendButton, LoverButton, GuildButton, TeamButton;
+        public MirButton CharacterButton, SocialButton, ContentButton, PetButton, ShopButton, RankButton, SystemButton;
+        //public SystemPannel systemPannel;
+        public static Point MouseLocation;
 
-        public MenuBarDialog()
+        public MenuPannel()
         {
-            Index = 2468;
-            Library = Libraries.Prguse;
-            Location = new Point(Settings.ScreenWidth - Size.Width - 10, Settings.ScreenHeight - Size.Height - 15);
-            PixelDetect = true;
+            Index = Settings.Resolution == 1920 ? 17 : 2;
+            Library = Libraries.GameUI;
+            Location = new Point(Settings.ScreenWidth - 400, Settings.ScreenHeight - 40);
+            MouseMove += (o, e) => MouseLocation = e.Location;
 
-            PersonalButton = new MirButton
+            CharacterButton = new MirButton
             {
-                //HoverIndex = 2448,
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 0),
+                HoverIndex = 26,
+                Index = 19,
+                Library = Libraries.GameUI,
+                Location = new Point(5, 5),
                 Parent = this,
-                PressedIndex = 2448,
+                //PressedIndex = 2,
                 Sound = SoundList.ButtonA,
-                //Hint = string.Format(GameLanguage.Character, CMain.InputKeys.GetKey(KeybindOptions.Equipment))
+                //Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
             };
-            PersonalButton.Click += (o, e) =>
+            CharacterButton.Click += (o, e) =>
             {
-                GameScene.Scene.PersonalPanel.Visible = !GameScene.Scene.PersonalPanel.Visible;
+                GameScene.Scene.CharacterBar.Visible = !GameScene.Scene.CharacterBar.Visible;
+            };
+            CharacterButton.MouseLeave += (o, e) =>
+            {
+                GameScene.Scene.CharacterBar.Visible = false;
             };
 
-            PlayContentButton = new MirButton
+            SocialButton = new MirButton
             {
-                //HoverIndex = 2448,
-                Index = 2447,
-                Library = Libraries.Prguse,
-                Location = new Point(0 + 73, 0),
+                HoverIndex = 27,
+                Index = 20,
+                Library = Libraries.GameUI,
+                Location = new Point(5 + 55, 5),
                 Parent = this,
-                PressedIndex = 2449,
                 Sound = SoundList.ButtonA,
-                //Hint = string.Format(GameLanguage.Character, CMain.InputKeys.GetKey(KeybindOptions.Equipment))
+                //Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
             };
-            PlayContentButton.Click += (o, e) =>
+            SocialButton.Click += (o, e) =>
             {
-                GameScene.Scene.PlayContentPanel.Visible = !GameScene.Scene.PlayContentPanel.Visible;
+                GameScene.Scene.socialBar.Visible = !GameScene.Scene.socialBar.Visible;
+            };
+            SocialButton.MouseLeave += (o, e) =>
+            {
+                GameScene.Scene.socialBar.Visible = false;
             };
 
-            RankingButton = new MirButton
+            ContentButton = new MirButton
             {
-                Index = 2447,
-                PressedIndex = 2450,
+                HoverIndex = 28,
+                Index = 21,
+                Library = Libraries.GameUI,
+                Location = new Point(5 + 109, 5),
                 Parent = this,
-                Library = Libraries.Prguse,
-                Location = new Point(0 + (73 * 2), 0),
-                Hint = string.Format(GameLanguage.Ranking, CMain.InputKeys.GetKey(KeybindOptions.Ranking))
-                //Visible = false
+                Sound = SoundList.ButtonA,
+                //Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
             };
-            RankingButton.Click += (o, e) =>
+            ContentButton.Click += (o, e) =>
+            {
+                GameScene.Scene.contentBar.Visible = !GameScene.Scene.contentBar.Visible;
+            };
+            ContentButton.MouseLeave += (o, e) =>
+            {
+                GameScene.Scene.contentBar.Visible = false;
+            };
+
+            PetButton = new MirButton
+            {
+                HoverIndex = 29,
+                Index = 22,
+                Library = Libraries.GameUI,
+                Location = new Point(5 + 163, 5),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                //Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
+            };
+            PetButton.Click += (o, e) =>
+            {
+                GameScene.Scene.petBar.Visible = !GameScene.Scene.petBar.Visible;
+            };
+            PetButton.MouseLeave += (o, e) =>
+            {
+                GameScene.Scene.petBar.Visible = false;
+            };
+
+            ShopButton = new MirButton
+            {
+                HoverIndex = 30,
+                Index = 23,
+                Library = Libraries.GameUI,
+                Location = new Point(5 + 217, 5),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                //Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
+            };
+            ShopButton.Click += (o, e) =>
+            {
+                if (!GameScene.Scene.GameShopDialog.Visible) GameScene.Scene.GameShopDialog.Show();
+                else GameScene.Scene.GameShopDialog.Hide();
+            };
+
+            RankButton = new MirButton
+            {
+                HoverIndex = 31,
+                Index = 24,
+                Library = Libraries.GameUI,
+                Location = new Point(5 + 269, 5),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                //Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
+            };
+            RankButton.Click += (o, e) =>
             {
                 if (GameScene.Scene.RankingDialog.Visible)
                     GameScene.Scene.RankingDialog.Hide();
                 else GameScene.Scene.RankingDialog.Show();
             };
 
-            SocialButton = new MirButton
-            {
-                Index = 2447,
-                PressedIndex = 2451,
-                Parent = this,
-                Library = Libraries.Prguse,
-                Location = new Point(0 + (73 * 3), 0),
-                //Hint = string.Format(GameLanguage.Ranking, CMain.InputKeys.GetKey(KeybindOptions.Ranking))
-                //Visible = false
-            };
-            SocialButton.Click += (o, e) =>
-            {
-                GameScene.Scene.SocialPanel.Visible = !GameScene.Scene.SocialPanel.Visible;
-            };
+            //SystemButton = new MirButton
+            //{
+            //    HoverIndex = 32,
+            //    Index = 25,
+            //    Library = Libraries.GameUI,
+            //    Location = new Point(5 + 328, 5),
+            //    Parent = this,
+            //    Sound = SoundList.ButtonA,
+            //    //Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
+            //};
+            //SystemButton.Click += (o, e) =>
+            //{
+            //    GameScene.Scene.systemBar.Visible = !GameScene.Scene.systemBar.Visible;
+            //};
+            //SystemButton.MouseLeave += (o, e) =>
+            //{
+            //    GameScene.Scene.systemBar.Visible = false;
+            //};
 
-            GameShopButton = new MirButton
-            {
-                Index = 2447,
-                PressedIndex = 2452,
-                Parent = this,
-                Library = Libraries.Prguse,
-                Location = new Point(0 + (73 * 4), 0),
-                Sound = SoundList.ButtonC,
-                Hint = string.Format(GameLanguage.GameShop, CMain.InputKeys.GetKey(KeybindOptions.GameShop))
-                //Visible = false
-            };
-            GameShopButton.Click += (o, e) =>
-            {
-                if (!GameScene.Scene.GameShopDialog.Visible) GameScene.Scene.GameShopDialog.Show();
-                else GameScene.Scene.GameShopDialog.Hide();
-            };
-
-            SettingButton = new MirButton
-            {
-                Index = 2447,
-                PressedIndex = 2453,
-                Parent = this,
-                Library = Libraries.Prguse,
-                Location = new Point(0 + (73 * 5), 0),
-                //Hint = string.Format(GameLanguage.Ranking, CMain.InputKeys.GetKey(KeybindOptions.Ranking))
-                //Visible = false
-            };
-            SettingButton.Click += (o, e) =>
-            {
-                GameScene.Scene.SettingPanel.Visible = !GameScene.Scene.SettingPanel.Visible;
-            };
-
-
+            //systemPannel = new SystemPannel { Parent = this, Visible = true };
         }
     }
+
     public sealed class MainDialog : MirImageControl
     {
         public static UserObject User
@@ -675,11 +542,9 @@ namespace Client.MirScenes.Dialogs
             set { MapObject.User = value; }
         }
 
-        public MirImageControl ExperienceBar, WeightBar/*, LeftCap, RightCap*/;
-        //public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
+        public MirImageControl ExperienceBar, WeightBar;
         public MirControl HealthOrb;
-        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel, PingLabel;
-
+        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel;
         public MirButton CustomButton1, CustomButton2;
 
         public bool HPOnly
@@ -689,25 +554,16 @@ namespace Client.MirScenes.Dialogs
 
         public MainDialog()
         {
-            Index = Settings.Resolution < 1280 ? 0 : Settings.Resolution < 1920 ? 1 : 2;
-            Library = Libraries.Prguse;
+            Index = 0;
+            //Library = Libraries.Prguse;
+            Library = Libraries.GameUI;
             Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)), Settings.ScreenHeight - Size.Height);
             PixelDetect = true;
-
-            PingLabel = new MirLabel
-            {
-                AutoSize = true,
-                ForeColour = Color.Yellow,
-                OutLineColour = Color.Black,
-                Parent = this,
-                Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -443 : -265),
-                Visible = false
-            };
 
             HealthOrb = new MirControl
             {
                 Parent = this,
-                Location = new Point(((Settings.ScreenWidth / 2) - 42), 33),
+                Location = new Point(this.Size.Width / 2 - 51, 30),
                 NotControl = true,
             };
 
@@ -716,15 +572,15 @@ namespace Client.MirScenes.Dialogs
             HealthLabel = new MirLabel
             {
                 AutoSize = true,
-                Location = new Point(12, 40),
-                Parent = HealthOrb
+                Location = new Point(20, 15),
+                Parent = HealthOrb,
             };
             //HealthLabel.SizeChanged += Label_SizeChanged;
 
             ManaLabel = new MirLabel
             {
                 AutoSize = true,
-                Location = new Point(43, 40),
+                Location = new Point(50, 15),
                 Parent = HealthOrb
             };
             //ManaLabel.SizeChanged += Label_SizeChanged;
@@ -747,27 +603,28 @@ namespace Client.MirScenes.Dialogs
 
             LevelLabel = new MirLabel
             {
-                AutoSize = true,
+                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                Size = new Size(90, 16),
                 Parent = this,
-                Location = new Point(((Settings.ScreenWidth / 2) + 30), 123)
+                Location = new Point(this.Size.Width / 2 + 5, 105),
             };
 
             CharacterName = new MirLabel
             {
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 Parent = this,
-                Location = new Point(((Settings.ScreenWidth / 2) - 60), 123),
+                Location = new Point(this.Size.Width / 2 - 90, 105),
                 Size = new Size(90, 16)
             };
 
 
             ExperienceBar = new MirImageControl
             {
-                Index = Settings.Resolution != 800 ? 8 : 7,
+                Index = 7,
                 Library = Libraries.Prguse,
-                Location = new Point(9, 143),
+                Location = new Point(9, 130),
                 Parent = this,
-                DrawImage = false,
+                DrawImage = true,
                 NotControl = true,
             };
             ExperienceBar.BeforeDraw += ExperienceBar_BeforeDraw;
@@ -777,41 +634,7 @@ namespace Client.MirScenes.Dialogs
                 AutoSize = true,
                 Parent = ExperienceBar,
                 NotControl = true,
-            };
-
-            GoldLabel = new MirLabel
-            {
-                DrawFormat = TextFormatFlags.VerticalCenter,
-                Font = new Font(Settings.FontName, 8F),
-                Location = new Point(this.Size.Width - 105, 119),
-                Parent = this,
-                Size = new Size(99, 13),
-                Sound = SoundList.Gold,
-            };
-            GoldLabel.Click += (o, e) =>
-            {
-                if (GameScene.SelectedCell == null)
-                    GameScene.PickedUpGold = !GameScene.PickedUpGold && GameScene.Gold > 0;
-            };
-
-
-
-            WeightBar = new MirImageControl
-            {
-                Index = 76,
-                Library = Libraries.Prguse,
-                Location = new Point(this.Size.Width - 105, 103),
-                Parent = this,
-                DrawImage = false,
-                NotControl = true,
-            };
-            WeightBar.BeforeDraw += WeightBar_BeforeDraw;
-
-            WeightLabel = new MirLabel
-            {
-                Parent = this,
-                Location = new Point(this.Size.Width - 105, 101),
-                Size = new Size(40, 14),
+                Location = new Point(1004 / 2 - 15, -15),
             };
 
             SpaceLabel = new MirLabel
@@ -821,23 +644,6 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(26, 14),
             };
 
-            CustomButton2 = new MirButton
-            {
-                Index = 2167,
-                HoverIndex = 2168,
-                PressedIndex = 2169,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location =  new Point(((Settings.ScreenWidth / 2) - 60), 110 - 80),
-                Size = new Size(20, 20),
-                Sound = SoundList.ButtonA,
-                Visible = !Settings.ModeView
-            };
-            CustomButton2.Click += (o, e) =>
-            {
-                Network.Enqueue(new C.CallNPC { ObjectID = uint.MaxValue });
-            };
-
             CustomButton1 = new MirButton
             {
                 Index = 2164,
@@ -845,13 +651,30 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 2166,
                 Library = Libraries.Prguse,
                 Parent = this,
-                Location = new Point(((Settings.ScreenWidth / 2) + 35), 110 - 80),
+                Location = new Point(this.Size.Width - 160, 65),
                 Size = new Size(20, 20),
-                Sound = SoundList.ButtonA
+                Sound = SoundList.ButtonA,
+                Visible = !Settings.ModeView
             };
             CustomButton1.Click += (o, e) =>
             {
                 GameScene.Scene.CustomPanel1.Toggle();
+            };
+
+            CustomButton2 = new MirButton
+            {
+                Index = 2167,
+                HoverIndex = 2168,
+                PressedIndex = 2169,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(this.Size.Width - 160, 90),
+                Size = new Size(20, 20),
+                Sound = SoundList.ButtonA
+            };
+            CustomButton2.Click += (o, e) =>
+            {
+                Network.Enqueue(new C.CallNPC { ObjectID = uint.MaxValue });
             };
 
             AModeLabel = new MirLabel
@@ -925,30 +748,20 @@ namespace Client.MirScenes.Dialogs
                     break;
             }
 
-            if ((CMain.PingTime) > 100)
-            {
-                PingLabel.Text = string.Format("网络延迟: {0}", CMain.PingTime);
-                PingLabel.Visible = true;
-            }
-            else
-            {
-                PingLabel.Visible = false;
-            }
-
             switch (Settings.SkillMode)
             {
                 case true:
-                    SModeLabel.Text = "[技能模式: ~]";
+                    SModeLabel.Text = "[Skill Mode: ~]";
                     break;
                 case false:
-                    SModeLabel.Text = "[技能模式: Ctrl]";
+                    SModeLabel.Text = "[Skill Mode: Ctrl]";
                     break;
             }
 
             if (Settings.HPView)
             {
-                HealthLabel.Text = string.Format("{0}\n----\n{1}", User.HP, User.MaxHP);
-                ManaLabel.Text = HPOnly ? "" : string.Format("{0}\n----\n{1} ", User.MP, User.MaxMP);
+                HealthLabel.Text = string.Format("{0}\n----\n{1}", User.HP, User.Stats[Stat.HP]);
+                ManaLabel.Text = HPOnly ? "" : string.Format("{0}\n----\n{1} ", User.MP, User.Stats[Stat.MP]);
                 TopLabel.Text = string.Empty;
                 BottomLabel.Text = string.Empty;
             }
@@ -957,25 +770,24 @@ namespace Client.MirScenes.Dialogs
                 if (HPOnly)
                 {
                     TopLabel.Text = string.Format("{0}\n" + "--", User.HP);
-                    BottomLabel.Text = string.Format("{0}", User.MaxHP);
+                    BottomLabel.Text = string.Format("{0}", User.Stats[Stat.HP]);
                 }
                 else
                 {
                     TopLabel.Text = string.Format(" {0}    {1} \n" + "---------------", User.HP, User.MP);
-                    BottomLabel.Text = string.Format(" {0}    {1} ", User.MaxHP, User.MaxMP);
+                    BottomLabel.Text = string.Format(" {0}    {1} ", User.Stats[Stat.HP], User.Stats[Stat.MP]);
                 }
                 HealthLabel.Text = string.Empty;
                 ManaLabel.Text = string.Empty;
             }
 
-            LevelLabel.Text = string.Format("Lv:{0}", User.Level.ToString());
+            LevelLabel.Text = "Lv:" + User.Level.ToString();
             ExperienceLabel.Text = string.Format("{0:#0.##%}", User.Experience / (double)User.MaxExperience);
-            ExperienceLabel.Location = new Point((ExperienceBar.Size.Width / 2) - 20, -10);
-            GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
+            //ExperienceLabel.Location = new Point((ExperienceBar.Size.Width / 2) - 20, -10);
+            //GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
             CharacterName.Text = User.Name;
-            CharacterName.Location = new Point(((Settings.ScreenWidth / 2)) - CharacterName.Size.Width, CharacterName.Location.Y);
             SpaceLabel.Text = User.Inventory.Count(t => t == null).ToString();
-            WeightLabel.Text = (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight).ToString();
+            //WeightLabel.Text = (MapObject.User.Stats[Stat.BagWeight] - MapObject.User.CurrentBagWeight).ToString();
         }
 
         private void Label_SizeChanged(object sender, EventArgs e)
@@ -987,42 +799,32 @@ namespace Client.MirScenes.Dialogs
 
         private void HealthOrb_BeforeDraw(object sender, EventArgs e)
         {
-            if (Libraries.Prguse == null) return;
+            if (Libraries.GameUI == null) return;
 
             int height;
-            if (User != null && User.HP != User.MaxHP)
-                height = (int)(80 * User.HP / (float)User.MaxHP);
+            if (User != null && User.HP != User.Stats[Stat.HP])
+                height = (int)(80 * User.HP / (float)User.Stats[Stat.HP]);
             else
                 height = 80;
 
             if (height < 0) height = 0;
             if (height > 80) height = 80;
 
-            int orbImage = 4;
+            int orbImage = 9;
 
-            bool hpOnly = false;
+            Rectangle r = new Rectangle(0, 80 - height, 50, height);
+            Libraries.GameUI.Draw(orbImage, r, new Point(HealthOrb.DisplayLocation.X, HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
 
-            if (HPOnly)
-            {
-                hpOnly = true;
-                orbImage = 6;
-            }
-
-            Rectangle r = new Rectangle(0, 80 - height, hpOnly ? 84 : 42, height);
-            Libraries.Prguse.Draw(orbImage, r, new Point(((Settings.ScreenWidth / 2) - (hpOnly ? (r.Width / 2) + 2: r.Width + 2)), HealthOrb.DisplayLocation.Y + 101 - height), Color.White, false);
-
-            if (hpOnly) return;
-
-            if (User.MP != User.MaxMP)
-                height = (int)(80 * User.MP / (float)User.MaxMP);
+            if (User.MP != User.Stats[Stat.MP])
+                height = (int)(80 * User.MP / (float)User.Stats[Stat.MP]);
             else
                 height = 80;
 
             if (height < 0) height = 0;
             if (height > 80) height = 80;
-            r = new Rectangle(41, 80 - height, 42, height);
+            r = new Rectangle(51, 80 - height, 50, height);
 
-            Libraries.Prguse.Draw(4, r, new Point(((Settings.ScreenWidth / 2) - (r.Width)) + 39, HealthOrb.DisplayLocation.Y + 101 - height), Color.White, false);
+            Libraries.GameUI.Draw(orbImage, r, new Point(HealthOrb.DisplayLocation.X + r.Width, HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
         }
 
         private void ExperienceBar_BeforeDraw(object sender, EventArgs e)
@@ -1044,7 +846,7 @@ namespace Client.MirScenes.Dialogs
         private void WeightBar_BeforeDraw(object sender, EventArgs e)
         {
             if (WeightBar.Library == null) return;
-            double percent = MapObject.User.CurrentBagWeight / (double)MapObject.User.MaxBagWeight;
+            double percent = MapObject.User.CurrentBagWeight / (double)MapObject.User.Stats[Stat.BagWeight];
             if (percent > 1) percent = 1;
             if (percent <= 0) return;
 
@@ -1071,16 +873,16 @@ namespace Client.MirScenes.Dialogs
         public Font ChatFont = new Font(Settings.FontName, 8F);
         public string LastPM = string.Empty;
 
-        public int StartIndex, LineCount = 11, WindowSize;
+        public int StartIndex, LineCount = 11, WindowSize = 2;
         public string ChatPrefix = "";
 
         public bool Transparent;
 
         public ChatDialog()
         {
-            Index = Settings.Resolution < 1920 ? 2201 : 2221;
+            Index = 2207;
             Library = Libraries.Prguse;
-            Location = new Point(GameScene.Scene.Location.X + 10, Settings.Resolution < 1920 ? Settings.ScreenHeight - 90 : Settings.ScreenHeight - 180);
+            Location = new Point(GameScene.Scene.Location.X + 10, Settings.ScreenHeight - 170);
             PixelDetect = true;
 
             KeyPress += ChatPanel_KeyPress;
@@ -1092,8 +894,8 @@ namespace Client.MirScenes.Dialogs
                 BackColour = Color.DarkGray,
                 ForeColour = Color.Black,
                 Parent = this,
-                Size = new Size(Settings.Resolution < 1920 ? 305 : 495, 13),
-                Location = new Point(1, Settings.Resolution < 1920 ? 54 : 150),
+                Size = new Size(403, 13),
+                Location = new Point(1, 150),
                 MaxLength = Globals.MaxChatLength,
                 Visible = false,
                 Font = ChatFont,
@@ -1107,7 +909,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 2018,
                 HoverIndex = 2019,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.Resolution < 1920 ? 300 : 490, 1),
+                Location = new Point(395, 1),
                 Parent = this,
                 PressedIndex = 2020,
                 Sound = SoundList.ButtonA,
@@ -1125,7 +927,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 2021,
                 HoverIndex = 2022,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.Resolution < 1920 ? 300 : 490, 9),
+                Location = new Point(395, 9),
                 Parent = this,
                 PressedIndex = 2023,
                 Sound = SoundList.ButtonA,
@@ -1143,7 +945,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 2027,
                 HoverIndex = 2028,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 45 : 141),
+                Location = new Point(395, 141),
                 Parent = this,
                 PressedIndex = 2029,
                 Sound = SoundList.ButtonA,
@@ -1160,7 +962,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 2024,
                 HoverIndex = 2025,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 39 : 135),
+                Location = new Point(395, 135),
                 Parent = this,
                 PressedIndex = 2026,
                 Sound = SoundList.ButtonA,
@@ -1176,9 +978,9 @@ namespace Client.MirScenes.Dialogs
 
             CountBar = new MirImageControl
             {
-                Index = Settings.Resolution < 1920 ? 2484 : 2012,
+                Index = 2014,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.Resolution < 1920 ? 304 : 494, 16),
+                Location = new Point(398, 16),
                 Parent = this,
             };
 
@@ -1187,7 +989,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 2015,
                 HoverIndex = 2016,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.Resolution < 1920 ? 300 : 490, 16),
+                Location = new Point(396, 16),
                 Parent = this,
                 PressedIndex = 2017,
                 Movable = true,
@@ -1257,7 +1059,7 @@ namespace Client.MirScenes.Dialogs
 
         void PositionBar_OnMoving(object sender, MouseEventArgs e)
         {
-            int x = Settings.Resolution < 1920 ? 300 : 490;
+            int x = 396;
             int y = PositionBar.Location.Y;
             if (y >= 16 + CountBar.Size.Height - PositionBar.Size.Height) y = 16 + CountBar.Size.Height - PositionBar.Size.Height;
             if (y < 16) y = 16;
@@ -1349,7 +1151,6 @@ namespace Client.MirScenes.Dialogs
 
             List<string> chat = new List<string>();
 
-            //int chatWidth = Settings.Resolution != 800 ? 614 : 390;
             int chatWidth = 390;
             int index = 0;
             int matchCount = 0;
@@ -1444,7 +1245,7 @@ namespace Client.MirScenes.Dialogs
             {
                 int h = CountBar.Size.Height - PositionBar.Size.Height;
                 h = (int)((h / (float)(History.Count - 1)) * StartIndex);
-                PositionBar.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, 16 + h);
+                PositionBar.Location = new Point(396, 16 + h);
             }
 
             int y = 1;
@@ -1683,45 +1484,45 @@ namespace Client.MirScenes.Dialogs
         }
 
 
-        public void ChangeSize()
-        {
-            if (++WindowSize >= 3) WindowSize = 0;
+        //public void ChangeSize()
+        //{
+        //    if (++WindowSize >= 3) WindowSize = 0;
 
-            int y = DisplayRectangle.Bottom;
-            switch (WindowSize)
-            {
-                case 0:
-                    LineCount = Settings.Resolution < 1920 ? 4 : 11;
-                    Index = Settings.Resolution < 1920 ? 2201 : 2221;
-                    CountBar.Index = Settings.Resolution < 1920 ? 2484 : 2012;
-                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 39 : 135);
-                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 45 : 140);
-                    ChatTextBox.Location = new Point(1, Settings.Resolution < 1920 ? 54 : 150);
-                    break;
-                case 1:
-                    LineCount = Settings.Resolution < 1920 ? 7 : 22;
-                    Index = Settings.Resolution < 1920 ? 2204 : 2224;
-                    CountBar.Index = Settings.Resolution < 1920 ? 2485 : 2013;
-                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 39 + 48 : 135 + 135);
-                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 45 + 48 : 140 + 135);
-                    ChatTextBox.Location = new Point(1, Settings.Resolution < 1920 ? 54 + 48 : 150 + 135);
-                    break;
-                case 2:
-                    LineCount = Settings.Resolution < 1920 ? 11 : 33;
-                    Index = Settings.Resolution < 1920 ? 2207 : 2227;
-                    CountBar.Index = Settings.Resolution < 1920 ? 2486 : 2014;
-                    DownButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 39 + 96 : 135 + 285);
-                    EndButton.Location = new Point(Settings.Resolution < 1920 ? 300 : 490, Settings.Resolution < 1920 ? 45 +96 : 140 + 285);
-                    ChatTextBox.Location = new Point(1, Settings.Resolution < 1920 ? 54 + 96 : 150 + 285);
-                    break;
-            }
+        //    int y = DisplayRectangle.Bottom;
+        //    switch (WindowSize)
+        //    {
+        //        case 0:
+        //            LineCount = 4;
+        //            Index = Settings.Resolution != 800 ? 2221 : 2207;
+        //            CountBar.Index = 2012;
+        //            DownButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 39);
+        //            EndButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 45);
+        //            ChatTextBox.Location = new Point(1, 54);
+        //            break;
+        //        case 1:
+        //            LineCount = 7;
+        //            Index = Settings.Resolution != 800 ? 2224 : 2207;
+        //            CountBar.Index = 2013;
+        //            DownButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 39 + 48);
+        //            EndButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 45 + 48);
+        //            ChatTextBox.Location = new Point(1, 54 + 48);
+        //            break;
+        //        case 2:
+        //            LineCount = 11;
+        //            Index = Settings.Resolution != 800 ? 2227 : 2207;
+        //            CountBar.Index = 2014;
+        //            DownButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 39 + 96);
+        //            EndButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 45 + 96);
+        //            ChatTextBox.Location = new Point(1, 54 + 96);
+        //            break;
+        //    }
 
-            Location = new Point(Location.X, y - Size.Height);
+        //    Location = new Point(Location.X, y - Size.Height);
 
-            UpdateBackground();
+        //    UpdateBackground();
 
-            Update();
-        }
+        //    Update();
+        //}
 
         public void UpdateBackground()
         {
@@ -1730,13 +1531,13 @@ namespace Client.MirScenes.Dialogs
             switch (WindowSize)
             {
                 case 0:
-                    Index = Settings.Resolution < 1920 ? 2201 : 2221;
+                    Index = Settings.Resolution != 800 ? 2221 : 2201;
                     break;
                 case 1:
-                    Index = Settings.Resolution < 1920 ? 2204 : 2224;
+                    Index = Settings.Resolution != 800 ? 2224 : 2204;
                     break;
                 case 2:
-                    Index = Settings.Resolution < 1920 ? 2207 : 2227;
+                    Index = Settings.Resolution != 800 ? 2227 : 2207;
                     break;
             }
 
@@ -1752,31 +1553,34 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class ChatControlBar : MirImageControl
     {
-        public MirButton SizeButton, SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton, ReportButton, TradeButton;
+        public MirButton SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton, ReportButton, TradeButton;
 
         public ChatControlBar()
         {
-            Index = Settings.Resolution < 1920 ? 2035 : 2034;
+            Index = 2035;
             Library = Libraries.Prguse;
-            Location = new Point(GameScene.Scene.Location.X + 10, Settings.Resolution < 1920 ? Settings.ScreenHeight - 105 : Settings.ScreenHeight - 195);
+            //Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Settings.ScreenHeight - 112);
+            Location = new Point(GameScene.Scene.Location.X + 10, Settings.ScreenHeight - 185);
 
-            SizeButton = new MirButton
-            {
-                Index = 2057,
-                HoverIndex = 2058,
-                PressedIndex = 2059,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(Settings.Resolution < 1920 ? 250 : 440, 1),
-                Visible = true,
-                Sound = SoundList.ButtonA,
-                Hint = GameLanguage.Size
-            };
-            SizeButton.Click += (o, e) =>
-            {
-                GameScene.Scene.ChatDialog.ChangeSize();
-                Location = new Point(Location.X, GameScene.Scene.ChatDialog.DisplayRectangle.Top - Size.Height);
-            };
+            //SizeButton = new MirButton
+            //{
+            //    Index = 2057,
+            //    HoverIndex = 2058,
+            //    PressedIndex = 2059,
+            //    Library = Libraries.Prguse,
+            //    Parent = this,
+            //    Location = new Point(Settings.Resolution != 800 ? 574 : 350, 1),
+            //    Visible = true,
+            //    Sound = SoundList.ButtonA,
+            //    Hint = GameLanguage.Size
+            //};
+            //SizeButton.Click += (o, e) =>
+            //{
+            //    //GameScene.Scene.ChatDialog.ChangeSize();
+            //    //Location = new Point(Location.X, GameScene.Scene.ChatDialog.DisplayRectangle.Top - Size.Height);
+            //    //if (GameScene.Scene.BeltDialog.Index == 1932)
+            //    //    GameScene.Scene.BeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
+            //};
 
             SettingsButton = new MirButton
             {
@@ -1785,7 +1589,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 2062,
                 Library = Libraries.Prguse,
                 Parent = this,
-                Location = new Point(Settings.Resolution < 1920 ? 273 : 463, 1),
+                Location = new Point(372, 1),
                 Sound = SoundList.ButtonA,
                 Hint = GameLanguage.ChatSettings
             };
@@ -1795,6 +1599,9 @@ namespace Client.MirScenes.Dialogs
                     GameScene.Scene.ChatOptionDialog.Hide();
                 else
                     GameScene.Scene.ChatOptionDialog.Show();
+
+                //GameScene.Scene.ChatDialog.Transparent = !GameScene.Scene.ChatDialog.Transparent;
+                //GameScene.Scene.ChatDialog.UpdateBackground();
             };
 
             NormalButton = new MirButton
@@ -1810,7 +1617,7 @@ namespace Client.MirScenes.Dialogs
             };
             NormalButton.Click += (o, e) =>
             {
-                ToggleChatFilter("全部");
+                ToggleChatFilter("All");
             };
 
             ShoutButton = new MirButton
@@ -1826,7 +1633,7 @@ namespace Client.MirScenes.Dialogs
             };
             ShoutButton.Click += (o, e) =>
             {
-                ToggleChatFilter("呐喊");
+                ToggleChatFilter("Shout");
             };
 
             WhisperButton = new MirButton
@@ -1842,7 +1649,7 @@ namespace Client.MirScenes.Dialogs
             };
             WhisperButton.Click += (o, e) =>
             {
-                ToggleChatFilter("私聊");
+                ToggleChatFilter("Whisper");
             };
 
             LoverButton = new MirButton
@@ -1858,7 +1665,7 @@ namespace Client.MirScenes.Dialogs
             };
             LoverButton.Click += (o, e) =>
             {
-                ToggleChatFilter("爱人");
+                ToggleChatFilter("Lover");
             };
 
             MentorButton = new MirButton
@@ -1874,7 +1681,7 @@ namespace Client.MirScenes.Dialogs
             };
             MentorButton.Click += (o, e) =>
             {
-                ToggleChatFilter("师傅");
+                ToggleChatFilter("Mentor");
             };
 
             GroupButton = new MirButton
@@ -1890,7 +1697,7 @@ namespace Client.MirScenes.Dialogs
             };
             GroupButton.Click += (o, e) =>
             {
-                ToggleChatFilter("队伍");
+                ToggleChatFilter("Group");
             };
 
             GuildButton = new MirButton
@@ -1907,7 +1714,7 @@ namespace Client.MirScenes.Dialogs
             GuildButton.Click += (o, e) =>
             {
                 Settings.ShowGuildChat = !Settings.ShowGuildChat;
-                ToggleChatFilter("行会");
+                ToggleChatFilter("Guild");
             };
 
             TradeButton = new MirButton
@@ -1932,7 +1739,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(Settings.Resolution != 800 ? 552 : 328, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "报告",
+                Hint = "Report",
                 Visible = false
             };
             ReportButton.Click += (o, e) =>
@@ -1940,7 +1747,7 @@ namespace Client.MirScenes.Dialogs
                 GameScene.Scene.ReportDialog.Visible = !GameScene.Scene.ReportDialog.Visible;
             };
 
-            ToggleChatFilter("全部");
+            ToggleChatFilter("All");
         }
 
         public void ToggleChatFilter(string chatFilter)
@@ -1964,37 +1771,37 @@ namespace Client.MirScenes.Dialogs
 
             switch (chatFilter)
             {
-                case "全部":
+                case "All":
                     NormalButton.Index = 2038;
                     NormalButton.HoverIndex = 2038;
                     GameScene.Scene.ChatDialog.ChatPrefix = "";
                     break;
-                case "呐喊":
+                case "Shout":
                     ShoutButton.Index = 2041;
                     ShoutButton.HoverIndex = 2041;
                     GameScene.Scene.ChatDialog.ChatPrefix = "!";
                     break;
-                case "私聊":
+                case "Whisper":
                     WhisperButton.Index = 2044;
                     WhisperButton.HoverIndex = 2044;
                     GameScene.Scene.ChatDialog.ChatPrefix = "/";
                     break;
-                case "队伍":
+                case "Group":
                     GroupButton.Index = 2053;
                     GroupButton.HoverIndex = 2053;
                     GameScene.Scene.ChatDialog.ChatPrefix = "!!";
                     break;
-                case "行会":
+                case "Guild":
                     GuildButton.Index = 2056;
                     GuildButton.HoverIndex = 2056;
                     GameScene.Scene.ChatDialog.ChatPrefix = "!~";
                     break;
-                case "爱人":
+                case "Lover":
                     LoverButton.Index = 2047;
                     LoverButton.HoverIndex = 2047;
                     GameScene.Scene.ChatDialog.ChatPrefix = ":)";
                     break;
-                case "师傅":
+                case "Mentor":
                     MentorButton.Index = 2050;
                     MentorButton.HoverIndex = 2050;
                     GameScene.Scene.ChatDialog.ChatPrefix = "!#";
@@ -2010,12 +1817,11 @@ namespace Client.MirScenes.Dialogs
         public MirItemCell[] QuestGrid;
 
         public MirButton CloseButton, ItemButton, ItemButton2, QuestButton, AddButton;
-        public MirButton SortButton, SplitButton;
         public MirLabel GoldLabel, WeightLabel;
 
         public InventoryDialog()
         {
-            Index = 824;
+            Index = 196;
             Library = Libraries.Title;
             Movable = true;
             Sort = true;
@@ -2025,35 +1831,11 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 24,
                 Library = Libraries.Prguse,
-                Location = new Point(182, 238),
+                Location = new Point(182, 217),
                 Parent = this,
                 DrawImage = false,
                 NotControl = true,
             };
-
-            SortButton = new MirButton
-            {
-                Index = 825,
-                HoverIndex = 826,
-                PressedIndex = 827,
-                Library = Libraries.Title,
-                Location = new Point(313 - 48 - 5, 207),
-                Parent = this,
-                Sound = SoundList.ButtonA,
-            };
-            SortButton.Click += SortButton_Click;
-
-            SplitButton = new MirButton
-            {
-                Index = 828,
-                HoverIndex = 829,
-                PressedIndex = 830,
-                Library = Libraries.Title,
-                Location = new Point(313 - (48 * 2) - 10, 207),
-                Parent = this,
-                Sound = SoundList.ButtonA,
-            };
-            //SplitButton.Click += Button_Click;
 
             ItemButton = new MirButton
             {
@@ -2102,7 +1884,7 @@ namespace Client.MirScenes.Dialogs
             };
             AddButton.Click += (o1, e) =>
             {
-                int openLevel = (GameScene.User.Inventory.Length - 50) / 4;
+                int openLevel = (GameScene.User.Inventory.Length - 46) / 4;
                 int openGold = (1000000 + openLevel * 1000000);
                 MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ExtraSlots4, openGold), MirMessageBoxButtons.OKCancel);
 
@@ -2128,7 +1910,7 @@ namespace Client.MirScenes.Dialogs
             GoldLabel = new MirLabel
             {
                 Parent = this,
-                Location = new Point(40, 235),
+                Location = new Point(40, 212),
                 Size = new Size(111, 14),
                 Sound = SoundList.Gold,
             };
@@ -2148,14 +1930,14 @@ namespace Client.MirScenes.Dialogs
                     int idx = 8 * y + x;
                     Grid[idx] = new MirItemCell
                     {
-                        ItemSlot = 10 + idx,
+                        ItemSlot = 6 + idx,
                         GridType = MirGridType.Inventory,
                         Library = Libraries.Items,
                         Parent = this,
                         Location = new Point(x * 36 + 9 + x, y % 5 * 32 + 37 + y % 5),
                     };
 
-                    if (idx >= 50)
+                    if (idx >= 40)
                         Grid[idx].Visible = false;
                 }
             }
@@ -2181,7 +1963,7 @@ namespace Client.MirScenes.Dialogs
             WeightLabel = new MirLabel
             {
                 Parent = this,
-                Location = new Point(268, 235),
+                Location = new Point(268, 212),
                 Size = new Size(26, 14)
             };
             WeightBar.BeforeDraw += WeightBar_BeforeDraw;
@@ -2202,18 +1984,9 @@ namespace Client.MirScenes.Dialogs
 
         }
 
-        void SortButton_Click(object sender, EventArgs e)
-        {
-            Network.Enqueue(new C.SortInventory { Order = true });
-            for (int i = 0; i < Grid.Length; i++)
-            {
-                Grid[i].Locked = true;
-            }
-        }
-
         void Button_Click(object sender, EventArgs e)
         {
-            if (GameScene.User.Inventory.Length == 50 && sender == ItemButton2)
+            if (GameScene.User.Inventory.Length == 46 && sender == ItemButton2)
             {
                 MirMessageBox messageBox = new MirMessageBox(GameLanguage.ExtraSlots8, MirMessageBoxButtons.OKCancel);
 
@@ -2241,7 +2014,7 @@ namespace Client.MirScenes.Dialogs
                     ItemButton2.Index = 738;
                     QuestButton.Index = 198;
 
-                    if (GameScene.User.Inventory.Length == 50)
+                    if (GameScene.User.Inventory.Length == 46)
                     {
                         ItemButton2.Index = 169;
                     }
@@ -2284,14 +2057,14 @@ namespace Client.MirScenes.Dialogs
             ItemButton2.Index = 738;
             QuestButton.Index = 739;
 
-            if (GameScene.User.Inventory.Length == 50)
+            if (GameScene.User.Inventory.Length == 46)
             {
                 ItemButton2.Index = 169;
             }
 
             foreach (var grid in Grid)
             {
-                if (grid.ItemSlot < 50)
+                if (grid.ItemSlot < 46)
                     grid.Visible = true;
                 else
                     grid.Visible = false;
@@ -2308,13 +2081,13 @@ namespace Client.MirScenes.Dialogs
 
             foreach (var grid in Grid)
             {
-                if (grid.ItemSlot < 50 || grid.ItemSlot >= GameScene.User.Inventory.Length)
+                if (grid.ItemSlot < 46 || grid.ItemSlot >= GameScene.User.Inventory.Length)
                     grid.Visible = false;
                 else
                     grid.Visible = true;
             }
 
-            int openLevel = (GameScene.User.Inventory.Length - 50) / 4;
+            int openLevel = (GameScene.User.Inventory.Length - 46) / 4;
             for (int i = 0; i < LockBar.Length; i++)
             {
                 LockBar[i].Visible = (i < openLevel) ? false : true;
@@ -2335,7 +2108,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (WeightBar.Library == null) return;
 
-            double percent = MapObject.User.CurrentBagWeight / (double)MapObject.User.MaxBagWeight;
+            double percent = MapObject.User.CurrentBagWeight / (double)MapObject.User.Stats[Stat.BagWeight];
             if (percent > 1) percent = 1;
             if (percent <= 0) return;
 
@@ -2393,120 +2166,89 @@ namespace Client.MirScenes.Dialogs
                     SoundManager.PlaySound(20000 + (ushort)Spell.MagicShield * 10);
                     break;
             }
-
         }
     }
     public sealed class BeltDialog : MirImageControl
     {
         public MirLabel[] Key = new MirLabel[10];
-        public MirButton CloseButton, RotateButton;
         public MirItemCell[] Grid;
 
         public BeltDialog()
         {
-            Index = Settings.Resolution < 1280 ? 2483 : Settings.Resolution < 1920 ? 2482 : 2477;
-            Library = Libraries.Prguse;
+            Index = 1;
+            Library = Libraries.GameUI;
             Movable = false;
             Sort = true;
             Visible = true;
-            if (Settings.Resolution < 1280)
-            {
-                Location = new Point(GameScene.Scene.MainDialog.Location.X + (GameScene.Scene.MainDialog.Size.Width / 2) - 197, Settings.ScreenHeight - 90 - 87);
-            }
-            else if (Settings.Resolution < 1920)
-            {
-                Location = new Point(GameScene.Scene.MainDialog.Location.X + (GameScene.Scene.MainDialog.Size.Width / 2) - 290, Settings.ScreenHeight - 90);
-            }
-            else
-            {
-                Location = new Point(GameScene.Scene.MainDialog.Location.X + (GameScene.Scene.MainDialog.Size.Width / 2) - 332, Settings.ScreenHeight - 90);
-            }
+            Location = new Point(GameScene.Scene.MainDialog.DisplayLocation.X + (GameScene.Scene.MainDialog.Size.Width / 2) - 255, Settings.ScreenHeight - 90);
 
-            if (Settings.Resolution < 1280)
+            //BeforeDraw += BeltPanel_BeforeDraw;
+
+            for (int i = 0; i < Key.Length; i++)
             {
-                for (int i = 0; i < Key.Length; i++)
+                Key[i] = new MirLabel
                 {
-                    Key[i] = new MirLabel
-                    {
-                        Parent = this,
-                        Size = new Size(26, 14),
-                        Location = i < 3 ? new Point(1 + i * 47, 2 + 87) : i < 6 ? new Point(109 + i * 47, 2 + 87) : new Point(i * 48 - 185, 2),
-                        Text = i == 9 ? "0" : (i + 1).ToString()
-                    };
-                }
-
-                Grid = new MirItemCell[10];
-
-                for (int x = 0; x < 10; x++)
-                {
-                    Grid[x] = new MirItemCell
-                    {
-                        ItemSlot = x,
-                        Size = new Size(37, 37),
-                        GridType = MirGridType.Inventory,
-                        Library = Libraries.Items,
-                        Parent = this,
-                        Location = x < 3 ? new Point(x * 47 + 4, 4 + 87) : x < 6 ? new Point(x * 47 + 112, 4 + 87) : new Point(x * 48 - 185, 4),
-                    };
-                }
+                    Parent = this,
+                    Size = new Size(26, 14),
+                    //Location = new Point(1 + i * 35, 2),
+                    Location = i < 5 ? new Point(1 + i * 41, 2) : new Point(104 + i * 41, 2),
+                    Text = (i + 1).ToString()
+                };
             }
-            else if (Settings.Resolution < 1920)
+
+            Grid = new MirItemCell[10];
+
+            for (int x = 0; x < 10; x++)
             {
-                for (int i = 0; i < Key.Length; i++)
+                Grid[x] = new MirItemCell
                 {
-                    Key[i] = new MirLabel
-                    {
-                        Parent = this,
-                        Size = new Size(26, 14),
-                        Location = i < 5 ? new Point(1 + i * 47, 2) : new Point(107 + i * 47, 2),
-                        Text = i == 9 ? "0" : (i + 1).ToString()
-                    };
-                }
+                    ItemSlot = x,
+                    Size = new Size(32, 32),
+                    GridType = MirGridType.Inventory,
+                    Library = Libraries.Items,
+                    Parent = this,
+                    //Location = new Point(x * 35 + 7, 3),
+                    Location = x < 5 ? new Point(x * 41 + 3, 3) : new Point(x * 41 + 104, 3),
+                };
+            }
 
-                Grid = new MirItemCell[10];
+        }
 
-                for (int x = 0; x < 10; x++)
-                {
-                    Grid[x] = new MirItemCell
-                    {
-                        ItemSlot = x,
-                        Size = new Size(37, 37),
-                        GridType = MirGridType.Inventory,
-                        Library = Libraries.Items,
-                        Parent = this,
-                        Location = x < 5 ? new Point(x * 47 + 4, 4) : new Point(x * 47 + 110, 4),
-                    };
-                }
+        private void BeltPanel_BeforeDraw(object sender, EventArgs e)
+        {
+            //if Transparent return
+
+            if (Libraries.Prguse != null)
+                Libraries.Prguse.Draw(Index + 1, DisplayLocation, Color.White, false, 0.5F);
+        }
+
+        public void Flip()
+        {
+            //0,70 LOCATION
+            if (Index == 1932)
+            {
+                Index = 1944;
+                Location = new Point(0, 200);
+
+                for (int x = 0; x < 6; x++)
+                    Grid[x].Location = new Point(3, x * 35 + 12);
+
             }
             else
             {
-                for (int i = 0; i < Key.Length; i++)
-                {
-                    Key[i] = new MirLabel
-                    {
-                        Parent = this,
-                        Size = new Size(26, 14),
-                        Location = i < 5 ? new Point(1 + i * 56, 2) : new Point(110 + i * 56, 2),
-                        Text = i == 9 ? "0" : (i + 1).ToString()
-                    };
-                }
+                Index = 1932;
+                Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Settings.ScreenHeight - 150);
 
-                Grid = new MirItemCell[10];
+                for (int x = 0; x < 6; x++)
+                    Grid[x].Location = new Point(x * 35 + 12, 3);
+            }
 
-                for (int x = 0; x < 10; x++)
-                {
-                    Grid[x] = new MirItemCell
-                    {
-                        ItemSlot = x,
-                        Size = new Size(37, 37),
-                        GridType = MirGridType.Inventory,
-                        Library = Libraries.Items,
-                        Parent = this,
-                        Location = x < 5 ? new Point(x * 56 + 4, 4) : new Point(x * 56 + 113, 4),
-                    };
-                }
+            for (int i = 0; i < Key.Length; i++)
+            {
+                Key[i].Location = (Index != 1932) ? new Point(-1, 11 + i * 35) : new Point(8 + i * 35, 2);
             }
         }
+
 
         public MirItemCell GetCell(ulong id)
         {
@@ -2531,7 +2273,7 @@ namespace Client.MirScenes.Dialogs
         public MirLabel[] KeyNameLabels = new MirLabel[8];
         public MirLabel BindNumberLabel = new MirLabel();
 
-        public MirAnimatedControl[] CoolDowns = new MirAnimatedControl[8];
+        public MirImageControl[] CoolDowns = new MirImageControl[8];
 
         public SkillBarDialog()
         {
@@ -2575,15 +2317,13 @@ namespace Client.MirScenes.Dialogs
                         GameScene.Scene.UseSpell(j + (8 * BarIndex));
                     };
 
-                CoolDowns[i] = new MirAnimatedControl
+                CoolDowns[i] = new MirImageControl
                 {
                     Library = Libraries.Prguse2,
                     Parent = this,
                     Location = new Point(i * 25 + 15, 3),
                     NotControl = true,
                     UseOffSet = true,
-                    Loop = false,
-                    Animated = false,
                     Opacity = 0.6F
                 };
             }
@@ -2674,6 +2414,7 @@ namespace Client.MirScenes.Dialogs
                 if ((m.Key < (BarIndex * 8)+1) || (m.Key > ((BarIndex + 1) * 8)+1)) continue;
                 HasSkill = true;
             }
+
             if (!Visible) return;
             Index = 2190;
             _switchBindsButton.Index = 2247;
@@ -2698,13 +2439,11 @@ namespace Client.MirScenes.Dialogs
                     //string key = m.Key > 8 ? string.Format("CTRL F{0}", i) : string.Format("F{0}", m.Key);
 
                     Cells[i - 1].Index = magic.Icon*2;
-                    Cells[i - 1].Hint = string.Format("{0}\nMP: {1}\n冷却: {2}\nKey: {3}", magic.Name,
+                    Cells[i - 1].Hint = string.Format("{0}\nMP: {1}\nCooldown: {2}\nKey: {3}", magic.Name,
                         (magic.BaseCost + (magic.LevelCost * magic.Level)), Functions.PrintTimeSpanFromMilliSeconds(magic.Delay), key);
 
                     KeyNameLabels[i - 1].Text = "";
                 }
-
-                CoolDowns[i - 1].Dispose();
             }
         }
 
@@ -2729,10 +2468,12 @@ namespace Client.MirScenes.Dialogs
                     int totalFrames = 22;
                     long timeLeft = magic.CastTime + magic.Delay - CMain.Time;
 
-                    if (timeLeft < 100 || (CoolDowns[i] != null && CoolDowns[i].Animated))
+                    if (timeLeft < 100)
                     {
-                        if (timeLeft > 0)
-                            CoolDowns[i].Dispose();
+                        if (timeLeft > 0) { 
+                            CoolDowns[i].Visible = false;
+                           // CoolDowns[i].Dispose();
+                        }
                         else
                             continue;
                     }
@@ -2740,24 +2481,10 @@ namespace Client.MirScenes.Dialogs
                     int delayPerFrame = (int)(magic.Delay / totalFrames);
                     int startFrame = totalFrames - (int)(timeLeft / delayPerFrame);
 
-                    if ((CMain.Time <= magic.CastTime + magic.Delay) && magic.CastTime > 0)
+                    if ((CMain.Time <= magic.CastTime + magic.Delay))
                     {
-                        CoolDowns[i].Dispose();
-
-                        CoolDowns[i] = new MirAnimatedControl
-                        {
-                            Index = 1260 + startFrame,
-                            AnimationCount = (totalFrames - startFrame),
-                            AnimationDelay = delayPerFrame,
-                            Library = Libraries.Prguse2,
-                            Parent = this,
-                            Location = new Point(i * 25 + 15, 3),
-                            NotControl = true,
-                            UseOffSet = true,
-                            Loop = false,
-                            Animated = true,
-                            Opacity = 0.6F
-                        };
+                        CoolDowns[i].Visible = true;
+                        CoolDowns[i].Index = 1260 + startFrame;
                     }
                 }
             }
@@ -2781,26 +2508,26 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class CharacterDialog : MirImageControl
     {
-        public MirButton CloseButton;
-        public MirImageControl CharacterPage, StatusPage, StatePage, ClassImage;
+        public MirButton CloseButton, CharacterButton, StatusButton, StateButton, SkillButton;
+        public MirImageControl CharacterPage, StatusPage, StatePage, SkillPage, ClassImage;
 
         public MirLabel NameLabel, GuildLabel, LoverLabel;
         public MirLabel ACLabel, MACLabel, DCLabel, MCLabel, SCLabel, HealthLabel, ManaLabel;
         public MirLabel CritRLabel, CritDLabel, LuckLabel, AttkSpdLabel, AccLabel, AgilLabel;
         public MirLabel ExpPLabel, BagWLabel, WearWLabel, HandWLabel, MagicRLabel, PoisonRecLabel, HealthRLabel, ManaRLabel, PoisonResLabel, HolyTLabel, FreezeLabel, PoisonAtkLabel;
         public MirLabel HeadingLabel, StatLabel;
+        public MirButton NextButton, BackButton;
 
         public MirItemCell[] Grid;
-        public MirItemCell Weapon, Armour, Helmet;
+        public MagicButton[] Magics;
 
         public int StartIndex;
 
         public CharacterDialog()
         {
-            //Index = 504;
-            Index = 820;
+            Index = 504;
             Library = Libraries.Title;
-            Location = new Point(Settings.ScreenWidth - 300, 0);
+            Location = new Point(Settings.ScreenWidth - 264, 0);
             Movable = true;
             Sort = true;
 
@@ -2808,11 +2535,10 @@ namespace Client.MirScenes.Dialogs
 
             CharacterPage = new MirImageControl
             {
-                //Index = 340,
-                Index = 2480,
+                Index = 340,
                 Parent = this,
                 Library = Libraries.Prguse,
-                Location = new Point(8, 90 - 19),
+                Location = new Point(8, 90),
             };
             CharacterPage.AfterDraw += (o, e) =>
             {
@@ -2826,22 +2552,22 @@ namespace Client.MirScenes.Dialogs
 
                         int genderOffset = MapObject.User.Gender == MirGender.Male ? 0 : 1;
 
-                        Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, new Point(DisplayLocation.X - 25, DisplayLocation.Y - 85), Color.White, true, 1F);
+                        Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, DisplayLocation, Color.White, true, 1F);
                     }
 
                     RealItem = Functions.GetRealItem(Grid[(int)EquipmentSlot.Armour].Item.Info, MapObject.User.Level, MapObject.User.Class, GameScene.ItemInfoList);
-                    Libraries.StateItems.Draw(RealItem.Image, new Point(DisplayLocation.X - 25, DisplayLocation.Y - 85), Color.White, true, 1F);
+                    Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
 
                 }
                 if (Grid[(int)EquipmentSlot.Weapon].Item != null)
                 {
                     RealItem = Functions.GetRealItem(Grid[(int)EquipmentSlot.Weapon].Item.Info, MapObject.User.Level, MapObject.User.Class, GameScene.ItemInfoList);
-                    Libraries.StateItems.Draw(RealItem.Image, new Point(DisplayLocation.X - 25, DisplayLocation.Y - 85), Color.White, true, 1F);
+                    Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
 
                 }
 
                 if (Grid[(int)EquipmentSlot.Helmet].Item != null)
-                    Libraries.StateItems.Draw(Grid[(int)EquipmentSlot.Helmet].Item.Info.Image, new Point(DisplayLocation.X - 25, DisplayLocation.Y - 85), Color.White, true, 1F);
+                    Libraries.StateItems.Draw(Grid[(int)EquipmentSlot.Helmet].Item.Info.Image, DisplayLocation, Color.White, true, 1F);
                 else
                 {
                     int hair = 441 + MapObject.User.Hair + (MapObject.User.Class == MirClass.Assassin ? 20 : 0) + (MapObject.User.Gender == MirGender.Male ? 0 : 40);
@@ -2849,61 +2575,119 @@ namespace Client.MirScenes.Dialogs
                     int offSetX = MapObject.User.Class == MirClass.Assassin ? (MapObject.User.Gender == MirGender.Male ? 6 : 4) : 0;
                     int offSetY = MapObject.User.Class == MirClass.Assassin ? (MapObject.User.Gender == MirGender.Male ? 25 : 18) : 0;
 
-                    Libraries.Prguse.Draw(hair, new Point(DisplayLocation.X - 25 + offSetX, DisplayLocation.Y - 85 + offSetY), Color.White, true, 1F);
+                    Libraries.Prguse.Draw(hair, new Point(DisplayLocation.X + offSetX, DisplayLocation.Y + offSetY), Color.White, true, 1F);
                 }
             };
 
             StatusPage = new MirImageControl
             {
-                Index = 822,
+                Index = 506,
                 Parent = this,
                 Library = Libraries.Title,
-                Location = new Point(10, 218 + 90 - 17),
-                Visible = true,
+                Location = new Point(8, 90),
+                Visible = false,
             };
             StatusPage.BeforeDraw += (o, e) =>
             {
-                ACLabel.Text = string.Format("{0}-{1}", MapObject.User.MinAC, MapObject.User.MaxAC);
-                MACLabel.Text = string.Format("{0}-{1}", MapObject.User.MinMAC, MapObject.User.MaxMAC);
-                DCLabel.Text = string.Format("{0}-{1}", MapObject.User.MinDC, MapObject.User.MaxDC);
-                MCLabel.Text = string.Format("{0}-{1}", MapObject.User.MinMC, MapObject.User.MaxMC);
-                SCLabel.Text = string.Format("{0}-{1}", MapObject.User.MinSC, MapObject.User.MaxSC);
-                HealthLabel.Text = string.Format("{0}/{1}", MapObject.User.HP, MapObject.User.MaxHP);
-                ManaLabel.Text = string.Format("{0}/{1}", MapObject.User.MP, MapObject.User.MaxMP);
-                CritRLabel.Text = string.Format("{0}%", MapObject.User.CriticalRate);
-                AttkSpdLabel.Text = string.Format("{0}", MapObject.User.ASpeed);
-                AccLabel.Text = string.Format("+{0}", MapObject.User.Accuracy);
-                AgilLabel.Text = string.Format("+{0}", MapObject.User.Agility);
-                LuckLabel.Text = string.Format("{0}", MapObject.User.Luck);
+                ACLabel.Text = string.Format("{0}-{1}", MapObject.User.Stats[Stat.MinAC], MapObject.User.Stats[Stat.MaxAC]);
+                MACLabel.Text = string.Format("{0}-{1}", MapObject.User.Stats[Stat.MinMAC], MapObject.User.Stats[Stat.MaxMAC]);
+                DCLabel.Text = string.Format("{0}-{1}", MapObject.User.Stats[Stat.MinDC], MapObject.User.Stats[Stat.MaxDC]);
+                MCLabel.Text = string.Format("{0}-{1}", MapObject.User.Stats[Stat.MinMC], MapObject.User.Stats[Stat.MaxMC]);
+                SCLabel.Text = string.Format("{0}-{1}", MapObject.User.Stats[Stat.MinSC], MapObject.User.Stats[Stat.MaxSC]);
+                HealthLabel.Text = string.Format("{0}/{1}", MapObject.User.HP, MapObject.User.Stats[Stat.HP]);
+                ManaLabel.Text = string.Format("{0}/{1}", MapObject.User.MP, MapObject.User.Stats[Stat.MP]);
+                CritRLabel.Text = string.Format("{0}%", MapObject.User.Stats[Stat.CriticalRate]);
+                CritDLabel.Text = string.Format("{0}", MapObject.User.Stats[Stat.CriticalDamage]);
+                AttkSpdLabel.Text = string.Format("{0}", MapObject.User.Stats[Stat.AttackSpeed]);
+                AccLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.Accuracy]);
+                AgilLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.Agility]);
+                LuckLabel.Text = string.Format("{0}", MapObject.User.Stats[Stat.Luck]);
             };
 
             StatePage = new MirImageControl
             {
-                Index = 821,
+                Index = 507,
                 Parent = this,
                 Library = Libraries.Title,
-                Location = new Point(219, 90 - 19),
-                Visible = true
+                Location = new Point(8, 90),
+                Visible = false
             };
             StatePage.BeforeDraw += (o, e) =>
             {
-                ExpPLabel.Text = string.Format("{0}/{1}", MapObject.User.Experience ,MapObject.User.MaxExperience);
-                WearWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentWearWeight, MapObject.User.MaxWearWeight);
-                HandWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentHandWeight, MapObject.User.MaxHandWeight);
-                MagicRLabel.Text = string.Format("+{0}", MapObject.User.MagicResist);
-                PoisonResLabel.Text = string.Format("+{0}", MapObject.User.PoisonResist);
-                HealthRLabel.Text = string.Format("+{0}", MapObject.User.HealthRecovery);
-                ManaRLabel.Text = string.Format("+{0}", MapObject.User.SpellRecovery);
-                HolyTLabel.Text = string.Format("+{0}", MapObject.User.Holy);
-                FreezeLabel.Text = string.Format("+{0}", MapObject.User.Freezing);
-                PoisonAtkLabel.Text = string.Format("+{0}", MapObject.User.PoisonAttack);
+                ExpPLabel.Text = string.Format("{0:0.##%}", MapObject.User.Experience / (double)MapObject.User.MaxExperience);
+                BagWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentBagWeight, MapObject.User.Stats[Stat.BagWeight]);
+                WearWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentWearWeight, MapObject.User.Stats[Stat.WearWeight]);
+                HandWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentHandWeight, MapObject.User.Stats[Stat.HandWeight]);
+                MagicRLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.MagicResist]);
+                PoisonResLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.PoisonResist]);
+                HealthRLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.HealthRecovery]);
+                ManaRLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.SpellRecovery]);
+                PoisonRecLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.PoisonRecovery]);
+                HolyTLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.Holy]);
+                FreezeLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.Freezing]);
+                PoisonAtkLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.PoisonAttack]);
             };
+
+
+            SkillPage = new MirImageControl
+            {
+                Index = 508,
+                Parent = this,
+                Library = Libraries.Title,
+                Location = new Point(8, 90),
+                Visible = false
+            };
+
+
+            CharacterButton = new MirButton
+            {
+                Index = 500,
+                Library = Libraries.Title,
+                Location = new Point(8, 70),
+                Parent = this,
+                PressedIndex = 500,
+                Size = new Size(64, 20),
+                Sound = SoundList.ButtonA,
+            };
+            CharacterButton.Click += (o, e) => ShowCharacterPage();
+            StatusButton = new MirButton
+            {
+                Library = Libraries.Title,
+                Location = new Point(70, 70),
+                Parent = this,
+                PressedIndex = 501,
+                Size = new Size(64, 20),
+                Sound = SoundList.ButtonA
+            };
+            StatusButton.Click += (o, e) => ShowStatusPage();
+
+            StateButton = new MirButton
+            {
+                Library = Libraries.Title,
+                Location = new Point(132, 70),
+                Parent = this,
+                PressedIndex = 502,
+                Size = new Size(64, 20),
+                Sound = SoundList.ButtonA
+            };
+            StateButton.Click += (o, e) => ShowStatePage();
+
+            SkillButton = new MirButton
+            {
+                Library = Libraries.Title,
+                Location = new Point(194, 70),
+                Parent = this,
+                PressedIndex = 503,
+                Size = new Size(64, 20),
+                Sound = SoundList.ButtonA
+            };
+            SkillButton.Click += (o, e) => ShowSkillPage();
 
             CloseButton = new MirButton
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(241 + 36, 3),
+                Location = new Point(241, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
@@ -2927,6 +2711,14 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(264, 30),
                 NotControl = true,
             };
+            ClassImage = new MirImageControl
+            {
+                Index = 100,
+                Library = Libraries.Prguse,
+                Location = new Point(15, 33),
+                Parent = this,
+                NotControl = true,
+            };
 
             Grid = new MirItemCell[Enum.GetNames(typeof(EquipmentSlot)).Length];
 
@@ -2935,18 +2727,16 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.Weapon,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(123 - 70, 7 + 30),
-                Border = false,
-                Visible = false
+                Location = new Point(123, 7),
             };
+
 
             Grid[(int)EquipmentSlot.Armour] = new MirItemCell
             {
                 ItemSlot = (int)EquipmentSlot.Armour,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(163 - 68, 7 + 45),
-                Visible = false
+                Location = new Point(163, 7),
             };
 
 
@@ -2955,8 +2745,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.Helmet,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(203 - 120, 7),
-                Visible = false
+                Location = new Point(203, 7),
             };
 
 
@@ -2966,7 +2755,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.Torch,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(203 - 39, 134 - 69),
+                Location = new Point(203, 134),
             };
 
 
@@ -2975,7 +2764,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.Necklace,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(203 - 39, 98 - 69),
+                Location = new Point(203, 98),
             };
 
 
@@ -2984,7 +2773,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.BraceletL,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(8, 170 - 69),
+                Location = new Point(8, 170),
             };
 
             Grid[(int)EquipmentSlot.BraceletR] = new MirItemCell
@@ -2992,7 +2781,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.BraceletR,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(203 - 39, 170 - 69),
+                Location = new Point(203, 170),
             };
 
             Grid[(int)EquipmentSlot.RingL] = new MirItemCell
@@ -3000,7 +2789,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.RingL,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(8, 206 - 69),
+                Location = new Point(8, 206),
             };
 
             Grid[(int)EquipmentSlot.RingR] = new MirItemCell
@@ -3008,7 +2797,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.RingR,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(203 - 39, 206 - 69),
+                Location = new Point(203, 206),
             };
 
 
@@ -3017,7 +2806,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.Amulet,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(8, 242 - 70),
+                Location = new Point(8, 242),
             };
 
 
@@ -3026,8 +2815,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.Boots,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(48 - 1, 242 - 70),
-                
+                Location = new Point(48, 242),
             };
 
             Grid[(int)EquipmentSlot.Belt] = new MirItemCell
@@ -3035,7 +2823,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.Belt,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(88 - 2, 242 - 70),
+                Location = new Point(88, 242),
             };
 
 
@@ -3044,7 +2832,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.Stone,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(128 - 3, 242 - 70),
+                Location = new Point(128, 242),
             };
 
             Grid[(int)EquipmentSlot.Mount] = new MirItemCell
@@ -3052,7 +2840,7 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.Mount,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(203 - 39, 242 - 70),
+                Location = new Point(203, 62),
             };
 
             // STATS I
@@ -3060,7 +2848,7 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(33, 1),
+                Location = new Point(126, 20),
                 NotControl = true,
                 Text = "0-0",
             };
@@ -3069,7 +2857,7 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(33, 17),
+                Location = new Point(126, 38),
                 NotControl = true,
                 Text = "0-0",
             };
@@ -3078,7 +2866,7 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(33, 34),
+                Location = new Point(126, 56),
                 NotControl = true,
                 Text = "0-0",
             };
@@ -3087,7 +2875,7 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(33, 51),
+                Location = new Point(126, 74),
                 NotControl = true,
                 Text = "0-0",
             };
@@ -3095,7 +2883,7 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(125, 1),
+                Location = new Point(126, 92),
                 NotControl = true,
                 Text = "0-0"
             };
@@ -3103,7 +2891,7 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(125, 18),
+                Location = new Point(126, 110),
                 NotControl = true,
                 Text = "0/0"
             };
@@ -3111,7 +2899,7 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(125, 35),
+                Location = new Point(126, 128),
                 NotControl = true,
                 Text = "0/0"
             };
@@ -3120,44 +2908,68 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(125, 52),
+                Location = new Point(126, 146),
+                NotControl = true
+            };
+            CritDLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatusPage,
+                Location = new Point(126, 164),
                 NotControl = true
             };
             AttkSpdLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(218, 2),
+                Location = new Point(126, 182),
                 NotControl = true
             };
             AccLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(218, 19),
+                Location = new Point(126, 200),
                 NotControl = true
             };
             AgilLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(218, 36),
+                Location = new Point(126, 218),
                 NotControl = true
             };
             LuckLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(218, 53),
+                Location = new Point(126, 236),
                 NotControl = true
             };
             // STATS II 
+            ExpPLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatePage,
+                Location = new Point(126, 20),
+                NotControl = true,
+                Text = "0-0",
+            };
+
+            BagWLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatePage,
+                Location = new Point(126, 38),
+                NotControl = true,
+                Text = "0-0",
+            };
 
             WearWLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatePage,
-                Location = new Point(36, 1),
+                Location = new Point(126, 56),
                 NotControl = true,
                 Text = "0-0",
             };
@@ -3166,7 +2978,7 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatePage,
-                Location = new Point(36, 20),
+                Location = new Point(126, 74),
                 NotControl = true,
                 Text = "0-0",
             };
@@ -3174,7 +2986,7 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatePage,
-                Location = new Point(36, 39),
+                Location = new Point(126, 92),
                 NotControl = true,
                 Text = "0-0"
             };
@@ -3182,7 +2994,7 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatePage,
-                Location = new Point(36, 58),
+                Location = new Point(126, 110),
                 NotControl = true,
                 Text = "0/0"
             };
@@ -3190,7 +3002,7 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatePage,
-                Location = new Point(36, 77),
+                Location = new Point(126, 128),
                 NotControl = true,
                 Text = "0/0"
             };
@@ -3199,37 +3011,75 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = true,
                 Parent = StatePage,
-                Location = new Point(36, 96),
+                Location = new Point(126, 146),
+                NotControl = true
+            };
+            PoisonRecLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatePage,
+                Location = new Point(126, 164),
                 NotControl = true
             };
             HolyTLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatePage,
-                Location = new Point(36, 116),
+                Location = new Point(126, 182),
                 NotControl = true
             };
             FreezeLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatePage,
-                Location = new Point(36, 136),
+                Location = new Point(126, 200),
                 NotControl = true
             };
             PoisonAtkLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatePage,
-                Location = new Point(36, 156),
+                Location = new Point(126, 218),
                 NotControl = true
             };
-            ExpPLabel = new MirLabel
+
+            Magics = new MagicButton[7];
+
+            for (int i = 0; i < Magics.Length; i++)
+                Magics[i] = new MagicButton { Parent = SkillPage, Visible = false, Location = new Point(8, 8 + i * 33) };
+
+            NextButton = new MirButton
             {
-                AutoSize = true,
-                Parent = StatePage,
-                Location = new Point(5, 190),
-                NotControl = true,
-                Text = "0-0",
+                Index = 396,
+                Location = new Point(140, 250),
+                Library = Libraries.Prguse,
+                Parent = SkillPage,
+                PressedIndex = 397,
+                Sound = SoundList.ButtonA,
+            };
+            NextButton.Click += (o, e) =>
+            {
+                if (StartIndex + 7 >= MapObject.User.Magics.Count) return;
+
+                StartIndex += 7;
+                RefreshInterface();
+            };
+
+            BackButton = new MirButton
+            {
+                Index = 398,
+                Location = new Point(90, 250),
+                Library = Libraries.Prguse,
+                Parent = SkillPage,
+                PressedIndex = 399,
+                Sound = SoundList.ButtonA,
+            };
+            BackButton.Click += (o, e) =>
+            {
+                if (StartIndex - 7 < 0) return;
+
+                StartIndex -= 7;
+                RefreshInterface();
             };
         }
 
@@ -3239,43 +3089,101 @@ namespace Client.MirScenes.Dialogs
             Visible = true;
         }
 
+        public override void Hide()
+        {
+            GameScene.Scene.SocketDialog.Hide();
+            base.Hide();
+        }
+
         public void ShowCharacterPage()
         {
             CharacterPage.Visible = true;
+            StatusPage.Visible = false;
+            StatePage.Visible = false;
+            SkillPage.Visible = false;
+            CharacterButton.Index = 500;
+            StatusButton.Index = -1;
+            StateButton.Index = -1;
+            SkillButton.Index = -1;
+        }
+
+        private void ShowStatusPage()
+        {
+            CharacterPage.Visible = false;
             StatusPage.Visible = true;
+            StatePage.Visible = false;
+            SkillPage.Visible = false;
+            CharacterButton.Index = -1;
+            StatusButton.Index = 501;
+            StateButton.Index = -1;
+            SkillButton.Index = -1;
+        }
+
+        private void ShowStatePage()
+        {
+            CharacterPage.Visible = false;
+            StatusPage.Visible = false;
             StatePage.Visible = true;
+            SkillPage.Visible = false;
+            CharacterButton.Index = -1;
+            StatusButton.Index = -1;
+            StateButton.Index = 502;
+            SkillButton.Index = -1;
+        }
+
+        public void ShowSkillPage()
+        {
+            CharacterPage.Visible = false;
+            StatusPage.Visible = false;
+            StatePage.Visible = false;
+            SkillPage.Visible = true;
+            CharacterButton.Index = -1;
+            StatusButton.Index = -1;
+            StateButton.Index = -1;
+            SkillButton.Index = 503;
+            StartIndex = 0;
         }
 
         private void RefreshInterface()
         {
             int offSet = MapObject.User.Gender == MirGender.Male ? 0 : 1;
 
-            Index = 820;
-            CharacterPage.Index = 2480 + offSet;
+            Index = 504;// +offSet;
+            CharacterPage.Index = 340 + offSet;
 
             switch (MapObject.User.Class)
             {
                 case MirClass.Warrior:
-                    //ClassImage.Index = 100;// + offSet * 5;
+                    ClassImage.Index = 100;// + offSet * 5;
                     break;
                 case MirClass.Wizard:
-                    //ClassImage.Index = 101;// + offSet * 5;
+                    ClassImage.Index = 101;// + offSet * 5;
                     break;
                 case MirClass.Taoist:
-                    //ClassImage.Index = 102;// + offSet * 5;
+                    ClassImage.Index = 102;// + offSet * 5;
                     break;
                 case MirClass.Assassin:
-                    //ClassImage.Index = 103;// + offSet * 5;
+                    ClassImage.Index = 103;// + offSet * 5;
                     break;
                 case MirClass.Archer:
-                    //ClassImage.Index = 104;// + offSet * 5;
+                    ClassImage.Index = 104;// + offSet * 5;
                     break;
             }
 
             NameLabel.Text = MapObject.User.Name;
-            NameLabel.Location = new Point((300 / 2) - (NameLabel.Size.Width / 2), 12);
             GuildLabel.Text = MapObject.User.GuildName + " " + MapObject.User.GuildRankName;
-            GuildLabel.Location = new Point((300 / 2) - (GuildLabel.Size.Width / 2), 33);
+
+            for (int i = 0; i < Magics.Length; i++)
+            {
+                if (i + StartIndex >= MapObject.User.Magics.Count)
+                {
+                    Magics[i].Visible = false;
+                    continue;
+                }
+
+                Magics[i].Visible = true;
+                Magics[i].Update(MapObject.User.Magics[i + StartIndex]);
+            }
         }
 
         public MirItemCell GetCell(ulong id)
@@ -3375,7 +3283,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(109, 3),
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
-                Hint = "小地图 (" + CMain.InputKeys.GetKey(KeybindOptions.Minimap) + ")"
+                Hint = "MiniMap (" + CMain.InputKeys.GetKey(KeybindOptions.Minimap) + ")"
             };
             ToggleButton.Click += (o, e) => Toggle();
 
@@ -3606,6 +3514,7 @@ namespace Client.MirScenes.Dialogs
         {
             MapControl map = GameScene.Scene.MapControl;
             if (map == null) return;
+
             MapNameLabel.Text = map.Title;
             LocationLabel.Text = Functions.PointToString(MapObject.User.CurrentLocation);
 
@@ -3615,8 +3524,7 @@ namespace Client.MirScenes.Dialogs
             (GameScene.Scene.MiniMapDialog.Size.Height + 165) - Settings.ScreenHeight);
             GameScene.Scene.MainDialog.PModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
             (GameScene.Scene.MiniMapDialog.Size.Height + 180) - Settings.ScreenHeight);
-            GameScene.Scene.MainDialog.PingLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
-            (GameScene.Scene.MiniMapDialog.Size.Height + 195) - Settings.ScreenHeight);
+
             if (GameScene.Scene.NewMail)
             {
                 double time = (CMain.Time) / 100D;
@@ -3759,20 +3667,20 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 433,
                 Sound = SoundList.ButtonA,
-                Hint = "邀请组队",
+                Hint = "Invite to Group",
             };
             GroupButton.Click += (o, e) =>
             {
 
                 if (GroupDialog.GroupList.Count >= Globals.MaxGroup)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("您的队伍已满员.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
                     return;
                 }
                 if (GroupDialog.GroupList.Count > 0 && GroupDialog.GroupList[0] != MapObject.User.Name)
                 {
 
-                    GameScene.Scene.ChatDialog.ReceiveChat("您不是队长.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
                 }
 
                 Network.Enqueue(new C.AddMember { Name = Name });
@@ -3788,7 +3696,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 436,
                 Sound = SoundList.ButtonA,
-                Hint = "加为好友",
+                Hint = "Add to Friends List",
             };
             FriendButton.Click += (o, e) =>
             {
@@ -3804,7 +3712,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 439,
                 Sound = SoundList.ButtonA,
-                Hint = "发送邮件",
+                Hint = "Send Mail",
             };
             MailButton.Click += (o, e) => GameScene.Scene.MailComposeLetterDialog.ComposeMail(Name);
 
@@ -3817,7 +3725,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 525,
                 Sound = SoundList.ButtonA,
-                Hint = "交易",
+                Hint = "Trade",
             };
             TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
 
@@ -4188,7 +4096,7 @@ namespace Client.MirScenes.Dialogs
             HPViewOn.Click += (o, e) =>
             {
                 Settings.HPView = true;
-                GameScene.Scene.ChatDialog.ReceiveChat("<HP/MP 模式 1>", ChatType.Hint);
+                GameScene.Scene.ChatDialog.ReceiveChat("[HP/MP Mode 1]", ChatType.Hint);
             };
 
             HPViewOff = new MirButton
@@ -4203,7 +4111,7 @@ namespace Client.MirScenes.Dialogs
             HPViewOff.Click += (o, e) =>
             {
                 Settings.HPView = false;
-                GameScene.Scene.ChatDialog.ReceiveChat("<HP/MP 模式 2>", ChatType.Hint);
+                GameScene.Scene.ChatDialog.ReceiveChat("[HP/MP Mode 2]", ChatType.Hint);
             };
 
             SoundBar = new MirImageControl
@@ -4506,7 +4414,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 69),
                 Visible = true,
-                Hint = "键盘 (" + CMain.InputKeys.GetKey(KeybindOptions.Keybind) + ")"
+                Hint = "Keyboard (" + CMain.InputKeys.GetKey(KeybindOptions.Keybind) + ")"
             };
             KeyboardLayoutButton.Click += (o, e) =>
             {
@@ -4697,7 +4605,7 @@ namespace Client.MirScenes.Dialogs
         public MirButton SkillButton;
         public MirLabel LevelLabel, NameLabel, ExpLabel, KeyLabel;
         public ClientMagic Magic;
-        public MirAnimatedControl CoolDown;
+        public MirImageControl CoolDown;
 
         public MagicButton()
         {
@@ -4764,16 +4672,14 @@ namespace Client.MirScenes.Dialogs
                 NotControl = true,
             };
 
-            CoolDown = new MirAnimatedControl
+            CoolDown = new MirImageControl
             {
                 Library = Libraries.Prguse2,
                 Parent = this,
                 Location = new Point(36, 0),
+                Opacity = 0.6F,
                 NotControl = true,
                 UseOffSet = true,
-                Loop = false,
-                Animated = false,
-                Opacity = 0.6F
             };
         }
 
@@ -4826,29 +4732,19 @@ namespace Client.MirScenes.Dialogs
 
             long timeLeft = Magic.CastTime + Magic.Delay - CMain.Time;
 
-            if (timeLeft < 100 || (CoolDown != null && CoolDown.Animated)) return;
+            if (timeLeft < 100)
+            {
+                CoolDown.Visible = false;
+                return;
+            }
 
             int delayPerFrame = (int)(Magic.Delay / totalFrames);
             int startFrame = totalFrames - (int)(timeLeft / delayPerFrame);
 
-            if ((CMain.Time <= Magic.CastTime + Magic.Delay) && Magic.CastTime > 0)
+            if ((CMain.Time <= Magic.CastTime + Magic.Delay))
             {
-                CoolDown.Dispose();
-
-                CoolDown = new MirAnimatedControl
-                {
-                    Index = 1290 + startFrame,
-                    AnimationCount = (totalFrames - startFrame),
-                    AnimationDelay = delayPerFrame,
-                    Library = Libraries.Prguse2,
-                    Parent = this,
-                    Location = new Point(36, 0),
-                    NotControl = true,
-                    UseOffSet = true,
-                    Loop = false,
-                    Animated = true,
-                    Opacity = 0.6F
-                };
+                CoolDown.Visible = true;
+                CoolDown.Index = 1290 + startFrame;
             }
         }
     }
@@ -5146,14 +5042,29 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class BigMapDialog : MirControl
     {
+	float ScaleX;
+        float ScaleY;
+	
+        int BigMap_MouseCoordsProcessing_OffsetX, BigMap_MouseCoordsProcessing_OffsetY;
+            
         public BigMapDialog()
         {
-            NotControl = true;
+            NotControl = false;
             Location = new Point(130, 100);
             //Border = true;
             //BorderColour = Color.Lime;
             BeforeDraw += (o, e) => OnBeforeDraw();
             Sort = true;
+	    
+            MouseMove += UpdateBigMapCoordinates;
+        }
+
+	private void UpdateBigMapCoordinates(object sender, MouseEventArgs e)
+        {
+            int MouseCoordsOnBigMap_MapValue_X = (int)((e.Location.X - BigMap_MouseCoordsProcessing_OffsetX) / ScaleX);
+            int MouseCoordsOnBigMap_MapValue_Y = (int)((e.Location.Y - BigMap_MouseCoordsProcessing_OffsetY) / ScaleY);
+	    
+            this.Hint = string.Format("{0},{1}", MouseCoordsOnBigMap_MapValue_X, MouseCoordsOnBigMap_MapValue_Y);
         }
 
         private void OnBeforeDraw()
@@ -5188,15 +5099,18 @@ namespace Client.MirScenes.Dialogs
             viewRect.X = (Settings.ScreenWidth - viewRect.Width) / 2;
             viewRect.Y = (Settings.ScreenHeight - 120 - viewRect.Height) / 2;
 
+	    BigMap_MouseCoordsProcessing_OffsetX = viewRect.X;
+            BigMap_MouseCoordsProcessing_OffsetY = viewRect.Y;
+
             Location = viewRect.Location;
             Size = viewRect.Size;
 
-            float scaleX = Size.Width / (float)map.Width;
-            float scaleY = Size.Height / (float)map.Height;
+            ScaleX = Size.Width / (float)map.Width;
+            ScaleY = Size.Height / (float)map.Height;
 
             viewRect.Location = new Point(
-                (int)(scaleX * MapObject.User.CurrentLocation.X) - viewRect.Width / 2,
-                (int)(scaleY * MapObject.User.CurrentLocation.Y) - viewRect.Height / 2);
+                (int)(ScaleX * MapObject.User.CurrentLocation.X) - viewRect.Width / 2,
+                (int)(ScaleY * MapObject.User.CurrentLocation.Y) - viewRect.Height / 2);
 
             if (viewRect.Right >= Size.Width)
                 viewRect.X = Size.Width - viewRect.Width;
@@ -5208,8 +5122,8 @@ namespace Client.MirScenes.Dialogs
 
             Libraries.MiniMap.Draw(index, Location, Size, Color.FromArgb(255, 255, 255));
 
-            int startPointX = (int)(viewRect.X / scaleX);
-            int startPointY = (int)(viewRect.Y / scaleY);
+            int startPointX = (int)(viewRect.X / ScaleX);
+            int startPointY = (int)(viewRect.Y / ScaleY);
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -5217,8 +5131,8 @@ namespace Client.MirScenes.Dialogs
 
 
                 if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell) continue; // || (ob.ObjectID != MapObject.User.ObjectID)
-                float x = ((ob.CurrentLocation.X - startPointX) * scaleX) + Location.X;
-                float y = ((ob.CurrentLocation.Y - startPointY) * scaleY) + Location.Y;
+                float x = ((ob.CurrentLocation.X - startPointX) * ScaleX) + Location.X;
+                float y = ((ob.CurrentLocation.Y - startPointY) * ScaleY) + Location.Y;
 
                 Color colour;
 
@@ -5358,8 +5272,8 @@ namespace Client.MirScenes.Dialogs
         {
             int Warning = item.MaxDura / 2;
             int Danger = item.MaxDura / 5;
-            uint AmuletWarning = item.Info.StackSize / 2;
-            uint AmuletDanger = item.Info.StackSize / 5;
+            ushort AmuletWarning = (ushort)(item.Info.StackSize / 2);
+            ushort AmuletDanger = (ushort)(item.Info.StackSize / 5);
 
             switch (item.Info.Type)
             {
@@ -5537,8 +5451,7 @@ namespace Client.MirScenes.Dialogs
             Size = new Size(24, 61);
             Parent = parent;
 
-            //Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)) + 362, Settings.ScreenHeight - Size.Height - 77);
-            Location = new Point(((Settings.ScreenWidth / 2) + 34), Settings.ScreenHeight - Size.Height - 111);
+            Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)) + 362, Settings.ScreenHeight - Size.Height - 77);
 
             Button1 = new MirButton //Skill
             {
@@ -5549,7 +5462,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Size = new Size(16, 16),
                 Location = new Point(3, 3),
-                Hint = "技能模式"
+                Hint = "SkillMode"
             };
             Button1.Click += (o, e) =>
             {
@@ -5565,7 +5478,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Size = new Size(16, 16),
                 Location = new Point(3, 20),
-                Hint = "宠物模式"
+                Hint = "PetMode"
             };
             Button2.Click += (o, e) =>
             {
@@ -5581,7 +5494,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Size = new Size(16, 16),
                 Location = new Point(3, 37),
-                Hint = "攻击模式"
+                Hint = "AttackMode"
             };
             Button3.Click += (o, e) =>
             {
@@ -5594,48 +5507,48 @@ namespace Client.MirScenes.Dialogs
             switch (GameScene.Scene.AMode)
             {
                 case AttackMode.Peace:
-                    AMode = "[Mode: 和平模式]";
+                    AMode = "[Mode: Peaceful]";
                     break;
                 case AttackMode.Group:
-                    AMode = "[Mode: 组队模式]";
+                    AMode = "[Mode: Group]";
                     break;
                 case AttackMode.Guild:
-                    AMode = "[Mode: 行会模式]";
+                    AMode = "[Mode: Guild]";
                     break;
                 case AttackMode.EnemyGuild:
-                    AMode = "[Mode: 敌对行会]";
+                    AMode = "[Mode: Enemy Guild]";
                     break;
                 case AttackMode.RedBrown:
-                    AMode = "[Mode: 善恶模式]";
+                    AMode = "[Mode: Red/Brown]";
                     break;
                 case AttackMode.All:
-                    AMode = "[Mode: 全体攻击]";
+                    AMode = "[Mode: Attack All]";
                     break;
             }
 
             switch (GameScene.Scene.PMode)
             {
                 case PetMode.Both:
-                    PMode = "[模式: 攻击 + 移动]";
+                    PMode = "[Mode: Attack and Move]";
                     break;
                 case PetMode.MoveOnly:
-                    PMode = "[模式: 停止攻击]";
+                    PMode = "[Mode: Do Not Attack]";
                     break;
                 case PetMode.AttackOnly:
-                    PMode = "[模式: 停止移动]";
+                    PMode = "[Mode: Do Not Move]";
                     break;
                 case PetMode.None:
-                    PMode = "[模式: 停止攻击和移动]";
+                    PMode = "[Mode: Do Not Attack or Move]";
                     break;
             }
 
             switch (Settings.SkillMode)
             {
                 case true:
-                    SMode = "[模式: ~]";
+                    SMode = "[Mode: ~]";
                     break;
                 case false:
-                    SMode = "[模式: Ctrl]";
+                    SMode = "[Mode: Ctrl]";
                     break;
             }
 
@@ -5643,9 +5556,9 @@ namespace Client.MirScenes.Dialogs
             //GameScene.Scene.MiniMapDialog.PModeLabel.Text = PMode;
             //GameScene.Scene.MiniMapDialog.SModeLabel.Text = SMode;
 
-            Button1.Hint = string.Format("技能模式\r\n{0}", SMode);
-            Button2.Hint = string.Format("宠物模式 ({1})\r\n{0}", PMode, CMain.InputKeys.GetKey(KeybindOptions.ChangePetmode));
-            Button3.Hint = string.Format("攻击模式 ({1})\r\n{0}", AMode, CMain.InputKeys.GetKey(KeybindOptions.ChangeAttackmode));
+            Button1.Hint = string.Format("Skill Mode\r\n{0}", SMode);
+            Button2.Hint = string.Format("Pet Mode ({1})\r\n{0}", PMode, CMain.InputKeys.GetKey(KeybindOptions.ChangePetmode));
+            Button3.Hint = string.Format("Attack Mode ({1})\r\n{0}", AMode, CMain.InputKeys.GetKey(KeybindOptions.ChangeAttackmode));
         }
 
         public void Toggle()

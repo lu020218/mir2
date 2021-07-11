@@ -413,6 +413,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.MarketGetBack:
                     MarketGetBack((C.MarketGetBack)p);
                     return;
+                case (short)ClientPacketIds.MarketSellNow:
+                    MarketSellNow((C.MarketSellNow)p);
+                    return;
                 case (short)ClientPacketIds.RequestUserName:
                     RequestUserName((C.RequestUserName)p);
                     return;
@@ -515,9 +518,6 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.CombineItem:
                     CombineItem((C.CombineItem)p);
                     break;
-                case (short)ClientPacketIds.SetConcentration:
-                    SetConcentration((C.SetConcentration)p);
-                    break;
                 case (short)ClientPacketIds.AwakeningNeedMaterials:
                     AwakeningNeedMaterials((C.AwakeningNeedMaterials)p);
                     break;
@@ -556,6 +556,9 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.MailCost:
                     MailCost((C.MailCost)p);
+                    break;
+                case (short)ClientPacketIds.RequestIntelligentCreatureUpdates://IntelligentCreature
+                    RequestIntelligentCreatureUpdates((C.RequestIntelligentCreatureUpdates)p);
                     break;
                 case (short)ClientPacketIds.UpdateIntelligentCreature://IntelligentCreature
                     UpdateIntelligentCreature((C.UpdateIntelligentCreature)p);
@@ -625,9 +628,6 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.ConfirmItemRental:
                     ConfirmItemRental();
-                    break;
-                case (short)ClientPacketIds.SortInventory:
-                    SortInventory((C.SortInventory)p);
                     break;
                 default:
                     MessageQueue.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
@@ -728,12 +728,12 @@ namespace Server.MirNetwork
 
                     BeginSend(data);
                     SoftDisconnect(10);
-                    MessageQueue.Enqueue(SessionID + ", 断开连接-错误的客户端版本。");
+                    MessageQueue.Enqueue(SessionID + ", Disconnnected - Wrong Client Version.");
                     return;
                 }
             }
 
-            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", 客户端版本匹配。");
+            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
             Enqueue(new S.ClientVersion { Result = 1 });
 
             Stage = GameStage.Login;
@@ -749,21 +749,21 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Login) return;
 
-            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", 正在创建新帐户。");
+            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", New account being created.");
             Envir.NewAccount(p, this);
         }
         private void ChangePassword(C.ChangePassword p)
         {
             if (Stage != GameStage.Login) return;
 
-            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", 密码被更改。");
+            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", Password being changed.");
             Envir.ChangePassword(p, this);
         }
         private void Login(C.Login p)
         {
             if (Stage != GameStage.Login) return;
 
-            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", 用户登录。");
+            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", User logging in.");
             Envir.Login(p, this);
         }
         private void NewCharacter(C.NewCharacter p)
@@ -918,13 +918,6 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.Chat(p.Message, p.LinkedItems);
-        }
-
-        private void SortInventory(C.SortInventory p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.SortInventory(true);
         }
 
         private void MoveItem(C.MoveItem p)
@@ -1244,7 +1237,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.ConsignItem(p.UniqueID, p.Price);
+            Player.ConsignItem(p.UniqueID, p.Price, p.Type);
         }
         private void MarketSearch(C.MarketSearch p)
         {
@@ -1276,6 +1269,13 @@ namespace Server.MirNetwork
 
             Player.MarketBuy(p.AuctionID, p.BidPrice);
         }
+        private void MarketSellNow(C.MarketSellNow p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MarketSellNow(p.AuctionID);
+        }
+
         private void MarketGetBack(C.MarketGetBack p)
         {
             if (Stage != GameStage.Game) return;
@@ -1359,17 +1359,17 @@ namespace Server.MirNetwork
             {
                 Player.AllowMarriage = !Player.AllowMarriage;
                 if (Player.AllowMarriage)
-                    Player.ReceiveChat("您现在允许结婚请求。", ChatType.Hint);
+                    Player.ReceiveChat("You're now allowing marriage requests.", ChatType.Hint);
                 else
-                    Player.ReceiveChat("您现在正在阻止结婚请求。", ChatType.Hint);
+                    Player.ReceiveChat("You're now blocking marriage requests.", ChatType.Hint);
             }
             else
             {
                 Player.AllowLoverRecall = !Player.AllowLoverRecall;
                 if (Player.AllowLoverRecall)
-                    Player.ReceiveChat("您现在可以允许爱人召回。", ChatType.Hint);
+                    Player.ReceiveChat("You're now allowing recall from lover.", ChatType.Hint);
                 else
-                    Player.ReceiveChat("您现在正在阻止爱人回忆。", ChatType.Hint);
+                    Player.ReceiveChat("You're now blocking recall from lover.", ChatType.Hint);
             }
         }
 
@@ -1504,12 +1504,12 @@ namespace Server.MirNetwork
 
             if (Player.ReincarnationHost != null && Player.ReincarnationHost.ReincarnationReady)
             {
-                Player.Revive((uint)Player.MaxHP / 2, true);
+                Player.Revive(Player.Stats[Stat.HP] / 2, true);
                 Player.ReincarnationHost = null;
                 return;
             }
 
-            Player.ReceiveChat("转世失败", ChatType.System);
+            Player.ReceiveChat("Reincarnation failed", ChatType.System);
         }
 
         private void CancelReincarnation()
@@ -1524,13 +1524,6 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.CombineItem(p.IDFrom, p.IDTo);
-        }
-
-        private void SetConcentration(C.SetConcentration p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.ConcentrateInterrupted = p.Interrupted;
         }
 
         private void Awakening(C.Awakening p)
@@ -1617,6 +1610,13 @@ namespace Server.MirNetwork
             uint cost = Player.GetMailCost(p.ItemsIdx, p.Gold, p.Stamped);
 
             Enqueue(new S.MailCost { Cost = cost });
+        }
+
+        private void RequestIntelligentCreatureUpdates(C.RequestIntelligentCreatureUpdates p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.SendIntelligentCreatureUpdates = p.Update;
         }
 
         private void UpdateIntelligentCreature(C.UpdateIntelligentCreature p)//IntelligentCreature
@@ -1707,7 +1707,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.NPCInputStr = p.Value;
+            Player.NPCData["NPCInputStr"] = p.Value;
 
             Player.CallNPC(Player.NPCObjectID, p.PageName);
         }

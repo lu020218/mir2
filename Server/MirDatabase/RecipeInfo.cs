@@ -42,7 +42,7 @@ namespace Server.MirDatabase
                 return;
             }
 
-            Item = Envir.CreateShopItem(itemInfo);
+            Item = Envir.CreateShopItem(itemInfo, ++Envir.NextRecipeID);
 
             LoadIngredients(name);
         }
@@ -77,7 +77,7 @@ namespace Server.MirDatabase
                             switch (data[0].ToLower())
                             {
                                 case "amount":
-                                    Item.Count = uint.Parse(data[1]);
+                                    Item.Count = ushort.Parse(data[1]);
                                     break;
                                 case "chance":
                                     Chance = byte.Parse(data[1]);
@@ -107,7 +107,7 @@ namespace Server.MirDatabase
                                 continue;
                             }
 
-                            UserItem tool = Envir.CreateShopItem(info);
+                            UserItem tool = Envir.CreateShopItem(info, 0);
 
                             Tools.Add(tool);
                         }
@@ -124,11 +124,11 @@ namespace Server.MirDatabase
                                 continue;
                             }
 
-                            UserItem ingredient = Envir.CreateShopItem(info);
+                            UserItem ingredient = Envir.CreateShopItem(info, 0);
 
-                            uint count = 1;
+                            ushort count = 1;
                             if (data.Length >= 2)
-                                uint.TryParse(data[1], out count);
+                                ushort.TryParse(data[1], out count);
 
                             if (data.Length >= 3)
                                 ushort.TryParse(data[2], out ingredient.CurrentDura);

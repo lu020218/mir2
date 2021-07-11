@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace Client.MirObjects
 {
-    class ItemObject : MapObject
+    public class ItemObject : MapObject
     {
         public override ObjectType Race{
             get { return ObjectType.Item; }
@@ -48,7 +48,7 @@ namespace Client.MirObjects
         }
         public void Load(S.ObjectGold info)
         {
-            Name = string.Format("金 ({0:###,###,###})", info.Gold);
+            Name = string.Format("Gold ({0:###,###,###})", info.Gold);
 
 
             BodyLibrary = Libraries.FloorItems;

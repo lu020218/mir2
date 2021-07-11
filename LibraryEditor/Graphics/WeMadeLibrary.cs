@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -31,8 +32,9 @@ namespace LibraryEditor
         private string _IndexExtention = WixExtention;
 
         private bool _initialized;
-        public byte _nType = 0; //0 = .wil //1 = .wzl //2 = .wil new wemade design //3 = .wil mir3 //4 = .miz shanda mir3
-        private byte[] ImageStructureSize = { 8, 16, 16, 17, 16 };//base size of an image structure
+
+        public byte _nType = 0; //0 = .wil //1 = .wzl //2 = .wil new wemade design //3 = .wil mir3 //4 = .miz shanda mir3 // 5 = 32bit wil
+        private byte[] ImageStructureSize = { 8, 16, 16, 17, 16, 16 };//base size of an image structure
 
         public WeMadeLibrary(string name)
         {
@@ -76,9 +78,21 @@ namespace LibraryEditor
             if (_nType == 0) //at least we know it's a .wil file up to now
             {
                 _fStream.Seek(0, SeekOrigin.Begin);
-                buffer = _bReader.ReadBytes(48);
-                //var desc = Encoding.UTF8.GetString(buffer, 1, 20);
-                _nType = (byte)(buffer[40] == 1 ? 2 : buffer[2] == 73 ? 3 : _nType);
+                buffer = _bReader.ReadBytes(49);
+
+                if (buffer[40] == 1 || buffer[40] == 6)
+                    _nType = 2;
+                else if (buffer[2] == 73)
+                    _nType = 3;
+                else if (buffer[48] == 32)
+                {
+                    _nType = 5;
+                }
+
+                if ((_nType == 2 || _nType == 0) && _bReader.ReadInt16() == 32)
+                {
+                    _nType = 5;
+                }
 
                 if (_nType == 0)
                 {
@@ -118,6 +132,7 @@ namespace LibraryEditor
                             break;
 
                         case 2:
+                        case 5:
                             reader.ReadBytes(52);
                             break;
 
@@ -222,6 +237,8 @@ namespace LibraryEditor
                 byte[][] Pixels = new byte[2][];
                 Pixels[0] = new byte[OutputWidth * OutputHeight * 2];
                 Pixels[1] = new byte[OutputWidth * OutputHeight * 2];
+                int n = BReader.ReadInt32();
+                if (n != 0) BReader.BaseStream.Seek(-4, SeekOrigin.Current);
                 byte[] FileBytes = BReader.ReadBytes(InputLength * 2);
 
                 int End = 0, OffSet = 0, Start = 0, Count;
@@ -231,14 +248,18 @@ namespace LibraryEditor
                 for (int Y = OutputHeight - 1; Y >= 0; Y--)
                 {
                     OffSet = Start * 2;
-                    End += FileBytes[OffSet];
+                    End += FileBytes[OffSet+1] << 8 | FileBytes[OffSet];
                     Start++;
                     nX = Start;
                     OffSet += 2;
-                    while (nX < End)
+
+                    while (nX < End && End > 0)
                     {
                         switch (FileBytes[OffSet])
                         {
+                            default: //Unknown
+                                OffSet += 1;
+                                break;
                             case 192: //No Colour
                                 nX += 2;
                                 x += FileBytes[OffSet + 3] << 8 | FileBytes[OffSet + 2];
@@ -246,7 +267,6 @@ namespace LibraryEditor
                                 break;
 
                             case 193:  //Solid Colour
-                            case 195:
                                 nX += 2;
                                 Count = FileBytes[OffSet + 3] << 8 | FileBytes[OffSet + 2];
                                 OffSet += 4;
@@ -262,6 +282,7 @@ namespace LibraryEditor
                                 break;
 
                             case 194:  //Overlay Colour
+                            case 195:
                                 HasMask = true;
                                 nX += 2;
                                 Count = FileBytes[OffSet + 3] << 8 | FileBytes[OffSet + 2];
@@ -315,6 +336,7 @@ namespace LibraryEditor
                         break;
 
                     case 2:
+                    case 5:
                         bo16bit = true;
                         reader.ReadInt16();
                         reader.ReadInt16();
@@ -365,6 +387,7 @@ namespace LibraryEditor
                         break;
 
                     case 2:
+                    case 5:
                         byte Compressed = reader.ReadByte();
                         reader.ReadBytes(5);
                         if (Compressed != 8)
@@ -420,6 +443,13 @@ namespace LibraryEditor
                     {
                         for (int x = 0; x < Width; x++)
                         {
+                            if (nType == 5)
+                            {
+                                scan0[y * Width + x] = BitConverter.ToInt32(bytes, index);
+                                index += 4;
+                                continue;
+                            }
+
                             if (bo16bit)
                                 scan0[y * Width + x] = convert16bitTo32bit(bytes[index++] + (bytes[index++] << 8));
                             else

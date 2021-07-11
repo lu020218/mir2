@@ -4,6 +4,7 @@
     public const string ProductVersion = "Release";
 
     public const int
+
         MinAccountIDLength = 3,
         MaxAccountIDLength = 15,
 
@@ -21,6 +22,8 @@
         MaxAttackRange = 9,
 
         MaxDragonLevel = 13,
+
+        ClassWeaponCount = 100,
 
         FlagIndexCount = 1999,
 

@@ -204,6 +204,8 @@ public abstract class Packet
                 return new C.MarketBuy();
             case (short)ClientPacketIds.MarketGetBack:
                 return new C.MarketGetBack();
+            case (short)ClientPacketIds.MarketSellNow:
+                return new C.MarketSellNow();
             case (short)ClientPacketIds.RequestUserName:
                 return new C.RequestUserName();
             case (short)ClientPacketIds.RequestChatItem:
@@ -272,8 +274,6 @@ public abstract class Packet
                 return new C.CancelReincarnation();
             case (short)ClientPacketIds.CombineItem:
                 return new C.CombineItem();
-            case (short)ClientPacketIds.SetConcentration:
-                return new C.SetConcentration();
             case (short)ClientPacketIds.AwakeningNeedMaterials:
                 return new C.AwakeningNeedMaterials();
             case (short)ClientPacketIds.AwakeningLockedItem:
@@ -300,9 +300,11 @@ public abstract class Packet
                 return new C.MailLockedItem();
             case (short)ClientPacketIds.MailCost:
                 return new C.MailCost();
-            case (short)ClientPacketIds.UpdateIntelligentCreature://IntelligentCreature
+            case (short)ClientPacketIds.RequestIntelligentCreatureUpdates:
+                return new C.RequestIntelligentCreatureUpdates();
+            case (short)ClientPacketIds.UpdateIntelligentCreature:
                 return new C.UpdateIntelligentCreature();
-            case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
+            case (short)ClientPacketIds.IntelligentCreaturePickup:
                 return new C.IntelligentCreaturePickup();
             case (short)ClientPacketIds.AddFriend:
                 return new C.AddFriend();
@@ -344,8 +346,6 @@ public abstract class Packet
                 return new C.ItemRentalLockItem();
             case (short)ClientPacketIds.ConfirmItemRental:
                 return new C.ConfirmItemRental();
-            case (short)ClientPacketIds.SortInventory:
-                return new C.SortInventory();
             default:
                 return null;
         }
@@ -393,6 +393,8 @@ public abstract class Packet
                 return new S.MapInformation();
             case (short)ServerPacketIds.UserInformation:
                 return new S.UserInformation();
+            case (short)ServerPacketIds.UserSlotsRefresh:
+                return new S.UserSlotsRefresh();
             case (short)ServerPacketIds.UserLocation:
                 return new S.UserLocation();
             case (short)ServerPacketIds.ObjectPlayer:
@@ -555,6 +557,8 @@ public abstract class Packet
                 return new S.RepairItem();
             case (short)ServerPacketIds.ItemRepaired:
                 return new S.ItemRepaired();
+            case (short)ServerPacketIds.ItemSlotSizeChanged:
+                return new S.ItemSlotSizeChanged();
             case (short)ServerPacketIds.NewMagic:
                 return new S.NewMagic();
             case (short)ServerPacketIds.MagicLeveled:
@@ -567,6 +571,8 @@ public abstract class Packet
                 return new S.MagicCast();
             case (short)ServerPacketIds.ObjectMagic:
                 return new S.ObjectMagic();
+            case (short)ServerPacketIds.ObjectProjectile:
+                return new S.ObjectProjectile();
             case (short)ServerPacketIds.ObjectEffect:
                 return new S.ObjectEffect();
             case (short)ServerPacketIds.RangeAttack:
@@ -605,6 +611,8 @@ public abstract class Packet
                 return new S.AddBuff();
             case (short)ServerPacketIds.RemoveBuff:
                 return new S.RemoveBuff();
+            case (short)ServerPacketIds.PauseBuff:
+                return new S.PauseBuff();
             case (short)ServerPacketIds.ObjectHidden:
                 return new S.ObjectHidden();
             case (short)ServerPacketIds.RefreshItem:
@@ -727,12 +735,8 @@ public abstract class Packet
                 return new S.ItemUpgraded();
             case (short)ServerPacketIds.SetConcentration:
                 return new S.SetConcentration();
-            case (short)ServerPacketIds.SetObjectConcentration:
-                return new S.SetObjectConcentration();
             case (short)ServerPacketIds.SetElemental:
                 return new S.SetElemental();
-            case (short)ServerPacketIds.SetObjectElemental:
-                return new S.SetObjectElemental();
             case (short)ServerPacketIds.RemoveDelayedExplosion:
                 return new S.RemoveDelayedExplosion();
             case (short)ServerPacketIds.ObjectDeco:
@@ -839,8 +843,8 @@ public abstract class Packet
                 return new S.ExpireTimer();
             case (short)ServerPacketIds.UpdateNotice:
                 return new S.UpdateNotice();
-            case (short)ServerPacketIds.SortInventory:
-                return new S.SortInventory();
+            case (short)ServerPacketIds.Roll:
+                return new S.Roll();
             default:
                 return null;
         }
