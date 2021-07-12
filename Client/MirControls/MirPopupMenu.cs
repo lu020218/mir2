@@ -11,7 +11,6 @@ namespace Client.MirControls
     {
         private MirButton _MenuBtn;
         private string _MenuName;
-        private int _BtnCount = 0;
         private int _ClickBtnIndex = 0;
         private MirButton[] _Option;
         private List<String> _Items = new List<string>();
@@ -37,18 +36,7 @@ namespace Client.MirControls
             set
             {
                 _MenuName = value;
-            }
-        }
-
-        public int ButtonCount
-        {
-            get
-            {
-                return _BtnCount;
-            }
-            set
-            {
-                _BtnCount = value;
+                MenuNameChanged();
             }
         }
 
@@ -67,16 +55,19 @@ namespace Client.MirControls
 
         public MirPopupMenu()
         {
+            
+        }
+
+        public void MenuNameChanged()
+        {
             _MenuBtn = new MirButton
             {
-                Index = 0,
-                HoverIndex = 0,
-                PressedIndex = 0,
+                Index = 73,
                 Parent = this,
                 Visible = true,
                 Text = _MenuName,
                 Library = Libraries.GameUI,
-                Location = new Point(0,0)
+                Location = new Point(0, 0)
             };
             _MenuBtn.Click += (o, e) =>
             {
@@ -86,37 +77,16 @@ namespace Client.MirControls
                     MouseClick(_Option[0].Visible);
                 }
             };
-
-            for (int i = 0; i < _BtnCount; i++)
-            {
-                _Option[i] = new MirButton
-                {
-                    Index = 0,
-                    HoverIndex = 0,
-                    PressedIndex = 0,
-                    Parent = this,
-                    Visible = false,
-                    Text = _Items[i],
-                    Library = Libraries.GameUI,
-                    Location = new Point(0,0)
-                };
-                _Option[i].Click += (o, e) =>
-                {
-                    _ClickBtnIndex = i + 1;
-                    MouseClick(false);
-                };
-            }
         }
 
         public void ItemsChanged()
         {
+            _Option = new MirButton[_Items.Count];
             for (int i = 0; i < _Items.Count; i++)
             {
                 _Option[i] = new MirButton
                 {
-                    Index = 0,
-                    HoverIndex = 0,
-                    PressedIndex = 0,
+                    Index = 74,
                     Parent = this,
                     Visible = false,
                     Text = _Items[i],
@@ -133,13 +103,18 @@ namespace Client.MirControls
 
         private void MouseClick(bool visible)
         {
-            for (int i = 0; i < _BtnCount; i++)
+            for (int i = 0; i < _Option.Length; i++)
             {
                 if (_Option[i] != null && _Option[i].IsDisposed)
                 {
                     _Option[i].Visible = visible;
                 }
             }
+        }
+
+        public override void OnMouseClick(MouseEventArgs e)
+        {
+            base.OnMouseClick(e);
         }
 
         protected override void Dispose(bool disposing)
