@@ -9192,6 +9192,7 @@ namespace Client.MirScenes
 
             if (setting != LightSetting.Day || GameScene.User.Poison.HasFlag(PoisonType.Blindness))
             {
+                setting = LightSetting.Day;//免蜡
                 DrawLights(setting);
             }
 
