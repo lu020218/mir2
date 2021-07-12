@@ -391,8 +391,10 @@ namespace Client.MirScenes.Dialogs
     public sealed class MenuPannel : MirImageControl
     {
         public MirButton CharacterButton, SocialButton, ContentButton, PetButton, ShopButton, RankButton, SystemButton;
-        //public SystemPannel systemPannel;
         public static Point MouseLocation;
+
+        public MirImageControl CharacterPannel;
+        public MirButton CharacterBtn, SkillBtn, BagBtn;
 
         public MenuPannel()
         {
@@ -408,17 +410,50 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.GameUI,
                 Location = new Point(5, 5),
                 Parent = this,
-                //PressedIndex = 2,
                 Sound = SoundList.ButtonA,
-                //Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
             };
             CharacterButton.Click += (o, e) =>
             {
-                GameScene.Scene.CharacterBar.Visible = !GameScene.Scene.CharacterBar.Visible;
+                CharacterPannel.Visible = !CharacterPannel.Visible;
             };
-            CharacterButton.MouseLeave += (o, e) =>
+
+            CharacterPannel = new MirImageControl
             {
-                GameScene.Scene.CharacterBar.Visible = false;
+                Index = 35,
+                Library = Libraries.GameUI,
+                Location = new Point(Settings.ScreenWidth - 400, Settings.ScreenHeight - Size.Height - 40 + 30),
+                Parent = this,
+                Visible = true
+            };
+
+            CharacterBtn = new MirButton
+            {
+                HoverIndex = 56,
+                Index = 39,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 65),
+                Parent = CharacterPannel,
+                Sound = SoundList.ButtonA,
+            };
+
+            SkillBtn = new MirButton
+            {
+                HoverIndex = 57,
+                Index = 40,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 35),
+                Parent = CharacterPannel,
+                Sound = SoundList.ButtonA,
+            };
+
+            BagBtn = new MirButton
+            {
+                HoverIndex = 58,
+                Index = 41,
+                Library = Libraries.GameUI,
+                Location = new Point(6, 5),
+                Parent = CharacterPannel,
+                Sound = SoundList.ButtonA,
             };
 
             SocialButton = new MirButton
@@ -511,26 +546,20 @@ namespace Client.MirScenes.Dialogs
                 else GameScene.Scene.RankingDialog.Show();
             };
 
-            //SystemButton = new MirButton
-            //{
-            //    HoverIndex = 32,
-            //    Index = 25,
-            //    Library = Libraries.GameUI,
-            //    Location = new Point(5 + 328, 5),
-            //    Parent = this,
-            //    Sound = SoundList.ButtonA,
-            //    //Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
-            //};
-            //SystemButton.Click += (o, e) =>
-            //{
-            //    GameScene.Scene.systemBar.Visible = !GameScene.Scene.systemBar.Visible;
-            //};
-            //SystemButton.MouseLeave += (o, e) =>
-            //{
-            //    GameScene.Scene.systemBar.Visible = false;
-            //};
-
-            //systemPannel = new SystemPannel { Parent = this, Visible = true };
+            SystemButton = new MirButton
+            {
+                HoverIndex = 32,
+                Index = 25,
+                Library = Libraries.GameUI,
+                Location = new Point(5 + 328, 5),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                //Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
+            };
+            SystemButton.Click += (o, e) =>
+            {
+                GameScene.Scene.systemBar.Visible = !GameScene.Scene.systemBar.Visible;
+            };
         }
     }
 

@@ -234,6 +234,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="MirControls\MirPopupMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\CheckF_Pressed.png" />

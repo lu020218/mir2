@@ -120,7 +120,7 @@ namespace Client.MirScenes
         public RollDialog RollControl;
 
         public MenuPannel menuBar;
-        public CharacterPannel CharacterBar;
+        //public CharacterPannel CharacterBar;
         public SocialPannel socialBar;
         public ContentPannel contentBar;
         public PetPannel petBar;
@@ -275,7 +275,7 @@ namespace Client.MirScenes
             RollControl = new RollDialog { Parent = this, Visible = false };
 
             menuBar = new MenuPannel { Parent = this, Visible = true };
-            CharacterBar = new CharacterPannel { Parent = this, Visible = false };
+            //CharacterBar = new CharacterPannel { Parent = this, Visible = false };
             socialBar = new SocialPannel { Parent = this, Visible = false };
             contentBar = new ContentPannel { Parent = this, Visible = false };
             petBar = new PetPannel { Parent = this, Visible = false };
