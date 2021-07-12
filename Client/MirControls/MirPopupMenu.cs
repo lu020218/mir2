@@ -12,8 +12,21 @@ namespace Client.MirControls
         private MirButton _MenuBtn;
         private string _MenuName;
         private int _BtnCount = 0;
+        private int _ClickBtnIndex = 0;
         private MirButton[] _Option;
         private List<String> _Items = new List<string>();
+
+        public int ClickBtnIndex
+        {
+            get
+            {
+                return _ClickBtnIndex;
+            }
+            set
+            {
+                _ClickBtnIndex = value;
+            }
+        }
 
         public string MenuName
         {
@@ -48,6 +61,7 @@ namespace Client.MirControls
             set
             {
                 _Items = value;
+                ItemsChanged();
             }
         }
 
@@ -64,6 +78,14 @@ namespace Client.MirControls
                 Library = Libraries.GameUI,
                 Location = new Point(0,0)
             };
+            _MenuBtn.Click += (o, e) =>
+            {
+                _ClickBtnIndex = 0;
+                if (_Option[0] != null && _Option[0].IsDisposed)
+                {
+                    MouseClick(_Option[0].Visible);
+                }
+            };
 
             for (int i = 0; i < _BtnCount; i++)
             {
@@ -78,6 +100,45 @@ namespace Client.MirControls
                     Library = Libraries.GameUI,
                     Location = new Point(0,0)
                 };
+                _Option[i].Click += (o, e) =>
+                {
+                    _ClickBtnIndex = i + 1;
+                    MouseClick(false);
+                };
+            }
+        }
+
+        public void ItemsChanged()
+        {
+            for (int i = 0; i < _Items.Count; i++)
+            {
+                _Option[i] = new MirButton
+                {
+                    Index = 0,
+                    HoverIndex = 0,
+                    PressedIndex = 0,
+                    Parent = this,
+                    Visible = false,
+                    Text = _Items[i],
+                    Library = Libraries.GameUI,
+                    Location = new Point(0, 0)
+                };
+                _Option[i].Click += (o, e) =>
+                {
+                    _ClickBtnIndex = i + 1;
+                    MouseClick(false);
+                };
+            }
+        }
+
+        private void MouseClick(bool visible)
+        {
+            for (int i = 0; i < _BtnCount; i++)
+            {
+                if (_Option[i] != null && _Option[i].IsDisposed)
+                {
+                    _Option[i].Visible = visible;
+                }
             }
         }
 
