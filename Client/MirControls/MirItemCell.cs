@@ -871,7 +871,7 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 6; x < ItemArray.Length; x++)
+                                for (int x = 10; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.RemoveItem { Grid = GridType, UniqueID = GameScene.SelectedCell.Item.UniqueID, To = x });
@@ -931,7 +931,7 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 6; x < ItemArray.Length; x++)
+                                for (int x = 10; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.TakeBackItem { From = GameScene.SelectedCell.ItemSlot, To = x });
@@ -1009,7 +1009,7 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 6; x < ItemArray.Length; x++)
+                                for (int x = 10; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.RetrieveTradeItem { From = GameScene.SelectedCell.ItemSlot, To = x });
@@ -1082,7 +1082,7 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 6; x < ItemArray.Length; x++)
+                                for (int x = 10; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.RetrieveRefineItem { From = GameScene.SelectedCell.ItemSlot, To = x });

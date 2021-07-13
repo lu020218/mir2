@@ -599,6 +599,22 @@ namespace Client.MirScenes
                     case KeybindOptions.Belt6Alt:
                         BeltDialog.Grid[5].UseItem();
                         break;
+                    case KeybindOptions.Belt7:
+                    case KeybindOptions.Belt7Alt:
+                        BeltDialog.Grid[6].UseItem();
+                        break;
+                    case KeybindOptions.Belt8:
+                    case KeybindOptions.Belt8Alt:
+                        BeltDialog.Grid[7].UseItem();
+                        break;
+                    case KeybindOptions.Belt9:
+                    case KeybindOptions.Belt9Alt:
+                        BeltDialog.Grid[8].UseItem();
+                        break;
+                    case KeybindOptions.Belt0:
+                    case KeybindOptions.Belt0Alt:
+                        BeltDialog.Grid[9].UseItem();
+                        break;
                     case KeybindOptions.Logout:
                         LogOut();
                         break;
