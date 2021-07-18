@@ -27,6 +27,7 @@ namespace Server.MirDatabase
 
         public int Index;
         public string Name = string.Empty;
+        public string DisplayName = string.Empty;
 
         public Monster Image;
         public byte AI, Effect, ViewRange = 7, CoolEye;
@@ -55,6 +56,7 @@ namespace Server.MirDatabase
         {
             Index = reader.ReadInt32();
             Name = reader.ReadString();
+            DisplayName = reader.ReadString();
 
             Image = (Monster) reader.ReadUInt16();
             AI = reader.ReadByte();
@@ -136,13 +138,14 @@ namespace Server.MirDatabase
 
         public string GameName
         {
-            get { return Regex.Replace(Name, @"[\d-]", string.Empty); }
+            get { return Regex.Replace(DisplayName, @"[\d-]", string.Empty); }
         }
 
         public void Save(BinaryWriter writer)
         {
             writer.Write(Index);
             writer.Write(Name);
+            writer.Write(DisplayName);
 
             writer.Write((ushort) Image);
             writer.Write(AI);

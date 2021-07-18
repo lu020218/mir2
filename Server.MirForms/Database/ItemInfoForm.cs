@@ -114,6 +114,7 @@ namespace Server
 
                 ItemIndexTextBox.Text = string.Empty;
                 ItemNameTextBox.Text = string.Empty;
+                DisplayNameBox.Text = string.Empty;
                 WeightTextBox.Text = string.Empty;
                 ImageTextBox.Text = string.Empty;
                 DuraTextBox.Text = string.Empty;
@@ -214,6 +215,7 @@ namespace Server
 
             ItemIndexTextBox.Text = info.Index.ToString();
             ItemNameTextBox.Text = info.Name;
+            DisplayNameBox.Text = info.DisplayName;
             WeightTextBox.Text = info.Weight.ToString();
             ImageTextBox.Text = info.Image.ToString();
             DuraTextBox.Text = info.Durability.ToString();
@@ -1813,6 +1815,16 @@ namespace Server
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 _selectedItemInfos[i].Slots = temp;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].DisplayName = ActiveControl.Text;
+
+            RefreshItemList();
         }
     }
 }

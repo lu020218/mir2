@@ -8,6 +8,7 @@ public class ItemInfo
 {
     public int Index;
     public string Name = string.Empty;
+    public string DisplayName = string.Empty;
     public ItemType Type;
     public ItemGrade Grade;
     public RequiredType RequiredType = RequiredType.Level;
@@ -57,7 +58,7 @@ public class ItemInfo
     {
         get
         {
-            string temp = Name;
+            string temp = DisplayName;
             temp = Regex.Replace(temp, @"\d+$", string.Empty); //hides end numbers
             temp = Regex.Replace(temp, @"\[[^]]*\]", string.Empty); //hides square brackets
 
@@ -74,6 +75,7 @@ public class ItemInfo
     {
         Index = reader.ReadInt32();
         Name = reader.ReadString();
+        DisplayName = reader.ReadString();
         Type = (ItemType)reader.ReadByte();
         Grade = (ItemGrade)reader.ReadByte();
         RequiredType = (RequiredType)reader.ReadByte();
@@ -211,6 +213,7 @@ public class ItemInfo
     {
         writer.Write(Index);
         writer.Write(Name);
+        writer.Write(DisplayName);
         writer.Write((byte)Type);
         writer.Write((byte)Grade);
         writer.Write((byte)RequiredType);

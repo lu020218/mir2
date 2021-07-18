@@ -31,6 +31,10 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.MonsterInfoPanel = new System.Windows.Forms.Panel();
+            this.GameNameBox = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.fileNameLabel = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.UndeadCheckBox = new System.Windows.Forms.CheckBox();
             this.AutoRevCheckBox = new System.Windows.Forms.CheckBox();
             this.ImageComboBox = new System.Windows.Forms.ComboBox();
@@ -94,8 +98,6 @@
             this.ImportButton = new System.Windows.Forms.Button();
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.DropBuilderButton = new System.Windows.Forms.Button();
-            this.label11 = new System.Windows.Forms.Label();
-            this.fileNameLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.MonsterInfoPanel.SuspendLayout();
@@ -129,6 +131,8 @@
             this.MonsterInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.MonsterInfoPanel.Controls.Add(this.GameNameBox);
+            this.MonsterInfoPanel.Controls.Add(this.label13);
             this.MonsterInfoPanel.Controls.Add(this.fileNameLabel);
             this.MonsterInfoPanel.Controls.Add(this.label11);
             this.MonsterInfoPanel.Controls.Add(this.UndeadCheckBox);
@@ -188,8 +192,43 @@
             this.MonsterInfoPanel.Enabled = false;
             this.MonsterInfoPanel.Location = new System.Drawing.Point(3, 6);
             this.MonsterInfoPanel.Name = "MonsterInfoPanel";
-            this.MonsterInfoPanel.Size = new System.Drawing.Size(618, 270);
+            this.MonsterInfoPanel.Size = new System.Drawing.Size(624, 270);
             this.MonsterInfoPanel.TabIndex = 11;
+            // 
+            // GameNameBox
+            // 
+            this.GameNameBox.Location = new System.Drawing.Point(87, 28);
+            this.GameNameBox.Name = "GameNameBox";
+            this.GameNameBox.Size = new System.Drawing.Size(180, 21);
+            this.GameNameBox.TabIndex = 92;
+            this.GameNameBox.TextChanged += new System.EventHandler(this.GameNameBox_TextChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(22, 31);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(59, 12);
+            this.label13.TabIndex = 91;
+            this.label13.Text = "GameName:";
+            // 
+            // fileNameLabel
+            // 
+            this.fileNameLabel.AutoSize = true;
+            this.fileNameLabel.Location = new System.Drawing.Point(529, 31);
+            this.fileNameLabel.Name = "fileNameLabel";
+            this.fileNameLabel.Size = new System.Drawing.Size(41, 12);
+            this.fileNameLabel.TabIndex = 90;
+            this.fileNameLabel.Text = "-1.Lib";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(464, 31);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(59, 12);
+            this.label11.TabIndex = 89;
+            this.label11.Text = "fileName:";
             // 
             // UndeadCheckBox
             // 
@@ -217,7 +256,7 @@
             // 
             this.ImageComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ImageComboBox.FormattingEnabled = true;
-            this.ImageComboBox.Location = new System.Drawing.Point(271, 28);
+            this.ImageComboBox.Location = new System.Drawing.Point(332, 27);
             this.ImageComboBox.Name = "ImageComboBox";
             this.ImageComboBox.Size = new System.Drawing.Size(128, 20);
             this.ImageComboBox.Sorted = true;
@@ -227,7 +266,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(226, 31);
+            this.label10.Location = new System.Drawing.Point(281, 31);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(41, 12);
             this.label10.TabIndex = 86;
@@ -419,7 +458,7 @@
             // 
             // AgilityTextBox
             // 
-            this.AgilityTextBox.Location = new System.Drawing.Point(176, 148);
+            this.AgilityTextBox.Location = new System.Drawing.Point(192, 149);
             this.AgilityTextBox.MaxLength = 5;
             this.AgilityTextBox.Name = "AgilityTextBox";
             this.AgilityTextBox.Size = new System.Drawing.Size(30, 21);
@@ -653,7 +692,7 @@
             // 
             // MonsterNameTextBox
             // 
-            this.MonsterNameTextBox.Location = new System.Drawing.Point(87, 28);
+            this.MonsterNameTextBox.Location = new System.Drawing.Point(273, 3);
             this.MonsterNameTextBox.Name = "MonsterNameTextBox";
             this.MonsterNameTextBox.Size = new System.Drawing.Size(115, 21);
             this.MonsterNameTextBox.TabIndex = 1;
@@ -662,7 +701,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(2, 31);
+            this.label3.Location = new System.Drawing.Point(184, 6);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(83, 12);
             this.label3.TabIndex = 8;
@@ -670,7 +709,7 @@
             // 
             // MonsterIndexTextBox
             // 
-            this.MonsterIndexTextBox.Location = new System.Drawing.Point(87, 4);
+            this.MonsterIndexTextBox.Location = new System.Drawing.Point(99, 3);
             this.MonsterIndexTextBox.Name = "MonsterIndexTextBox";
             this.MonsterIndexTextBox.ReadOnly = true;
             this.MonsterIndexTextBox.Size = new System.Drawing.Size(47, 21);
@@ -777,24 +816,6 @@
             this.DropBuilderButton.UseVisualStyleBackColor = true;
             this.DropBuilderButton.Click += new System.EventHandler(this.DropBuilderButton_Click);
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(413, 31);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(59, 12);
-            this.label11.TabIndex = 89;
-            this.label11.Text = "fileName:";
-            // 
-            // fileNameLabel
-            // 
-            this.fileNameLabel.AutoSize = true;
-            this.fileNameLabel.Location = new System.Drawing.Point(478, 31);
-            this.fileNameLabel.Name = "fileNameLabel";
-            this.fileNameLabel.Size = new System.Drawing.Size(41, 12);
-            this.fileNameLabel.TabIndex = 90;
-            this.fileNameLabel.Text = "-1.Lib";
-            // 
             // MonsterInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -813,6 +834,7 @@
             this.Name = "MonsterInfoForm";
             this.Text = "MonsterInfoForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MonsterInfoForm_FormClosed);
+            this.Load += new System.EventHandler(this.MonsterInfoForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.MonsterInfoPanel.ResumeLayout(false);
@@ -891,5 +913,7 @@
         private System.Windows.Forms.Button DropBuilderButton;
         private System.Windows.Forms.Label fileNameLabel;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox GameNameBox;
     }
 }

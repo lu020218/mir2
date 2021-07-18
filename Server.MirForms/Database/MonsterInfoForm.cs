@@ -60,6 +60,7 @@ namespace Server
                 MonsterInfoPanel.Enabled = false;
                 MonsterIndexTextBox.Text = string.Empty;
                 MonsterNameTextBox.Text = string.Empty;
+                GameNameBox.Text = string.Empty;
 
                 ImageComboBox.SelectedItem = null;
                 fileNameLabel.Text = "";
@@ -103,6 +104,7 @@ namespace Server
 
             MonsterIndexTextBox.Text = info.Index.ToString();
             MonsterNameTextBox.Text = info.Name;
+            GameNameBox.Text = info.DisplayName;
 
             ImageComboBox.SelectedItem = null;
             ImageComboBox.SelectedItem = info.Image;
@@ -145,6 +147,7 @@ namespace Server
 
                 if (MonsterIndexTextBox.Text != info.Index.ToString()) MonsterIndexTextBox.Text = string.Empty;
                 if (MonsterNameTextBox.Text != info.Name) MonsterNameTextBox.Text = string.Empty;
+                if (GameNameBox.Text != info.DisplayName) GameNameBox.Text = string.Empty;
 
                 if (ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) ImageComboBox.SelectedItem = null;
                 if (ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) fileNameLabel.Text = "";
@@ -704,6 +707,21 @@ namespace Server
             MirForms.DropBuilder.DropGenForm GenForm = new MirForms.DropBuilder.DropGenForm();
 
             GenForm.ShowDialog();
+        }
+
+        private void GameNameBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].DisplayName = ActiveControl.Text;
+
+            RefreshMonsterList();
+        }
+
+        private void MonsterInfoForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
